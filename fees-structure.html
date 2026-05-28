@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Financial Ledger & Academic Compliance | Krishnaite Global Academy</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Official fees structure, billing schedules, digital gateway retainer, and academic degree compliance guidelines for Krishnaite Global Academy.">
+  
+  <!-- Style Sheet -->
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Unique standalone page overrides */
+    .detail-page-section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 140px 4% 80px 4%;
+      position: relative;
+      z-index: 10;
+    }
+
+    .detail-card-container {
+      background: var(--white-glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 2px solid var(--black);
+      border-radius: 28px;
+      width: 100%;
+      max-width: 1000px;
+      padding: 60px 48px;
+      box-shadow: 20px 20px 0px var(--black-shadow);
+      animation: float-straight 15s ease-in-out infinite alternate;
+      transition: var(--transition-smooth);
+      position: relative;
+    }
+
+    .detail-card-container:hover {
+      transform: translateY(-8px) scale(1.005);
+      box-shadow: 26px 26px 0px var(--black-shadow);
+    }
+
+    /* Back Button styling */
+    .back-home-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--black);
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 32px;
+      align-self: flex-start;
+      border: 1.5px solid var(--black);
+      padding: 8px 16px;
+      border-radius: 50px;
+      background: var(--gold);
+      box-shadow: 3px 3px 0px var(--black);
+      transition: var(--transition-fast);
+    }
+
+    .back-home-link:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 5px 5px 0px var(--black);
+      background: var(--red);
+      color: var(--bg-peach);
+    }
+
+    .back-home-link svg {
+      transition: transform 0.25s ease;
+    }
+
+    .back-home-link:hover svg {
+      transform: translateX(-4px);
+    }
+
+    /* Billing and Info cards unique styles */
+    .fees-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 32px;
+      margin-top: 32px;
+    }
+
+    .fees-card {
+      background: var(--white-glass);
+      border: 1.5px solid var(--black);
+      border-radius: 20px;
+      padding: 36px;
+      box-shadow: 6px 6px 0px var(--black);
+    }
+
+    .fees-card h3 {
+      font-size: 1.6rem;
+      margin-bottom: 12px;
+      color: var(--black);
+      font-family: var(--font-serif);
+    }
+
+    .fees-card h4 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--red);
+      margin-bottom: 24px;
+      font-family: var(--font-sans);
+    }
+
+    .fees-sub-section {
+      margin-top: 24px;
+      border-top: 1.5px dashed hsla(0, 0%, 7%, 0.15);
+      padding-top: 20px;
+    }
+
+    .fees-sub-section h5 {
+      font-family: var(--font-serif);
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+      color: var(--black);
+    }
+
+    .fees-sub-section p {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .fees-sub-section ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .fees-sub-section ul li {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .fees-sub-section ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 8px;
+      width: 6px;
+      height: 6px;
+      background: var(--red);
+      border-radius: 50%;
+    }
+
+    .sovereign-card {
+      border-color: var(--gold);
+      box-shadow: 6px 6px 0px rgba(212, 175, 55, 0.4);
+    }
+
+    .vanguard-card {
+      border-color: var(--red);
+      box-shadow: 6px 6px 0px rgba(217, 56, 58, 0.4);
+    }
+
+    .compliance-warning-box {
+      background: rgba(217, 56, 58, 0.05);
+      border: 1.5px solid var(--red);
+      border-radius: 12px;
+      padding: 16px 20px;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      color: var(--black);
+      margin-top: 16px;
+    }
+
+    .compliance-warning-box strong {
+      color: var(--red);
+    }
+
+    /* Custom straight vertical float without any angular tilting/rotation */
+    @keyframes float-straight {
+      0% {
+        transform: translateY(0);
+      }
+      100% {
+        transform: translateY(-16px);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Canvas for Grid & Floating Particle Shapes -->
+  <div class="canvas-bg">
+    <div class="perspective-grid" id="grid"></div>
+    <div class="floating-shape shape-1" id="shape1"></div>
+    <div class="floating-shape shape-2" id="shape2"></div>
+    <div class="floating-shape shape-3" id="shape3"></div>
+  </div>
+
+  <!-- Glass panel header with gold / black outlines -->
+  <header id="main-header">
+    <a href="index.html" class="logo" id="header-logo">
+      <div class="logo-icon"></div>
+      <span>Krishanaite</span>
+    </a>
+    <nav id="header-nav">
+      <a href="index.html#hero" id="nav-home">The Forge</a>
+      <a href="index.html#tracks" id="nav-tracks">Tracks</a>
+      <a href="sovereign-forge.html" id="nav-sovereign">Sovereign Forge</a>
+      <a href="index.html#tracks" id="nav-vanguard">Vanguard Launchpad</a>
+    </nav>
+    <a href="index.html#tracks" class="cta-header-btn" id="cta-enroll-header">All Tracks</a>
+  </header>
+
+  <main>
+    <section class="detail-page-section">
+      <!-- Back Navigation Pill -->
+      <a href="sovereign-forge.html" class="back-home-link">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        Back to Sovereign Forge
+      </a>
+
+      <!-- Large Suspended Standalone Layout Panel -->
+      <div class="detail-card-container" id="detail-panel">
+        
+        <!-- Header Section -->
+        <div class="modal-header">
+          <span class="modal-badge">Financial Ledger & Academic Compliance</span>
+          <h2>Krishnaite Fees & Gateway Onboarding</h2>
+          <blockquote class="modal-quote">
+            Admission to the Krishnaite Academy is strictly gated. Our financial architecture is designed to support the continuous deployment of resources, ensuring you receive enterprise-grade infrastructure and undivided mentorship.
+          </blockquote>
+          <p class="modal-intro">
+            Below is the official fee structure, academic compliance requirements, and payment schedule for both active tracks. All values and terms are structured for absolute transactional clarity.
+          </p>
+        </div>
+
+        <div class="modal-body">
+          <div class="fees-grid">
+            
+            <!-- Track 01 -->
+            <div class="fees-card sovereign-card">
+              <h3>Track 01: The Sovereign Forge (4-Year Track)</h3>
+              <h4>The Master Architect Program</h4>
+              
+              <div class="fees-sub-section">
+                <h5>Tuition & Specializations</h5>
+                <ul>
+                  <li><strong>Base Tuition:</strong> ₹3,00,000 (Includes complete manual architectural training, continuous portfolio development, and comprehensive technical skills scaling).</li>
+                  <li><strong>The AI Vanguard Specialization (Optional):</strong> +₹75,000 (Advanced machine learning deployment and system scaling).</li>
+                </ul>
+              </div>
+
+              <div class="fees-sub-section">
+                <h5>Academic Compliance & Eligibility</h5>
+                <p>
+                  To maintain the integrity of our dual-education model and "B-Tech benefits," candidates applying for The Sovereign Forge must be actively enrolled in a traditional university or college degree program (any major is accepted).
+                </p>
+                <div class="compliance-warning-box">
+                  <strong>Non-Enrollment Clause:</strong> If a candidate is not actively enrolled in a traditional university, they must sign a formal Legal Disclosure Agreement with the Academy acknowledging their exclusive reliance on our portfolio-based architecture prior to final admission.
+                </div>
+              </div>
+
+              <div class="fees-sub-section">
+                <h5>Billing Architecture (Academic Year = 3 Semesters of 4 Months)</h5>
+                <ul>
+                  <li><strong>Base Tuition Installments:</strong> ₹1,00,000 per semester.</li>
+                  <li><strong>AI Specialization Installments:</strong> +₹25,000 per semester.</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Track 02 -->
+            <div class="fees-card vanguard-card">
+              <h3>Track 02: The Vanguard Launchpad (2-Year Track)</h3>
+              <h4>The Deployment Accelerator</h4>
+              
+              <div class="fees-sub-section">
+                <h5>Tuition & Specializations</h5>
+                <ul>
+                  <li><strong>Base Tuition:</strong> ₹2,50,000 (Includes full-stack execution, rapid UI development, and live capstone platform deployment).</li>
+                  <li><strong>The AI Vanguard Specialization (Optional):</strong> +₹50,000 (Applied AI integrations for rapid production scaling).</li>
+                </ul>
+              </div>
+
+              <div class="fees-sub-section">
+                <h5>Academic Compliance & Eligibility</h5>
+                <p>
+                  Candidates must provide proof of a completed traditional degree OR active enrollment in the final semester of their final year (any major is accepted) to ensure they are prepared for immediate, high-velocity execution.
+                </p>
+              </div>
+
+              <div class="fees-sub-section">
+                <h5>Billing Architecture (Academic Year = 3 Semesters of 4 Months)</h5>
+                <p>
+                  Payments are structured across the active semesters, mirroring the term-based breakdown.
+                </p>
+              </div>
+            </div>
+
+            <!-- Admission Gateway & Transaction Infrastructure -->
+            <div class="fees-card" style="background: rgba(17, 17, 17, 0.02);">
+              <h3>The Admission Gateway & Transaction Infrastructure</h3>
+              <h4>Tier-One Compliant Capital Deployment</h4>
+              <p style="margin-bottom: 24px;">
+                To ensure a seamless and secure financial commitment, all transactions are processed through our compliant, tier-one digital gateway structure.
+              </p>
+
+              <div class="fees-sub-section">
+                <h5>1. The Mandatory Admission Retainer</h5>
+                <p>
+                  Upon successfully passing the automated Logic Entrance Exam and receiving an official acceptance letter from Krishnaite, a mandatory ₹50,000 Admission Fee is required to lock in your seat in the Genesis Cohort. This acts as your official onboarding commitment and activates your digital campus access.
+                </p>
+              </div>
+
+              <div class="fees-sub-section">
+                <h5>2. Flexible Capital Deployment (Payment Modes)</h5>
+                <p>
+                  Once the admission retainer is secured, the remaining semester balances can be cleared via two authorized methods:
+                </p>
+                <ul>
+                  <li><strong>Upfront Semester Clearance:</strong> Full payment of the semester block (e.g., ₹1,00,000) at the commencement of every 4-month cycle.</li>
+                  <li><strong>Monthly EMI Protocols:</strong> Authorized month-to-month automatic financing via our approved payment dashboard, allowing you to split the semester block into manageable 30-day installments.</li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Exam button shortcut -->
+          <div class="modal-cta-box" style="margin-top: 48px;">
+            <a href="#" class="entrance-exam-btn" id="initiate-exam-btn">
+              Initiate Entrance Exam
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+              </svg>
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Modern Royal Footer -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand" id="footer-logo-block">
+        <h4>Krishanaite</h4>
+        <p> Fusing absolute gravitational independence with the mythological structures of royal architecture and the iron law of memory execution. </p>
+      </div>
+      <div class="footer-links" id="footer-sect-paths">
+        <h5>The Paths</h5>
+        <ul>
+          <li><a href="index.html#hero">The Forge Chamber</a></li>
+          <li><a href="index.html#sovereign">The Sovereign Path</a></li>
+          <li><a href="index.html#vanguard">The Vanguard Forge</a></li>
+        </ul>
+      </div>
+      <div class="footer-links" id="footer-sect-details">
+        <h5>Academy Details</h5>
+        <ul>
+          <li><a href="#">The Codex</a></li>
+          <li><a href="#">Trials & Admissions</a></li>
+          <li><a href="#">Royal Registry</a></li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="footer-meta" id="footer-bottom-row">
+      <p>&copy; 2026 Krishanaite Global Academy. All rights reserved. Under Sovereign Charter.</p>
+      <div class="footer-coords" id="coords-text">
+        Location: <span>45.1098° N, 15.2001° E</span> | Latency: <span>0.003ms</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Main interactive JS for grids & tilts -->
+  <script src="app.js"></script>
+</body>
+</html>
