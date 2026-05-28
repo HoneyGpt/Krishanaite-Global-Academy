@@ -566,6 +566,14 @@ section {
   box-shadow: 28px 28px 0px var(--black-shadow);
 }
 
+.track-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 32px;
+}
+
 .track-badge {
   align-self: flex-start;
   font-size: 0.75rem;
@@ -575,7 +583,7 @@ section {
   padding: 6px 16px;
   border-radius: 100px;
   border: 1.5px solid var(--black);
-  margin-bottom: 32px;
+  margin-bottom: 0;
   box-shadow: 3px 3px 0px var(--black);
 }
 
@@ -586,6 +594,28 @@ section {
 
 .vanguard-forge .track-badge {
   background: var(--black);
+  color: var(--bg-peach);
+}
+
+.duration-badge {
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 6px 16px;
+  border-radius: 100px;
+  border: 1.5px solid var(--black);
+  box-shadow: 3px 3px 0px var(--black);
+  transition: var(--transition-fast);
+}
+
+.sovereign-path .duration-badge {
+  background: var(--black);
+  color: var(--gold);
+}
+
+.vanguard-forge .duration-badge {
+  background: var(--red);
   color: var(--bg-peach);
 }
 
