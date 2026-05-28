@@ -32,7 +32,7 @@
       max-width: 1000px;
       padding: 60px 48px;
       box-shadow: 20px 20px 0px var(--black-shadow);
-      animation: float-slow 15s ease-in-out infinite alternate;
+      animation: float-straight 15s ease-in-out infinite alternate;
       transition: var(--transition-smooth);
       position: relative;
     }
@@ -76,6 +76,16 @@
 
     .back-home-link:hover svg {
       transform: translateX(-4px);
+    }
+
+    /* Custom straight vertical float without any angular tilting/rotation */
+    @keyframes float-straight {
+      0% {
+        transform: translateY(0);
+      }
+      100% {
+        transform: translateY(-16px);
+      }
     }
   </style>
 </head>
