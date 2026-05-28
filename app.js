@@ -208,53 +208,30 @@ function initSmoothScroll() {
 }
 
 /**
- * 6. Modal open/close controls for The Sovereign Forge
+ * 6. Standalone Detail Page Controls & Entrance CTA
  */
 function initModalControls() {
-  const modal = document.getElementById('sovereign-modal');
-  const openBtn = document.getElementById('enroll-sovereign');
-  const closeBtn = document.getElementById('close-sovereign-modal');
-
-  if (!modal || !openBtn || !closeBtn) return;
-
-  // Open modal
-  openBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden'; // Stop background scrolling
-  });
-
-  // Close modal
-  const closeModal = () => {
-    modal.classList.remove('active');
-    document.body.style.overflow = ''; // Resume background scrolling
-  };
-
-  closeBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    closeModal();
-  });
-
-  // Close on backdrop click
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) {
-      closeModal();
-    }
-  });
-
-  // Close on ESC key press
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && modal.classList.contains('active')) {
-      closeModal();
-    }
-  });
-
-  // Entrance Exam CTA click behavior
+  // Dynamic click handler for Entrance Exam CTA
   const examBtn = document.getElementById('initiate-exam-btn');
   if (examBtn) {
     examBtn.addEventListener('click', (e) => {
       e.preventDefault();
       alert('🔒 Entrance Exam portal is initiating. Your strategic diagnostic test will begin shortly!');
+    });
+  }
+
+  // Active floating parallax for the standalone detail card container
+  const detailPanel = document.getElementById('detail-panel');
+  if (detailPanel) {
+    document.addEventListener('mousemove', (e) => {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      
+      const mouseX = (e.clientX - w / 2) / (w / 2);
+      const mouseY = (e.clientY - h / 2) / (h / 2);
+      
+      // Gently tilt and translate the floating detail panel card
+      detailPanel.style.transform = `translateY(${mouseY * 8}px) rotateY(${mouseX * 1.5}deg) rotateX(${-mouseY * 1.5}deg)`;
     });
   }
 }
