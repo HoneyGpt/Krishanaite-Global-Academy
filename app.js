@@ -220,18 +220,4 @@ function initModalControls() {
     });
   }
 
-  // Active floating parallax for the standalone detail card container
-  const detailPanel = document.getElementById('detail-panel');
-  if (detailPanel) {
-    document.addEventListener('mousemove', (e) => {
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-      
-      const mouseX = (e.clientX - w / 2) / (w / 2);
-      const mouseY = (e.clientY - h / 2) / (h / 2);
-      
-      // Gently tilt and translate the floating detail panel card
-      detailPanel.style.transform = `translateY(${mouseY * 8}px) rotateY(${mouseX * 1.5}deg) rotateX(${-mouseY * 1.5}deg)`;
-    });
-  }
 }
