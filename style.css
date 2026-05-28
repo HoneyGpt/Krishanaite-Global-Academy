@@ -933,3 +933,408 @@ footer {
     font-size: 2.2rem;
   }
 }
+
+/* Sovereign Forge Detail Modal Styling */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(17, 17, 17, 0.45);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-container {
+  background: var(--bg-peach);
+  border: 2px solid var(--black);
+  border-radius: 28px;
+  width: 100%;
+  max-width: 950px;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 48px;
+  position: relative;
+  box-shadow: 20px 20px 0px var(--black-shadow);
+  transform: scale(0.95) translateY(30px);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-overlay.active .modal-container {
+  transform: scale(1) translateY(0);
+}
+
+/* Scrollbar within modal */
+.modal-container::-webkit-scrollbar {
+  width: 8px;
+}
+.modal-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+.modal-container::-webkit-scrollbar-thumb {
+  background: var(--black);
+  border-radius: 4px;
+}
+
+.modal-close {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  background: transparent;
+  border: none;
+  font-size: 2.2rem;
+  font-weight: 300;
+  color: var(--black);
+  cursor: pointer;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1.5px solid transparent;
+  transition: var(--transition-fast);
+  z-index: 100;
+}
+
+.modal-close:hover {
+  background: var(--red);
+  color: var(--bg-peach);
+  border-color: var(--black);
+  transform: rotate(90deg);
+}
+
+/* Header Content */
+.modal-badge {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  padding: 6px 16px;
+  background: var(--gold);
+  color: var(--black);
+  border: 1.5px solid var(--black);
+  border-radius: 100px;
+  box-shadow: 3px 3px 0px var(--black);
+  margin-bottom: 24px;
+}
+
+.modal-header h2 {
+  font-size: clamp(2rem, 3.5vw, 2.8rem);
+  line-height: 1.1;
+  margin-bottom: 20px;
+}
+
+.modal-quote {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+  line-height: 1.5;
+  color: var(--red);
+  border-left: 3px solid var(--red);
+  padding-left: 20px;
+  margin: 28px 0;
+  max-width: 800px;
+}
+
+.modal-intro {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: hsla(0, 0%, 7%, 0.85);
+  margin-bottom: 40px;
+  max-width: 850px;
+}
+
+/* Sections */
+.modal-sect-title {
+  font-size: 1.5rem;
+  margin-top: 48px;
+  margin-bottom: 24px;
+  border-bottom: 2px solid var(--black);
+  padding-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sect-intro {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 20px;
+  color: hsla(0, 0%, 7%, 0.7);
+}
+
+/* Curriculum Cards Grid */
+.curriculum-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.curriculum-card {
+  background: var(--white-glass);
+  backdrop-filter: blur(8px);
+  border: 1.5px solid var(--black);
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 6px 6px 0px var(--black-shadow);
+  transition: var(--transition-fast);
+}
+
+.curriculum-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0px var(--black-shadow);
+}
+
+.curriculum-card h4 {
+  font-size: 1.25rem;
+  margin-bottom: 12px;
+  font-family: var(--font-serif);
+}
+
+.curriculum-card .card-lead {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--red);
+  margin-bottom: 20px;
+}
+
+.curriculum-card ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.curriculum-card ul li {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  position: relative;
+  padding-left: 20px;
+}
+
+.curriculum-card ul li::before {
+  content: '🛡️';
+  position: absolute;
+  left: 0;
+  top: 1px;
+  font-size: 0.75rem;
+}
+
+/* Learn Engine Grid */
+.engine-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.engine-item {
+  background: var(--white-glass);
+  border: 1.5px solid var(--black);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 4px 4px 0px var(--black);
+}
+
+.engine-item h5 {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  color: var(--red);
+  margin-bottom: 8px;
+}
+
+.engine-item p {
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+/* Academy Comparison Table */
+.table-container {
+  overflow-x: auto;
+  border: 2px solid var(--black);
+  border-radius: 16px;
+  box-shadow: 6px 6px 0px var(--black);
+  margin-bottom: 40px;
+}
+
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--white-glass);
+  font-size: 0.9rem;
+  text-align: left;
+}
+
+.comparison-table th, .comparison-table td {
+  padding: 16px 20px;
+  border-bottom: 1.5px solid var(--black);
+}
+
+.comparison-table th {
+  background: var(--black);
+  color: var(--bg-peach);
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.comparison-table th:not(:last-child), .comparison-table td:not(:last-child) {
+  border-right: 1.5px solid var(--black);
+}
+
+.comparison-table tr:last-child td {
+  border-bottom: none;
+}
+
+.comparison-table .td-header {
+  font-weight: 700;
+  background: rgba(17, 17, 17, 0.03);
+}
+
+.comparison-table .td-highlight {
+  font-weight: 600;
+  color: var(--black);
+  background: rgba(212, 175, 55, 0.08);
+}
+
+/* Investment and Pricing Grid */
+.investment-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 28px;
+  margin-bottom: 48px;
+}
+
+.investment-card {
+  background: var(--white-glass);
+  border: 2px solid var(--black);
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 8px 8px 0px var(--black-shadow);
+  transition: var(--transition-fast);
+}
+
+.investment-card:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 12px 12px 0px var(--black-shadow);
+}
+
+.investment-card.gold-border {
+  border-color: var(--gold);
+}
+
+.investment-card.red-border {
+  border-color: var(--red);
+}
+
+.investment-card h4 {
+  font-size: 1.25rem;
+  margin-bottom: 8px;
+  font-family: var(--font-serif);
+}
+
+.investment-card .price {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--black);
+  margin-bottom: 16px;
+  font-family: var(--font-sans);
+}
+
+.investment-card.gold-border .price {
+  color: var(--gold);
+  text-shadow: 1px 1px 0px var(--black);
+}
+
+.investment-card.red-border .price {
+  color: var(--red);
+}
+
+.investment-card p {
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+/* Entrance Exam CTA Box */
+.modal-cta-box {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+  margin-bottom: 20px;
+}
+
+.entrance-exam-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--red);
+  color: var(--bg-peach);
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 20px 48px;
+  border: 3px solid var(--black);
+  border-radius: 16px;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 8px 8px 0px var(--black);
+  transition: var(--transition-fast);
+}
+
+.entrance-exam-btn:hover {
+  transform: translate(-4px, -4px);
+  box-shadow: 12px 12px 0px var(--black);
+  background: var(--red-hover);
+}
+
+.entrance-exam-btn svg {
+  transition: transform 0.3s ease;
+}
+
+.entrance-exam-btn:hover svg {
+  transform: scale(1.15) rotate(15deg);
+}
+
+/* Modal Responsive adjustments */
+@media (max-width: 768px) {
+  .modal-container {
+    padding: 32px 20px;
+  }
+  .modal-sect-title {
+    margin-top: 36px;
+  }
+  .curriculum-card {
+    padding: 20px;
+  }
+  .comparison-table th, .comparison-table td {
+    padding: 12px;
+    font-size: 0.82rem;
+  }
+  .entrance-exam-btn {
+    padding: 16px 32px;
+    font-size: 1rem;
+    width: 100%;
+    justify-content: center;
+  }
+}
+
