@@ -18,7 +18,7 @@ function initHeroParallax() {
   const interactiveZone = document.getElementById('hero-interactive-zone');
   if (!interactiveZone) return;
 
-  const floatCards = interactiveZone.querySelectorAll('.floating-card, .suspended-node');
+  const floatCards = interactiveZone.querySelectorAll('.floating-card, .suspended-node, .forge-container');
   
   interactiveZone.addEventListener('mousemove', (e) => {
     const rect = interactiveZone.getBoundingClientRect();
@@ -52,7 +52,7 @@ function initHeroParallax() {
   // Reset positions smoothly on mouse leave
   interactiveZone.addEventListener('mouseleave', () => {
     floatCards.forEach(card => {
-      card.style.transform = 'translate(0px, 0px)';
+      card.style.transform = '';
       if (card.classList.contains('floating-card')) {
         card.style.boxShadow = '12px 12px 0px var(--black-shadow)';
       }

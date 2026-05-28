@@ -64,9 +64,162 @@
           </div>
         </div>
 
-        <!-- Centerpiece Forge Image -->
-        <div class="forge-container" id="forge-img-container">
-          <img src="assets/architectural_forge.png" alt="Mythological Architectural Forge" class="forge-image" id="forge-graphic">
+        <!-- Centerpiece Forge SVG -->
+        <div class="forge-container" id="forge-img-container" data-speed="0.5">
+          <svg class="forge-svg" viewBox="0 0 400 400" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;">
+            <!-- Definitions for gradients and glowing filters -->
+            <defs>
+              <linearGradient id="gold-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="hsl(47, 85%, 65%)" />
+                <stop offset="50%" stop-color="hsl(47, 75%, 50%)" />
+                <stop offset="100%" stop-color="hsl(40, 70%, 35%)" />
+              </linearGradient>
+              <linearGradient id="red-grad" x1="0%" y1="100%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="hsl(359, 75%, 45%)" />
+                <stop offset="100%" stop-color="hsl(359, 90%, 60%)" />
+              </linearGradient>
+              <filter id="glow-red" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="6" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+              <filter id="glow-gold" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="4" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+
+            <!-- 1. Background Constellations & Orbiting Rings (Anti-Gravity Mythological Space) -->
+            <!-- Outer Runed Ring -->
+            <circle cx="200" cy="200" r="160" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-dasharray="12 6 4 6" opacity="0.4">
+              <animateTransform attributeName="transform" type="rotate" from="0 200 200" to="360 200 200" dur="40s" repeatCount="indefinite" />
+            </circle>
+            <!-- Inner Concentric Orbit Ring -->
+            <circle cx="200" cy="200" r="140" fill="none" stroke="var(--black)" stroke-width="1" stroke-dasharray="2 4" opacity="0.6" />
+            <circle cx="200" cy="200" r="110" fill="none" stroke="var(--red)" stroke-width="1" stroke-dasharray="15 5" opacity="0.5">
+              <animateTransform attributeName="transform" type="rotate" from="360 200 200" to="0 200 200" dur="25s" repeatCount="indefinite" />
+            </circle>
+
+            <!-- Stars/Nodes connecting with thin lines -->
+            <g opacity="0.3">
+              <line x1="80" y1="120" x2="140" y2="80" stroke="var(--black)" stroke-width="1" stroke-dasharray="2 2" />
+              <line x1="140" y1="80" x2="260" y2="80" stroke="var(--black)" stroke-width="1" stroke-dasharray="2 2" />
+              <line x1="260" y1="80" x2="320" y2="120" stroke="var(--black)" stroke-width="1" stroke-dasharray="2 2" />
+              <circle cx="80" cy="120" r="3" fill="var(--black)" />
+              <circle cx="140" cy="80" r="4" fill="var(--gold)" />
+              <circle cx="260" cy="80" r="4" fill="var(--red)" />
+              <circle cx="320" cy="120" r="3" fill="var(--black)" />
+            </g>
+
+            <!-- 2. The Suspended Foundation Cross-Platform -->
+            <g>
+              <!-- Floating blocks under platform -->
+              <polygon points="120,310 140,320 130,330 110,320" fill="var(--black)" stroke="var(--gold)" stroke-width="1" opacity="0.8">
+                <animate attributeName="transform" type="translate" values="0,0; 0,-8; 0,0" dur="5s" repeatCount="indefinite" />
+              </polygon>
+              <polygon points="270,300 285,310 280,318 265,308" fill="var(--black)" stroke="var(--red)" stroke-width="1" opacity="0.7">
+                <animate attributeName="transform" type="translate" values="0,0; 0,-6; 0,0" dur="4s" repeatCount="indefinite" />
+              </polygon>
+
+              <!-- Central Levitating Platform Base -->
+              <polygon points="100,280 200,240 300,280 200,320" fill="var(--white-glass)" stroke="url(#gold-grad)" stroke-width="2" />
+              
+              <!-- Core Red Power Inlays -->
+              <polygon points="130,280 200,252 270,280 200,308" fill="none" stroke="var(--red)" stroke-width="1.5" opacity="0.9" filter="url(#glow-red)" />
+              <!-- Center socket -->
+              <polygon points="180,280 200,272 220,280 200,288" fill="var(--black)" stroke="var(--gold)" stroke-width="1.5" />
+            </g>
+
+            <!-- 3. The Mythological Temple Pillars and Arches -->
+            <g>
+              <!-- Left Pillar -->
+              <g>
+                <rect x="120" y="190" width="20" height="60" fill="var(--white-glass)" stroke="var(--black)" stroke-width="1.5" />
+                <rect x="116" y="244" width="28" height="6" fill="var(--gold)" stroke="var(--black)" stroke-width="1.5" />
+                <line x1="126" y1="194" x2="126" y2="240" stroke="var(--black)" stroke-width="1" />
+                <line x1="134" y1="194" x2="134" y2="240" stroke="var(--black)" stroke-width="1" />
+                <rect x="116" y="184" width="28" height="6" fill="var(--gold)" stroke="var(--black)" stroke-width="1.5" />
+              </g>
+
+              <!-- Right Pillar -->
+              <g>
+                <rect x="260" y="190" width="20" height="60" fill="var(--white-glass)" stroke="var(--black)" stroke-width="1.5" />
+                <rect x="256" y="244" width="28" height="6" fill="var(--gold)" stroke="var(--black)" stroke-width="1.5" />
+                <line x1="266" y1="194" x2="266" y2="240" stroke="var(--black)" stroke-width="1" />
+                <line x1="274" y1="194" x2="274" y2="240" stroke="var(--black)" stroke-width="1" />
+                <rect x="256" y="184" width="28" height="6" fill="var(--gold)" stroke="var(--black)" stroke-width="1.5" />
+              </g>
+
+              <!-- Main Arch linking the pillars -->
+              <path d="M 120 184 A 80 80 0 0 1 280 184" fill="none" stroke="var(--black)" stroke-width="4" />
+              <path d="M 120 184 A 80 80 0 0 1 280 184" fill="none" stroke="url(#gold-grad)" stroke-width="2" />
+            </g>
+
+            <!-- 4. The Burning Forge Furnace (Centerpiece) -->
+            <g transform="translate(0, -10)">
+              <!-- Outer cylindrical furnace shield -->
+              <path d="M 160 210 L 160 270 A 40 15 0 0 0 240 270 L 240 210 A 40 15 0 0 0 160 210 Z" fill="var(--white-glass)" stroke="var(--black)" stroke-width="2" />
+              
+              <!-- Golden structural bands around furnace -->
+              <path d="M 160 220 A 40 10 0 0 0 240 220" fill="none" stroke="var(--gold)" stroke-width="2" />
+              <path d="M 160 255 A 40 10 0 0 0 240 255" fill="none" stroke="var(--gold)" stroke-width="2" />
+
+              <!-- Core Furnace Fire Chamber opening -->
+              <path d="M 175 230 L 175 265 A 25 10 0 0 0 225 265 L 225 230 A 25 10 0 0 0 175 230 Z" fill="var(--black)" stroke="var(--black)" stroke-width="1.5" />
+              
+              <!-- Glowing Red Forge Core Flame -->
+              <g filter="url(#glow-red)">
+                <ellipse cx="200" cy="250" rx="18" ry="12" fill="url(#red-grad)" opacity="0.8" />
+                <path d="M 190 258 C 185 245, 192 232, 200 224 C 208 232, 215 245, 210 258 Z" fill="url(#gold-grad)">
+                  <animate attributeName="d" 
+                           values="M 190 258 C 185 245, 192 232, 200 224 C 208 232, 215 245, 210 258 Z;
+                                   M 190 258 C 182 242, 195 235, 200 220 C 205 235, 218 242, 210 258 Z;
+                                   M 190 258 C 185 245, 192 232, 200 224 C 208 232, 215 245, 210 258 Z" 
+                           dur="3s" repeatCount="indefinite" />
+                </path>
+              </g>
+              
+              <!-- Glowing spark particles rising -->
+              <g fill="var(--gold)" filter="url(#glow-gold)">
+                <circle cx="192" cy="235" r="2">
+                  <animate attributeName="cy" values="235;190;235" dur="2.2s" repeatCount="indefinite" />
+                  <animate attributeName="cx" values="192;196;192" dur="2.2s" repeatCount="indefinite" />
+                  <animate attributeName="opacity" values="0;1;0" dur="2.2s" repeatCount="indefinite" />
+                </circle>
+                <circle cx="206" cy="242" r="1.5">
+                  <animate attributeName="cy" values="242;180;242" dur="1.8s" repeatCount="indefinite" />
+                  <animate attributeName="cx" values="206;200;206" dur="1.8s" repeatCount="indefinite" />
+                  <animate attributeName="opacity" values="0;1;0" dur="1.8s" repeatCount="indefinite" />
+                </circle>
+                <circle cx="198" cy="248" r="2">
+                  <animate attributeName="cy" values="248;170;248" dur="2.5s" repeatCount="indefinite" />
+                  <animate attributeName="cx" values="198;205;198" dur="2.5s" repeatCount="indefinite" />
+                  <animate attributeName="opacity" values="0;1;0" dur="2.5s" repeatCount="indefinite" />
+                </circle>
+              </g>
+            </g>
+
+            <!-- 5. Floating mythological crown and energy source at top -->
+            <g transform="translate(0, -10)">
+              <polygon points="180,120 200,95 220,120 200,125" fill="var(--black)" stroke="var(--gold)" stroke-width="2">
+                <animateTransform attributeName="transform" type="translate" values="0,0; 0,-6; 0,0" dur="3.5s" repeatCount="indefinite" />
+              </polygon>
+              
+              <polygon points="194,110 200,100 206,110 200,116" fill="var(--red)" stroke="var(--black)" stroke-width="1" filter="url(#glow-red)">
+                <animate attributeName="opacity" values="0.7;1;0.7" dur="2s" repeatCount="indefinite" />
+                <animateTransform attributeName="transform" type="translate" values="0,0; 0,-6; 0,0" dur="3.5s" repeatCount="indefinite" />
+              </polygon>
+              
+              <line x1="200" y1="125" x2="200" y2="195" stroke="var(--red)" stroke-width="1.5" stroke-dasharray="4 2" opacity="0.8">
+                <animate attributeName="stroke-dashoffset" values="0;6" dur="1.5s" repeatCount="indefinite" />
+              </line>
+            </g>
+          </svg>
         </div>
 
         <!-- Floating Card Right -->
