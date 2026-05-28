@@ -1,0 +1,905 @@
+/* Style system for Krishanaite Global Academy */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+:root {
+  --bg-peach: hsl(38, 90%, 96%);
+  --gold: hsl(47, 75%, 50%);
+  --gold-glow: rgba(212, 175, 55, 0.25);
+  --red: hsl(359, 75%, 52%);
+  --red-hover: hsl(359, 85%, 45%);
+  --black: hsl(0, 0%, 7%);
+  --black-shadow: rgba(17, 17, 17, 0.95);
+  --white-glass: rgba(253, 245, 230, 0.75);
+  
+  --font-serif: 'Playfair Display', serif;
+  --font-sans: 'Outfit', sans-serif;
+  
+  --transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Reset & Scrollbar */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-peach);
+  color: var(--black);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  min-height: 100vh;
+  line-height: 1.6;
+  position: relative;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-peach);
+  border-left: 2px solid var(--black);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--black);
+  border: 2px solid var(--bg-peach);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--red);
+}
+
+/* Base Typography */
+h1, h2, h3, h4, .royal-text {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  color: var(--black);
+  line-height: 1.15;
+}
+
+p {
+  color: hsla(0, 0%, 7%, 0.8);
+  font-weight: 400;
+}
+
+/* Layout Elements */
+header {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateZ(0);
+  width: 90%;
+  max-width: 1200px;
+  background: var(--white-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1.5px solid var(--black);
+  border-radius: 100px;
+  z-index: 1000;
+  padding: 16px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 6px 6px 0px var(--black);
+  transition: var(--transition-smooth);
+}
+
+header:hover {
+  transform: translateX(-50%) translateY(-2px) translateZ(0);
+  box-shadow: 10px 10px 0px var(--black);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: var(--black);
+  text-decoration: none;
+}
+
+.logo-icon {
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--black);
+  background: var(--red);
+  transform: rotate(45deg);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-smooth);
+}
+
+.logo:hover .logo-icon {
+  transform: rotate(225deg);
+  background: var(--gold);
+}
+
+.logo-icon::after {
+  content: '';
+  width: 10px;
+  height: 10px;
+  background: var(--bg-peach);
+  border: 1.5px solid var(--black);
+}
+
+nav {
+  display: flex;
+  gap: 32px;
+  align-items: center;
+}
+
+nav a {
+  text-decoration: none;
+  color: var(--black);
+  font-weight: 500;
+  font-size: 0.95rem;
+  position: relative;
+  padding: 4px 0;
+  transition: var(--transition-fast);
+}
+
+nav a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--red);
+  transition: var(--transition-smooth);
+}
+
+nav a:hover {
+  color: var(--red);
+}
+
+nav a:hover::after {
+  width: 100%;
+}
+
+.cta-header-btn {
+  text-decoration: none;
+  color: var(--black);
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 8px 20px;
+  border: 1.5px solid var(--black);
+  border-radius: 50px;
+  background: var(--gold);
+  box-shadow: 3px 3px 0px var(--black);
+  transition: var(--transition-fast);
+}
+
+.cta-header-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0px var(--black);
+  background: var(--red);
+  color: var(--bg-peach);
+}
+
+/* Background Anti-Gravity Grid and Particles */
+.canvas-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.perspective-grid {
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  top: -50%;
+  left: -50%;
+  background-image: 
+    linear-gradient(rgba(17, 17, 17, 0.03) 1.5px, transparent 1.5px),
+    linear-gradient(90deg, rgba(17, 17, 17, 0.03) 1.5px, transparent 1.5px);
+  background-size: 80px 80px;
+  transform: perspective(600px) rotateX(45deg);
+  animation: grid-scroll 100s linear infinite;
+  opacity: 0.8;
+}
+
+@keyframes grid-scroll {
+  0% {
+    transform: perspective(600px) rotateX(45deg) translateY(0);
+  }
+  100% {
+    transform: perspective(600px) rotateX(45deg) translateY(80px);
+  }
+}
+
+.floating-shape {
+  position: absolute;
+  border: 1.5px dashed hsla(0, 0%, 7%, 0.15);
+  background: rgba(253, 245, 230, 0.4);
+  border-radius: 4px;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.shape-1 {
+  width: 120px;
+  height: 120px;
+  top: 15%;
+  left: 8%;
+  transform: rotate(15deg);
+  animation: float-slow 15s ease-in-out infinite alternate;
+  border-color: var(--gold);
+}
+
+.shape-2 {
+  width: 80px;
+  height: 80px;
+  bottom: 20%;
+  left: 12%;
+  border-radius: 50%;
+  transform: rotate(-25deg);
+  animation: float-medium 12s ease-in-out infinite alternate;
+  border-color: var(--red);
+}
+
+.shape-3 {
+  width: 100px;
+  height: 100px;
+  top: 25%;
+  right: 10%;
+  transform: rotate(45deg);
+  animation: float-fast 8s ease-in-out infinite alternate;
+}
+
+/* Sections */
+main {
+  position: relative;
+  z-index: 10;
+}
+
+section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 120px 4% 80px 4%;
+  position: relative;
+}
+
+/* Hero Section (Prompt 1) */
+.hero-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  max-width: 1400px;
+  margin: 0 auto;
+  gap: 48px;
+}
+
+.hero-content {
+  max-width: 850px;
+  position: relative;
+  z-index: 5;
+}
+
+.pre-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--black);
+  color: var(--bg-peach);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  padding: 6px 16px;
+  border-radius: 100px;
+  margin-bottom: 24px;
+  box-shadow: 4px 4px 0px var(--gold);
+  transform: rotate(-1.5deg);
+}
+
+.pre-title span {
+  width: 8px;
+  height: 8px;
+  background: var(--red);
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.hero-title {
+  font-size: clamp(3rem, 6vw, 5.2rem);
+  font-weight: 700;
+  line-height: 1.05;
+  margin-bottom: 24px;
+}
+
+.hero-title span.gold-glow-text {
+  position: relative;
+  color: var(--black);
+  z-index: 1;
+}
+
+.hero-title span.gold-glow-text::after {
+  content: '';
+  position: absolute;
+  bottom: 8px;
+  left: 0;
+  width: 100%;
+  height: 24px;
+  background: var(--gold-glow);
+  z-index: -1;
+  border-bottom: 2.5px solid var(--gold);
+}
+
+.hero-desc {
+  font-size: clamp(1.05rem, 2vw, 1.25rem);
+  max-width: 680px;
+  margin: 0 auto 40px auto;
+  line-height: 1.7;
+}
+
+/* Floating Visuals (Forge & Suspended Elements) */
+.hero-visual {
+  position: relative;
+  width: 100%;
+  max-width: 700px;
+  height: 480px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+}
+
+.forge-container {
+  width: 320px;
+  height: 320px;
+  position: relative;
+  z-index: 2;
+  animation: float-slow 10s ease-in-out infinite alternate;
+}
+
+.forge-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 20px 30px rgba(0,0,0,0.15));
+}
+
+/* Suspension Cards & Geometric elements */
+.floating-card {
+  position: absolute;
+  background: var(--white-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid var(--black);
+  padding: 16px 24px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  z-index: 5;
+  cursor: pointer;
+  
+  /* Disconnected shadow: Key anti-gravity aesthetic */
+  box-shadow: 12px 12px 0px var(--black-shadow);
+  transition: var(--transition-smooth);
+}
+
+/* Subtle individual hovering triggers movement independent of shadow */
+.floating-card:hover {
+  transform: translate(-6px, -6px);
+  box-shadow: 18px 18px 0px var(--black-shadow);
+  border-color: var(--red);
+}
+
+.floating-card.card-left {
+  top: 15%;
+  left: 5%;
+  animation: float-medium 8s ease-in-out infinite alternate;
+  border-left: 5px solid var(--gold);
+}
+
+.floating-card.card-right {
+  bottom: 20%;
+  right: 5%;
+  animation: float-slow 9s ease-in-out infinite alternate-reverse;
+  border-left: 5px solid var(--red);
+}
+
+.card-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--black);
+  color: var(--bg-peach);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  border: 1.5px solid var(--black);
+}
+
+.card-left .card-icon {
+  background: var(--gold);
+  color: var(--black);
+}
+
+.card-right .card-icon {
+  background: var(--red);
+  color: var(--bg-peach);
+}
+
+.card-text {
+  text-align: left;
+}
+
+.card-text h4 {
+  font-size: 1rem;
+  margin-bottom: 2px;
+}
+
+.card-text p {
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+/* Gold/Red suspension rings and nodes */
+.suspended-node {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--black);
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 4px 4px 0px var(--black);
+  animation: float-fast 6s ease-in-out infinite alternate;
+}
+
+.node-1 {
+  top: 30%;
+  right: 22%;
+  background: var(--red);
+}
+
+.node-2 {
+  bottom: 30%;
+  left: 20%;
+}
+
+.scroll-indicator {
+  position: absolute;
+  bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--black);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  animation: bounce 2s infinite;
+}
+
+.scroll-line {
+  width: 2px;
+  height: 40px;
+  background: linear-gradient(var(--black), transparent);
+}
+
+/* Track Split Section (Prompt 2) */
+.tracks-section {
+  flex-direction: column;
+  max-width: 1300px;
+  margin: 0 auto;
+  gap: 60px;
+  width: 100%;
+}
+
+.section-header {
+  text-align: center;
+  max-width: 700px;
+  margin-bottom: 20px;
+}
+
+.section-header h2 {
+  font-size: clamp(2.5rem, 4vw, 3.8rem);
+  margin-bottom: 16px;
+}
+
+.track-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 48px;
+  width: 100%;
+  perspective: 1000px;
+  padding: 20px 0;
+}
+
+/* Glass-like levitating panels */
+.track-panel {
+  background: var(--white-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1.5px solid var(--gold);
+  border-radius: 24px;
+  padding: 48px 40px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 10;
+  min-height: 580px;
+  
+  /* Disconnected floating shadow */
+  box-shadow: 16px 16px 0px var(--black-shadow);
+  transform: translateZ(0);
+  transition: var(--transition-smooth);
+}
+
+/* Two distinct sides with separate color profiles */
+.track-panel.sovereign-path {
+  border-color: var(--gold);
+  animation: float-slow 12s ease-in-out infinite alternate;
+}
+
+.track-panel.vanguard-forge {
+  border-color: var(--red);
+  animation: float-medium 10s ease-in-out infinite alternate-reverse;
+}
+
+/* Hover effects */
+.track-panel:hover {
+  transform: translateY(-16px) scale(1.02) rotateX(1deg) rotateY(-1deg);
+  box-shadow: 28px 28px 0px var(--black-shadow);
+}
+
+.track-badge {
+  align-self: flex-start;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 6px 16px;
+  border-radius: 100px;
+  border: 1.5px solid var(--black);
+  margin-bottom: 32px;
+  box-shadow: 3px 3px 0px var(--black);
+}
+
+.sovereign-path .track-badge {
+  background: var(--gold);
+  color: var(--black);
+}
+
+.vanguard-forge .track-badge {
+  background: var(--black);
+  color: var(--bg-peach);
+}
+
+.track-panel h3 {
+  font-size: 2.2rem;
+  margin-bottom: 8px;
+}
+
+.track-tagline {
+  font-style: italic;
+  font-size: 1.05rem;
+  color: hsla(0, 0%, 7%, 0.6);
+  margin-bottom: 24px;
+  font-family: var(--font-serif);
+}
+
+.track-desc {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+
+.divider {
+  height: 1.5px;
+  background: linear-gradient(90deg, var(--black), transparent);
+  width: 100%;
+  margin-bottom: 32px;
+}
+
+.sovereign-path .divider {
+  background: linear-gradient(90deg, var(--gold), transparent);
+}
+
+.vanguard-forge .divider {
+  background: linear-gradient(90deg, var(--red), transparent);
+}
+
+.track-curriculum {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: auto; /* Pushes button to bottom */
+}
+
+.curriculum-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.curriculum-item-bullet {
+  width: 8px;
+  height: 8px;
+  margin-top: 8px;
+  border-radius: 50%;
+  border: 1.5px solid var(--black);
+  flex-shrink: 0;
+}
+
+.sovereign-path .curriculum-item-bullet {
+  background: var(--gold);
+}
+
+.vanguard-forge .curriculum-item-bullet {
+  background: var(--red);
+}
+
+.curriculum-text h5 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.curriculum-text p {
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.action-btn-container {
+  margin-top: 40px;
+}
+
+/* Beautiful red CTA with sharp gold and black borders */
+.cta-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  background: var(--red);
+  color: var(--bg-peach);
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 16px 32px;
+  border: 2.5px solid var(--black);
+  border-radius: 12px;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 6px 6px 0px var(--black);
+  transition: var(--transition-fast);
+}
+
+.cta-action-btn:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 10px 10px 0px var(--black);
+  background: var(--red-hover);
+}
+
+.cta-action-btn svg {
+  transition: transform 0.3s ease;
+}
+
+.cta-action-btn:hover svg {
+  transform: translateX(4px);
+}
+
+/* Ancient wisdom node floaters */
+.wisdom-floater {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  border: 1.5px dashed var(--black);
+  background: rgba(253, 245, 230, 0.6);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--black);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.wf-1 {
+  top: -15px;
+  right: 40px;
+  border-color: var(--gold);
+  animation: float-fast 5s ease-in-out infinite alternate;
+}
+
+.wf-2 {
+  bottom: 80px;
+  left: -20px;
+  border-color: var(--red);
+  animation: float-medium 7s ease-in-out infinite alternate;
+}
+
+/* Modern Royal Footer */
+footer {
+  background: var(--black);
+  color: var(--bg-peach);
+  padding: 60px 4% 40px 4%;
+  border-top: 3px solid var(--gold);
+  position: relative;
+  z-index: 10;
+}
+
+.footer-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 40px;
+  margin-bottom: 40px;
+}
+
+.footer-brand h4 {
+  color: var(--bg-peach);
+  font-size: 1.5rem;
+  margin-bottom: 12px;
+}
+
+.footer-brand p {
+  color: hsla(38, 90%, 96%, 0.6);
+  font-size: 0.85rem;
+}
+
+.footer-links h5 {
+  color: var(--gold);
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  margin-bottom: 16px;
+  font-family: var(--font-sans);
+}
+
+.footer-links ul {
+  list-style: none;
+}
+
+.footer-links ul li {
+  margin-bottom: 8px;
+}
+
+.footer-links ul li a {
+  color: hsla(38, 90%, 96%, 0.6);
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: var(--transition-fast);
+}
+
+.footer-links ul li a:hover {
+  color: var(--red);
+}
+
+.footer-meta {
+  max-width: 1200px;
+  margin: 0 auto;
+  border-top: 1px solid rgba(253, 245, 230, 0.1);
+  padding-top: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: hsla(38, 90%, 96%, 0.4);
+}
+
+.footer-coords span {
+  color: var(--gold);
+}
+
+/* Animations */
+@keyframes float-slow {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  100% {
+    transform: translateY(-16px) rotate(2deg);
+  }
+}
+
+@keyframes float-medium {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  100% {
+    transform: translateY(-10px) rotate(-3deg);
+  }
+}
+
+@keyframes float-fast {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  100% {
+    transform: translateY(-8px) rotate(5deg);
+  }
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  header {
+    width: 95%;
+    padding: 12px 24px;
+  }
+  nav {
+    display: none; /* In a production app, we would have a burger menu, let's keep it simple or implement toggle */
+  }
+  .hero-visual {
+    height: 380px;
+  }
+  .forge-container {
+    width: 240px;
+    height: 240px;
+  }
+  .floating-card.card-left {
+    left: 2%;
+    top: 5%;
+  }
+  .floating-card.card-right {
+    right: 2%;
+    bottom: 10%;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero-visual {
+    height: 280px;
+  }
+  .floating-card {
+    padding: 10px 16px;
+    font-size: 0.8rem;
+  }
+  .floating-card.card-left {
+    top: 0;
+  }
+  .floating-card.card-right {
+    bottom: 0;
+  }
+  .track-grid {
+    grid-template-columns: 1fr;
+  }
+  .track-panel {
+    padding: 32px 24px;
+    min-height: auto;
+  }
+  .section-header h2 {
+    font-size: 2.2rem;
+  }
+}
