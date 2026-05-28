@@ -217,12 +217,12 @@
   <main>
     <section class="detail-page-section">
       <!-- Back Navigation Pill -->
-      <a href="sovereign-forge.html" class="back-home-link">
+      <a href="#" onclick="if (document.referrer && document.referrer.includes(window.location.hostname)) { history.back(); return false; } else { window.location.href = 'index.html#tracks'; return false; }" class="back-home-link">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <line x1="19" y1="12" x2="5" y2="12"></line>
           <polyline points="12 19 5 12 12 5"></polyline>
         </svg>
-        Back to Sovereign Forge
+        Go Back
       </a>
 
       <!-- Large Suspended Standalone Layout Panel -->
