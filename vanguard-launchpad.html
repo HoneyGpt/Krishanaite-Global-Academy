@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Vanguard Launchpad | Krishnaite Global Academy</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Detailed curriculum, accelerated full-stack execution engine, comparison standards, and tuition breakdown for the elite 2-Year Vanguard Launchpad track at Krishnaite Global Academy.">
+  
+  <!-- Style Sheet -->
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Unique standalone page overrides */
+    .detail-page-section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 140px 4% 80px 4%;
+      position: relative;
+      z-index: 10;
+    }
+
+    .detail-card-container {
+      background: var(--white-glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 2px solid var(--black);
+      border-radius: 28px;
+      width: 100%;
+      max-width: 1000px;
+      padding: 60px 48px;
+      box-shadow: 20px 20px 0px var(--black-shadow);
+      animation: float-straight 15s ease-in-out infinite alternate;
+      transition: var(--transition-smooth);
+      position: relative;
+    }
+
+    .detail-card-container:hover {
+      transform: translateY(-8px) scale(1.005);
+      box-shadow: 26px 26px 0px var(--black-shadow);
+    }
+
+    /* Back Button styling */
+    .back-home-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--black);
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 32px;
+      align-self: flex-start;
+      border: 1.5px solid var(--black);
+      padding: 8px 16px;
+      border-radius: 50px;
+      background: var(--gold);
+      box-shadow: 3px 3px 0px var(--black);
+      transition: var(--transition-fast);
+    }
+
+    .back-home-link:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 5px 5px 0px var(--black);
+      background: var(--red);
+      color: var(--bg-peach);
+    }
+
+    .back-home-link svg {
+      transition: transform 0.25s ease;
+    }
+
+    .back-home-link:hover svg {
+      transform: translateX(-4px);
+    }
+
+    /* Custom straight vertical float without any angular tilting/rotation */
+    @keyframes float-straight {
+      0% {
+        transform: translateY(0);
+      }
+      100% {
+        transform: translateY(-16px);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Canvas for Grid & Floating Particle Shapes -->
+  <div class="canvas-bg">
+    <div class="perspective-grid" id="grid"></div>
+    <div class="floating-shape shape-1" id="shape1"></div>
+    <div class="floating-shape shape-2" id="shape2"></div>
+    <div class="floating-shape shape-3" id="shape3"></div>
+  </div>
+
+  <!-- Glass panel header with gold / black outlines -->
+  <header id="main-header">
+    <a href="index.html" class="logo" id="header-logo">
+      <div class="logo-icon"></div>
+      <span>Krishanaite</span>
+    </a>
+    <nav id="header-nav">
+      <a href="index.html#hero" id="nav-home">The Forge</a>
+      <a href="index.html#tracks" id="nav-tracks">Tracks</a>
+      <a href="sovereign-forge.html" id="nav-sovereign">Sovereign Forge</a>
+      <a href="vanguard-launchpad.html" id="nav-vanguard">Vanguard Launchpad</a>
+    </nav>
+    <a href="index.html#tracks" class="cta-header-btn" id="cta-enroll-header">All Tracks</a>
+  </header>
+
+  <main>
+    <section class="detail-page-section">
+      <!-- Back Navigation Pill -->
+      <a href="index.html#tracks" class="back-home-link">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        Back to Tracks
+      </a>
+
+      <!-- Large Suspended Standalone Layout Panel -->
+      <div class="detail-card-container" id="detail-panel">
+        
+        <!-- Header Section -->
+        <div class="modal-header">
+          <span class="modal-badge">🚀 The Vanguard Launchpad</span>
+          <h2>The 2-Year Deployment Accelerator</h2>
+          <blockquote class="modal-quote">
+            "Your degree gave you the foundation; we give you the tools. Add cutting-edge practical logic to your traditional knowledge and graduate with a fully functioning digital platform."
+          </blockquote>
+          <p class="modal-intro">
+            The Vanguard Launchpad is a high-velocity, 2-year accelerator designed strictly for recent graduates and final-year students. We bypass the absolute basics and throw you directly into modern full-stack development. Your traditional degree proved your discipline; this track proves your ability to execute, build, and deploy.
+          </p>
+        </div>
+
+        <div class="modal-body">
+          
+          <!-- Curriculum -->
+          <h3 class="modal-sect-title">📐 What You Will Learn (The Accelerated Curriculum)</h3>
+          <div class="curriculum-grid">
+            <div class="curriculum-card">
+              <h4>Year 1: The Full-Stack Engine (Frontend & Backend)</h4>
+              <p class="card-lead">We bridge the gap between academic theory and live production. You will build the complete architecture of modern applications.</p>
+              <ul>
+                <li><strong>Advanced Frontend Systems:</strong> Rapidly designing, structuring, and coding highly responsive, elite user interfaces.</li>
+                <li><strong>Robust Backend Infrastructure:</strong> Writing secure server logic, structuring complex databases, and handling real-time data flow.</li>
+                <li><strong>The API Bridge:</strong> Seamlessly connecting your frontend interfaces to your backend servers, creating a fully functioning, self-contained application ecosystem.</li>
+              </ul>
+            </div>
+
+            <div class="curriculum-card">
+              <h4>Year 2: Deployment, SEO & Market Sovereignty</h4>
+              <p class="card-lead">Writing code is only half the battle. A platform does not exist until it is live and discoverable.</p>
+              <ul>
+                <li><strong>Cloud Deployment:</strong> Mastering cloud hosting environments to take your application from a local testing server to a live URL accessible globally.</li>
+                <li><strong>Technical SEO & Discoverability:</strong> Architecting your platform's code so search engines can read, rank, and index your application efficiently.</li>
+                <li><strong>The Capstone (Your First Platform):</strong> Your ultimate graduation requirement. You will design, code, deploy, and optimize a fully functioning digital platform from scratch.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- How you Learn -->
+          <h3 class="modal-sect-title">⚙️ How You Will Learn (The Execution Engine)</h3>
+          <p class="sect-intro">Our operational methodology remains uncompromising. We do not do standard lectures.</p>
+          <div class="engine-grid">
+            <div class="engine-item">
+              <h5>The Weekly Masterclass</h5>
+              <p>1 hour of raw, live strategic engineering with the founders. Focused entirely on high-level system architecture and real-time problem-solving.</p>
+            </div>
+            <div class="engine-item">
+              <h5>6 Days of Autonomous Building</h5>
+              <p>You spend the rest of the week executing your mission, submitting your live workspace links directly to our secure submission portal.</p>
+            </div>
+            <div class="engine-item">
+              <h5>Proof of Work</h5>
+              <p>You do not graduate by passing a written exam. You graduate by proving your GitHub commit history and delivering your live capstone platform.</p>
+            </div>
+          </div>
+
+          <!-- Table -->
+          <h3 class="modal-sect-title">⚖️ The Academy Standard</h3>
+          <div class="table-container">
+            <table class="comparison-table">
+              <thead>
+                <tr>
+                  <th>Criteria</th>
+                  <th>Traditional Post-Graduation</th>
+                  <th>The Krishnaite Launchpad</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="td-header">Focus</td>
+                  <td>Searching for entry-level jobs with zero live experience.</td>
+                  <td class="td-highlight">Building a high-value portfolio that forces companies to notice you.</td>
+                </tr>
+                <tr>
+                  <td class="td-header">Scope</td>
+                  <td>Theoretical concepts and isolated code snippets.</td>
+                  <td class="td-highlight">Full-stack execution, cloud deployment, and live SEO optimization.</td>
+                </tr>
+                <tr>
+                  <td class="td-header">Pacing</td>
+                  <td>Stagnant.</td>
+                  <td class="td-highlight">High-velocity, continuous deployment.</td>
+                </tr>
+                <tr>
+                  <td class="td-header">Result</td>
+                  <td>A static resume.</td>
+                  <td class="td-highlight">A functioning, live digital platform you own.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Tuition cards -->
+          <h3 class="modal-sect-title">💳 Investment & Academic Compliance</h3>
+          <div class="investment-grid">
+            <div class="investment-card gold-border">
+              <h4>Core Vanguard Tuition</h4>
+              <div class="price">₹2,50,000</div>
+              <p>Structured across 6 semesters (₹83,333 per year). Includes full-stack execution, rapid UI development, and live capstone platform deployment. The Admission Retainer: A mandatory ₹50,000 fee is required upon acceptance to lock in your seat and activate your digital campus access.</p>
+            </div>
+            <div class="investment-card red-border">
+              <h4>Specialized Options & Eligibility</h4>
+              <div class="price">+₹50,000</div>
+              <p><strong>The AI Vanguard Specialization (Optional):</strong> Applied AI integrations for rapid production scaling. <br><strong>Eligibility Standard:</strong> Candidates must provide proof of a completed traditional degree OR active enrollment in the final semester of their final year (any major) to ensure readiness for this accelerated track.</p>
+            </div>
+          </div>
+
+          <!-- Entrance Exam CTA Button -->
+          <div class="modal-cta-box">
+            <a href="#" class="entrance-exam-btn" id="initiate-exam-btn">
+              Initiate Entrance Exam
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Modern Royal Footer -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand" id="footer-logo-block">
+        <h4>Krishanaite</h4>
+        <p> Fusing absolute gravitational independence with the mythological structures of royal architecture and the iron law of memory execution. </p>
+      </div>
+      <div class="footer-links" id="footer-sect-paths">
+        <h5>The Paths</h5>
+        <ul>
+          <li><a href="index.html#hero">The Forge Chamber</a></li>
+          <li><a href="sovereign-forge.html">The Sovereign Path</a></li>
+          <li><a href="vanguard-launchpad.html">The Vanguard Forge</a></li>
+        </ul>
+      </div>
+      <div class="footer-links" id="footer-sect-details">
+        <h5>Academy Details</h5>
+        <ul>
+          <li><a href="#">The Codex</a></li>
+          <li><a href="#">Trials & Admissions</a></li>
+          <li><a href="#">Royal Registry</a></li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="footer-meta" id="footer-bottom-row">
+      <p>&copy; 2026 Krishanaite Global Academy. All rights reserved. Under Sovereign Charter.</p>
+      <div class="footer-coords" id="coords-text">
+        Location: <span>45.1098° N, 15.2001° E</span> | Latency: <span>0.003ms</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Main interactive JS for grids & tilts -->
+  <script src="app.js"></script>
+</body>
+</html>
