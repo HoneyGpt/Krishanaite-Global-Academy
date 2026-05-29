@@ -1,4 +1,4 @@
-/* Interactive systems for Krishanaite Global Academy */
+/* Interactive systems for Krishnaite Global Academy */
 
 document.addEventListener('DOMContentLoaded', () => {
   initHeroParallax();
