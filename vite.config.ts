@@ -17,7 +17,8 @@ export default defineConfig({
         fellowship: resolve(__dirname, 'fellowship.html'),
         howYouLearn: resolve(__dirname, 'how-you-learn.html'),
         sovereignForge: resolve(__dirname, 'sovereign-forge.html'),
-        vanguardLaunchpad: resolve(__dirname, 'vanguard-launchpad.html')
+        vanguardLaunchpad: resolve(__dirname, 'vanguard-launchpad.html'),
+        sovereignManifest: resolve(__dirname, 'sovereign-manifest.html')
       }
     }
   }

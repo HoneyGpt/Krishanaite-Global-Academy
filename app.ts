@@ -17,6 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
   if (window.location.pathname.includes('dashboard.html')) {
     initDashboardController();
   }
+  if (window.location.pathname.includes('sovereign-manifest.html')) {
+    initManifestController();
+  }
 });
 
 /**
@@ -699,35 +702,7 @@ async function initDashboardController() {
   const fileUploaderInput = document.getElementById('file-uploader-input') as HTMLInputElement;
   const uploadedDossierList = document.getElementById('uploaded-dossier-list');
 
-  // 4-Year Sovereign Forge Manifest Modal DOM Bindings
-  const modalSovereignManifest = document.getElementById('modal-sovereign-manifest');
-  const closeManifestModal = document.getElementById('close-manifest-modal');
-  const btnCancelManifest = document.getElementById('btn-cancel-manifest');
-  const btnSubmitManifest = document.getElementById('btn-submit-manifest');
-  const manifestDossierForm = document.getElementById('manifest-dossier-form') as HTMLFormElement;
-
-  // Manifest inputs
-  const manifestName = document.getElementById('manifest-name') as HTMLInputElement;
-  const manifestEmail = document.getElementById('manifest-email') as HTMLInputElement;
-  const manifestPhone = document.getElementById('manifest-phone') as HTMLInputElement;
-  const manifestAge = document.getElementById('manifest-age') as HTMLInputElement;
-  const manifestGender = document.getElementById('manifest-gender') as HTMLSelectElement;
-  const manifestResidence = document.getElementById('manifest-residence') as HTMLInputElement;
-  const manifestQualification = document.getElementById('manifest-qualification') as HTMLSelectElement;
-  const manifestEnrolled = document.getElementById('manifest-enrolled') as HTMLSelectElement;
-  const manifestHasSpecialization = document.getElementById('manifest-has-specialization') as HTMLSelectElement;
-  const manifestSpecialization = document.getElementById('manifest-specialization') as HTMLInputElement;
-  const manifestDisclosureCheck = document.getElementById('manifest-disclosure-check') as HTMLInputElement;
-  
-  const manifestFatherName = document.getElementById('manifest-father-name') as HTMLInputElement;
-  const manifestMotherName = document.getElementById('manifest-mother-name') as HTMLInputElement;
-  const manifestGuardianName = document.getElementById('manifest-guardian-name') as HTMLInputElement;
-  const manifestFatherOccup = document.getElementById('manifest-father-occup') as HTMLInputElement;
-  const manifestMotherOccup = document.getElementById('manifest-mother-occup') as HTMLInputElement;
-  const manifestIncome = document.getElementById('manifest-income') as HTMLSelectElement;
-
-  const groupSpecializationSpec = document.getElementById('group-specialization-spec');
-  const groupDisclosureAgree = document.getElementById('group-disclosure-agree');
+  // Note: Sovereign Forge Manifest elements have been migrated to initManifestController() for sovereign-manifest.html
 
   // 2. Fetch User Profile credentials
   let applicantName = user.user_metadata?.full_name || user.user_metadata?.name || "Candidate";
@@ -1043,7 +1018,7 @@ async function initDashboardController() {
   if (btnStartApp && modalPrograms) {
     btnStartApp.addEventListener('click', () => {
       if (state.selected_track && !state.submitted) {
-        prefillAndOpenManifest();
+        window.location.href = "sovereign-manifest.html";
       } else {
         modalPrograms.classList.add('active');
       }
@@ -1079,20 +1054,20 @@ async function initDashboardController() {
 
   // E. Program Track selection handlers
   if (selectTrackSovereign) {
-    selectTrackSovereign.addEventListener('click', () => {
+    selectTrackSovereign.addEventListener('click', async () => {
       state.selected_track = "Sovereign Path (Systems & Strategy)";
       closeModal(modalPrograms);
-      saveDashboardState();
-      prefillAndOpenManifest();
+      await saveDashboardState();
+      window.location.href = "sovereign-manifest.html";
     });
   }
-
+ 
   if (selectTrackVanguard) {
-    selectTrackVanguard.addEventListener('click', () => {
+    selectTrackVanguard.addEventListener('click', async () => {
       state.selected_track = "Vanguard Forge (GPU & Optimization)";
       closeModal(modalPrograms);
-      saveDashboardState();
-      prefillAndOpenManifest();
+      await saveDashboardState();
+      window.location.href = "sovereign-manifest.html";
     });
   }
 
@@ -1247,8 +1222,107 @@ async function initDashboardController() {
       }
     });
   }
+}
 
-  // J. 4-Year Academic Manifest Modal Controllers & Event Handlers
+/**
+ * J. Dedicated Sovereign Forge 4-Year Academic Manifest Page Controller
+ * For sovereign-manifest.html
+ */
+async function initManifestController() {
+  const sessionUser = await supabase.auth.getUser();
+  const user = sessionUser.data?.user;
+  if (!user || !user.email) {
+    alert("Candidate identity not authenticated. Redirecting to gateway admissions portal.");
+    window.location.href = "admissions-portal.html";
+    return;
+  }
+  const email = user.email;
+
+  // DOM elements
+  const manifestDossierForm = document.getElementById('manifest-dossier-form') as HTMLFormElement;
+  const manifestName = document.getElementById('manifest-name') as HTMLInputElement;
+  const manifestEmail = document.getElementById('manifest-email') as HTMLInputElement;
+  const manifestPhone = document.getElementById('manifest-phone') as HTMLInputElement;
+  const manifestAge = document.getElementById('manifest-age') as HTMLInputElement;
+  const manifestGender = document.getElementById('manifest-gender') as HTMLSelectElement;
+  const manifestResidence = document.getElementById('manifest-residence') as HTMLInputElement;
+  const manifestQualification = document.getElementById('manifest-qualification') as HTMLSelectElement;
+  const manifestEnrolled = document.getElementById('manifest-enrolled') as HTMLSelectElement;
+  const manifestHasSpecialization = document.getElementById('manifest-has-specialization') as HTMLSelectElement;
+  const manifestSpecialization = document.getElementById('manifest-specialization') as HTMLInputElement;
+  const manifestDisclosureCheck = document.getElementById('manifest-disclosure-check') as HTMLInputElement;
+  
+  const manifestFatherName = document.getElementById('manifest-father-name') as HTMLInputElement;
+  const manifestMotherName = document.getElementById('manifest-mother-name') as HTMLInputElement;
+  const manifestGuardianName = document.getElementById('manifest-guardian-name') as HTMLInputElement;
+  const manifestFatherOccup = document.getElementById('manifest-father-occup') as HTMLInputElement;
+  const manifestMotherOccup = document.getElementById('manifest-mother-occup') as HTMLInputElement;
+  const manifestIncome = document.getElementById('manifest-income') as HTMLSelectElement;
+
+  const groupSpecializationSpec = document.getElementById('group-specialization-spec');
+  const groupDisclosureAgree = document.getElementById('group-disclosure-agree');
+
+  const btnSaveDraft = document.getElementById('btn-save-draft');
+  const btnSubmitManifest = document.getElementById('btn-submit-manifest');
+
+  // Load applicant info from Supabase/Auth
+  let applicantName = user.user_metadata?.full_name || user.user_metadata?.name || "Candidate";
+  try {
+    const { data: regData } = await supabase.from('registrations').select('*').eq('email', email);
+    if (regData && regData.length > 0) {
+      applicantName = regData[0].name || applicantName;
+    }
+  } catch (e) {}
+
+  // Prefill default name/email
+  if (manifestName) manifestName.value = applicantName;
+  if (manifestEmail) manifestEmail.value = email;
+
+  // Initialize state structure
+  interface DashboardState {
+    selected_track: string | null;
+    fellowship_claimed: string | null;
+    uploaded_documents: string[];
+    submitted: boolean;
+    manifest_data?: any;
+  }
+
+  let state: DashboardState = {
+    selected_track: "Sovereign Path (Systems & Strategy)",
+    fellowship_claimed: null,
+    uploaded_documents: [],
+    submitted: false
+  };
+
+  // Sync state loader
+  const loadState = async () => {
+    if (user.user_metadata?.kga_dashboard_state) {
+      state = { ...state, ...user.user_metadata.kga_dashboard_state };
+    }
+    const localCached = localStorage.getItem('kga_dashboard_state_' + email);
+    if (localCached) {
+      try {
+        state = { ...state, ...JSON.parse(localCached) };
+      } catch (e) {}
+    }
+    try {
+      const { data: regData } = await supabase.from('registrations').select('*').eq('email', email);
+      if (regData && regData.length > 0) {
+        const record = regData[0];
+        if (record.selected_track) state.selected_track = record.selected_track;
+        if (record.fellowship_claimed) state.fellowship_claimed = record.fellowship_claimed;
+        if (record.application_status === 'submitted') state.submitted = true;
+        if (record.manifest_data) {
+          try {
+            state.manifest_data = typeof record.manifest_data === 'string'
+              ? JSON.parse(record.manifest_data)
+              : record.manifest_data;
+          } catch (e) {}
+        }
+      }
+    } catch (e) {}
+  };
+
   const triggerSpecializationUI = (val: string) => {
     if (val === "Yes") {
       if (groupSpecializationSpec) groupSpecializationSpec.classList.add('active');
@@ -1266,97 +1340,128 @@ async function initDashboardController() {
     }
   };
 
-  const prefillAndOpenManifest = () => {
-    if (manifestName && !manifestName.value) manifestName.value = applicantName;
-    if (manifestEmail && !manifestEmail.value) manifestEmail.value = email;
+  // Prefill form values from manifest_data draft
+  const prefillForm = () => {
+    if (!state.manifest_data) return;
+    const d = state.manifest_data;
+    if (d.name) manifestName.value = d.name;
+    if (d.email) manifestEmail.value = d.email;
+    if (d.phone) manifestPhone.value = d.phone;
+    if (d.age) manifestAge.value = d.age;
+    if (d.gender) manifestGender.value = d.gender;
+    if (d.residence) manifestResidence.value = d.residence;
+    if (d.qualification) manifestQualification.value = d.qualification;
+    if (d.enrolled) manifestEnrolled.value = d.enrolled;
     
-    // Load existing draft if saved
-    if (state.manifest_data) {
-      const d = state.manifest_data;
-      if (d.name) manifestName.value = d.name;
-      if (d.email) manifestEmail.value = d.email;
-      if (d.phone) manifestPhone.value = d.phone;
-      if (d.age) manifestAge.value = d.age;
-      if (d.gender) manifestGender.value = d.gender;
-      if (d.residence) manifestResidence.value = d.residence;
-      if (d.qualification) manifestQualification.value = d.qualification;
-      if (d.enrolled) manifestEnrolled.value = d.enrolled;
-      
-      if (d.has_specialization) {
-        manifestHasSpecialization.value = d.has_specialization;
-        triggerSpecializationUI(d.has_specialization);
-      }
-      if (d.specialization) manifestSpecialization.value = d.specialization;
-      if (d.disclosure !== undefined) manifestDisclosureCheck.checked = d.disclosure;
-      
-      if (d.father_name) manifestFatherName.value = d.father_name;
-      if (d.mother_name) manifestMotherName.value = d.mother_name;
-      if (d.guardian_name) manifestGuardianName.value = d.guardian_name;
-      if (d.father_occup) manifestFatherOccup.value = d.father_occup;
-      if (d.mother_occup) manifestMotherOccup.value = d.mother_occup;
-      if (d.income) manifestIncome.value = d.income;
+    if (d.has_specialization) {
+      manifestHasSpecialization.value = d.has_specialization;
+      triggerSpecializationUI(d.has_specialization);
     }
+    if (d.specialization) manifestSpecialization.value = d.specialization;
+    if (d.disclosure !== undefined) manifestDisclosureCheck.checked = d.disclosure;
     
-    if (modalSovereignManifest) modalSovereignManifest.classList.add('active');
+    if (d.father_name) manifestFatherName.value = d.father_name;
+    if (d.mother_name) manifestMotherName.value = d.mother_name;
+    if (d.guardian_name) manifestGuardianName.value = d.guardian_name;
+    if (d.father_occup) manifestFatherOccup.value = d.father_occup;
+    if (d.mother_occup) manifestMotherOccup.value = d.mother_occup;
+    if (d.income) manifestIncome.value = d.income;
   };
 
+  // Sync state saver
+  const saveState = async () => {
+    localStorage.setItem('kga_dashboard_state_' + email, JSON.stringify(state));
+    try {
+      await supabase.auth.updateUser({
+        data: { kga_dashboard_state: state }
+      });
+    } catch (e) {}
+
+    try {
+      const dbRecord: any = {
+        selected_track: state.selected_track,
+        fellowship_claimed: state.fellowship_claimed,
+        documents_uploaded: JSON.stringify(state.uploaded_documents),
+        application_status: state.submitted ? 'submitted' : 'draft',
+        manifest_data: state.manifest_data ? JSON.stringify(state.manifest_data) : null,
+        verified: true
+      };
+      const { error } = await supabase.from('registrations').update(dbRecord).eq('email', email);
+      if (error) {
+        delete dbRecord.manifest_data;
+        const { error: err2 } = await supabase.from('registrations').update(dbRecord).eq('email', email);
+        if (err2) {
+          await supabase.from('applicants').update(dbRecord).eq('email', email);
+        }
+      }
+    } catch (e) {}
+  };
+
+  // Bind change on HasSpecialization dropdown
   if (manifestHasSpecialization) {
     manifestHasSpecialization.addEventListener('change', () => {
       triggerSpecializationUI(manifestHasSpecialization.value);
     });
   }
 
-  if (closeManifestModal) closeManifestModal.addEventListener('click', () => closeModal(modalSovereignManifest));
-  if (btnCancelManifest) btnCancelManifest.addEventListener('click', () => closeModal(modalSovereignManifest));
+  // Compile current payload
+  const getPayload = () => {
+    return {
+      name: manifestName?.value.trim() || "",
+      email: manifestEmail?.value.trim() || "",
+      phone: manifestPhone?.value.trim() || "",
+      age: manifestAge?.value.trim() || "",
+      gender: manifestGender?.value || "",
+      residence: manifestResidence?.value.trim() || "",
+      qualification: manifestQualification?.value || "",
+      enrolled: manifestEnrolled?.value || "",
+      has_specialization: manifestHasSpecialization?.value || "",
+      specialization: manifestSpecialization?.value.trim() || "",
+      disclosure: manifestDisclosureCheck?.checked || false,
+      father_name: manifestFatherName?.value.trim() || "",
+      mother_name: manifestMotherName?.value.trim() || "",
+      guardian_name: manifestGuardianName?.value.trim() || "",
+      father_occup: manifestFatherOccup?.value.trim() || "",
+      mother_occup: manifestMotherOccup?.value.trim() || "",
+      income: manifestIncome?.value || ""
+    };
+  };
 
-  if (btnSubmitManifest && manifestDossierForm) {
+  // 1. SAVE DRAFT BUTTON handler (No complete validation required)
+  if (btnSaveDraft) {
+    btnSaveDraft.addEventListener('click', async (e) => {
+      e.preventDefault();
+      state.manifest_data = getPayload();
+      state.submitted = false; // Remains draft
+      await saveState();
+      alert("Academic Manifest draft cached successfully under the Genesis Charter.\n\nReturning to your dashboard...");
+      window.location.href = "dashboard.html";
+    });
+  }
+
+  // 2. SUBMIT MANIFEST BUTTON handler (Runs full validations & triggers Resend)
+  if (btnSubmitManifest) {
     btnSubmitManifest.addEventListener('click', async (e) => {
       e.preventDefault();
       
-      // Basic HTML5 validation
-      if (!manifestDossierForm.checkValidity()) {
+      if (manifestDossierForm && !manifestDossierForm.checkValidity()) {
         manifestDossierForm.reportValidity();
         return;
       }
 
-      // Check conditional requirements
       if (manifestHasSpecialization.value === "No" && !manifestDisclosureCheck.checked) {
         alert("You must agree to the Academy's instructional terms and framework to proceed.");
         return;
       }
 
-      // Collect all form values
-      const manifestPayload = {
-        name: manifestName.value.trim(),
-        email: manifestEmail.value.trim(),
-        phone: manifestPhone.value.trim(),
-        age: manifestAge.value.trim(),
-        gender: manifestGender.value,
-        residence: manifestResidence.value.trim(),
-        qualification: manifestQualification.value,
-        enrolled: manifestEnrolled.value,
-        has_specialization: manifestHasSpecialization.value,
-        specialization: manifestSpecialization.value.trim(),
-        disclosure: manifestDisclosureCheck.checked,
-        father_name: manifestFatherName.value.trim(),
-        mother_name: manifestMotherName.value.trim(),
-        guardian_name: manifestGuardianName.value.trim(),
-        father_occup: manifestFatherOccup.value.trim(),
-        mother_occup: manifestMotherOccup.value.trim(),
-        income: manifestIncome.value
-      };
-
-      // Set state values
+      const manifestPayload = getPayload();
       state.manifest_data = manifestPayload;
       state.submitted = true;
-      closeModal(modalSovereignManifest);
-      
-      // Save state to Supabase & local storage
-      await saveDashboardState();
+      await saveState();
 
-      alert("Genesis Manifest Submitted and Locked Successfully!\n\nSyncing academic dossier and triggering admissions secure email notifications...");
+      alert("Academic Manifest submitted and locked successfully!\n\nSyncing credentials and triggering admissions notifications...");
 
-      // Execute Resend API Post call
+      // Send Resend Email Dispatch
       try {
         const emailHTML = `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 2px solid #111111; border-radius: 16px; padding: 32px; background-color: #FDF5E6;">
@@ -1377,18 +1482,18 @@ async function initDashboardController() {
               <tr><td style="padding: 6px 0; font-weight: bold; width: 40%;">Qualification:</td><td style="padding: 6px 0;">${manifestPayload.qualification}</td></tr>
               <tr><td style="padding: 6px 0; font-weight: bold;">Currently Enrolled:</td><td style="padding: 6px 0;">${manifestPayload.enrolled}</td></tr>
               <tr><td style="padding: 6px 0; font-weight: bold;">Has Specialization:</td><td style="padding: 6px 0;">${manifestPayload.has_specialization}</td></tr>
-              \${manifestPayload.has_specialization === 'Yes' ? \`<tr><td style="padding: 6px 0; font-weight: bold; color: #D9383A;">Specialization:</td><td style="padding: 6px 0; font-weight: bold; color: #D9383A;">\${manifestPayload.specialization}</td></tr>\` : ''}
-              <tr><td style="padding: 6px 0; font-weight: bold;">KGA Terms Agreed:</td><td style="padding: 6px 0;">\${manifestPayload.disclosure ? 'Yes (Genesis Charter Guidelines)' : 'No'}</td></tr>
+              ${manifestPayload.has_specialization === 'Yes' ? `<tr><td style="padding: 6px 0; font-weight: bold; color: #D9383A;">Specialization:</td><td style="padding: 6px 0; font-weight: bold; color: #D9383A;">${manifestPayload.specialization}</td></tr>` : ''}
+              <tr><td style="padding: 6px 0; font-weight: bold;">KGA Terms Agreed:</td><td style="padding: 6px 0;">${manifestPayload.disclosure ? 'Yes (Genesis Charter Guidelines)' : 'No'}</td></tr>
             </table>
 
             <h3 style="font-family: Georgia, serif; color: #111111; border-bottom: 1px solid #111111; padding-bottom: 4px; margin-top: 24px;">3. Family & Financial Profile</h3>
             <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
-              <tr><td style="padding: 6px 0; font-weight: bold; width: 40%;">Father's Name:</td><td style="padding: 6px 0;">\${manifestPayload.father_name || 'N/A'}</td></tr>
-              <tr><td style="padding: 6px 0; font-weight: bold;">Mother's Name:</td><td style="padding: 6px 0;">\${manifestPayload.mother_name || 'N/A'}</td></tr>
-              <tr><td style="padding: 6px 0; font-weight: bold;">Guardian's Name:</td><td style="padding: 6px 0;">\${manifestPayload.guardian_name || 'N/A'}</td></tr>
-              <tr><td style="padding: 6px 0; font-weight: bold;">Father's Occupation:</td><td style="padding: 6px 0;">\${manifestPayload.father_occup || 'N/A'}</td></tr>
-              <tr><td style="padding: 6px 0; font-weight: bold;">Mother's Occupation:</td><td style="padding: 6px 0;">\${manifestPayload.mother_occup || 'N/A'}</td></tr>
-              <tr style="color: #D4AF37; font-weight: bold;"><td style="padding: 6px 0;">Annual Income Bracket:</td><td style="padding: 6px 0;">\${manifestPayload.income}</td></tr>
+              <tr><td style="padding: 6px 0; font-weight: bold; width: 40%;">Father's Name:</td><td style="padding: 6px 0;">${manifestPayload.father_name || 'N/A'}</td></tr>
+              <tr><td style="padding: 6px 0; font-weight: bold;">Mother's Name:</td><td style="padding: 6px 0;">${manifestPayload.mother_name || 'N/A'}</td></tr>
+              <tr><td style="padding: 6px 0; font-weight: bold;">Guardian's Name:</td><td style="padding: 6px 0;">${manifestPayload.guardian_name || 'N/A'}</td></tr>
+              <tr><td style="padding: 6px 0; font-weight: bold;">Father's Occupation:</td><td style="padding: 6px 0;">${manifestPayload.father_occup || 'N/A'}</td></tr>
+              <tr><td style="padding: 6px 0; font-weight: bold;">Mother's Occupation:</td><td style="padding: 6px 0;">${manifestPayload.mother_occup || 'N/A'}</td></tr>
+              <tr style="color: #D4AF37; font-weight: bold;"><td style="padding: 6px 0;">Annual Income Bracket:</td><td style="padding: 6px 0;">${manifestPayload.income}</td></tr>
             </table>
             
             <div style="margin-top: 32px; border-top: 2px dashed #111111; padding-top: 16px; text-align: center; font-size: 12px; color: #777777;">
@@ -1406,7 +1511,7 @@ async function initDashboardController() {
           body: JSON.stringify({
             from: 'KGA Admissions <onboarding@resend.dev>',
             to: ['honeygpt111@gmail.com'],
-            subject: `KGA 4-Year Manifest: \${manifestPayload.name} (\${state.selected_track})`,
+            subject: `KGA 4-Year Manifest: ${manifestPayload.name} (${state.selected_track})`,
             html: emailHTML
           })
         });
@@ -1414,16 +1519,17 @@ async function initDashboardController() {
         if (resendResponse.ok) {
           console.log("Resend email dispatch successful!");
         } else {
-          const errText = await resendResponse.text();
-          console.warn("Resend email dispatch rejected by server (CORS / Sandboxed domain):", errText);
+          console.warn("Resend email dispatch failed (CORS/Sandboxed domain trigger).");
         }
       } catch (err) {
-        console.warn("Resend email post request bypassed by client CORS restrictions. Application remains safely synced in Supabase:", err);
+        console.warn("Resend bypassed by client CORS restrictions. Saved in database.", err);
       }
+
+      window.location.href = "dashboard.html";
     });
   }
 
-  // 6. Run Initial load & Render cycle
-  await loadDashboardState();
-  renderDashboard();
+  // Load and prefill
+  await loadState();
+  prefillForm();
 }
