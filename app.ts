@@ -366,36 +366,64 @@ function initModalControls() {
   // Admissions Portal Form Toggles
   const portalLoginBtn = document.getElementById('portal-login-btn');
   const portalCreateBtn = document.getElementById('portal-create-btn');
+  const loginForm = document.getElementById('login-form');
 
-  if (portalLoginBtn && portalCreateBtn && manifestForm) {
-    portalLoginBtn.addEventListener('click', async () => {
+  if (manifestForm && loginForm) {
+    // Initial State: Create ID Manifest form is active, Login is hidden
+    (manifestForm as HTMLElement).style.display = 'block';
+    (loginForm as HTMLElement).style.display = 'none';
+    if (portalCreateBtn) portalCreateBtn.classList.add('active');
+    if (portalLoginBtn) portalLoginBtn.classList.remove('active');
+  }
+
+  if (portalLoginBtn && portalCreateBtn && manifestForm && loginForm) {
+    portalLoginBtn.addEventListener('click', () => {
       portalLoginBtn.classList.add('active');
       portalCreateBtn.classList.remove('active');
-      manifestForm.classList.remove('active');
-      
-      const email = prompt("Enter your registered Primary Email address:");
-      if (!email) return;
-      const k_id = prompt("Enter your secure Krishnaite ID (e.g. KGA-ID-XXXX):");
-      if (!k_id) return;
+      (loginForm as HTMLElement).style.display = 'block';
+      (manifestForm as HTMLElement).style.display = 'none';
+    });
 
+    portalCreateBtn.addEventListener('click', () => {
+      portalCreateBtn.classList.add('active');
+      portalLoginBtn.classList.remove('active');
+      (manifestForm as HTMLElement).style.display = 'block';
+      (loginForm as HTMLElement).style.display = 'none';
+    });
+
+    // 1. Authenticate login manifest
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = (document.getElementById('login-email') as HTMLInputElement).value.trim();
+      const k_id = (document.getElementById('login-k-id') as HTMLInputElement).value.trim();
+      
       let found = false;
       let name = "Candidate";
       let verified = false;
 
-      // 1. Query Supabase
+      // Query Supabase registrations & applicants
       if (supabase) {
         try {
-          const { data: regData } = await supabase.from('registrations').select('*').eq('email', email).eq('k_id', k_id);
+          const { data: regData } = await supabase.from('registrations').select('*').eq('email', email);
           if (regData && regData.length > 0) {
-            found = true;
-            name = regData[0].name;
-            verified = regData[0].verified;
-          } else {
-            const { data: appData } = await supabase.from('applicants').select('*').eq('email', email).eq('k_id', k_id);
-            if (appData && appData.length > 0) {
+            const matched = regData.find((r: any) => (r.k_id ? r.k_id.replace(/[\s]/g, '') : '') === k_id.replace(/[\s]/g, ''));
+            if (matched) {
               found = true;
-              name = appData[0].name;
-              verified = appData[0].verified;
+              name = matched.name;
+              verified = matched.verified;
+            }
+          }
+          
+          if (!found) {
+            const { data: appData } = await supabase.from('applicants').select('*').eq('email', email);
+            if (appData && appData.length > 0) {
+              const matched = appData.find((r: any) => (r.k_id ? r.k_id.replace(/[\s]/g, '') : '') === k_id.replace(/[\s]/g, ''));
+              if (matched) {
+                found = true;
+                name = matched.name;
+                verified = matched.verified;
+              }
             }
           }
         } catch (err) {
@@ -403,14 +431,15 @@ function initModalControls() {
         }
       }
 
-      // 2. Query Local Cache Fallback
+      // Query Local Cache Fallback
       if (!found) {
         const cachedData = localStorage.getItem('kga_applicants');
         if (cachedData) {
           try {
             const records = JSON.parse(cachedData);
             for (let r of records) {
-              if (r.email === email && r.k_id === k_id) {
+              const cleanKId = r.k_id ? r.k_id.replace(/[\s]/g, '') : '';
+              if (r.email === email && cleanKId === k_id.replace(/[\s]/g, '')) {
                 found = true;
                 name = r.name;
                 verified = r.verified;
@@ -426,17 +455,11 @@ function initModalControls() {
           alert(`Welcome back, ${name}.\n\nIdentity authenticated successfully.\nProceeding to secure Unstop entrance exam...`);
           window.location.href = 'https://unstop.com';
         } else {
-          alert(`Identity Manifest Found for ${name}.\n\nHowever, email verification is still pending.\nPlease verify your email via the outbox link to unlock the entrance exam.`);
+          alert(`Identity Manifest Found for ${name}.\n\nHowever, email verification is still pending.\nPlease verify your email via the link to unlock the entrance exam.`);
         }
       } else {
         alert("Identity manifest not found.\nPlease register a new Krishnaite ID or check your credentials.");
       }
-    });
-
-    portalCreateBtn.addEventListener('click', () => {
-      portalCreateBtn.classList.add('active');
-      portalLoginBtn.classList.remove('active');
-      manifestForm.classList.add('active');
     });
 
     manifestForm.addEventListener('submit', async (e) => {
