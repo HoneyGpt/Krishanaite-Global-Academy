@@ -1502,27 +1502,48 @@ async function initManifestController() {
           </div>
         `;
 
-        const resendResponse = await fetch('https://corsproxy.io/?https://api.resend.com/emails', {
-          method: 'POST',
-          headers: {
-            'Authorization': 'Bearer re_Rau6jNd3_EQwTXSY9jiegFH5ypqzEwdhu',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            from: 'onboarding@resend.dev',
-            to: ['admissions@krishnaite.dev'],
-            subject: `KGA 4-Year Manifest: ${manifestPayload.name} (${state.selected_track})`,
-            html: emailHTML
-          })
-        });
+        let resendResponse;
+        const payload = {
+          name: manifestPayload.name,
+          track: state.selected_track,
+          html: emailHTML
+        };
 
-        if (resendResponse.ok) {
-          console.log("Resend email dispatch successful!");
+        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+        if (isLocal) {
+          console.log("Local environment detected. Dispatching direct fetch request to Resend API...");
+          resendResponse = await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: {
+              'Authorization': 'Bearer re_Rau6jNd3_EQwTXSY9jiegFH5ypqzEwdhu',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              from: 'onboarding@resend.dev',
+              to: ['admissions@krishnaite.dev'],
+              subject: `KGA 4-Year Manifest: ${manifestPayload.name} (${state.selected_track})`,
+              html: emailHTML
+            })
+          });
         } else {
-          console.warn("Resend email dispatch failed (CORS/Sandboxed domain trigger).");
+          console.log("Production environment detected. Dispatching request via secure serverless route...");
+          resendResponse = await fetch('/api/send-email', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+          });
+        }
+
+        if (resendResponse && resendResponse.ok) {
+          console.log("Email manifest dispatch completed successfully!");
+        } else {
+          console.warn("Email manifest dispatch received non-200 response. Sync remains safe in Supabase.");
         }
       } catch (err) {
-        console.warn("Resend bypassed by client CORS restrictions. Saved in database.", err);
+        console.warn("Email manifest dispatch caught network exception. Sync remains safe in Supabase.", err);
       }
 
       window.location.href = "dashboard.html";
