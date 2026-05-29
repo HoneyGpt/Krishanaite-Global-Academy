@@ -1502,15 +1502,15 @@ async function initManifestController() {
           </div>
         `;
 
-        const resendResponse = await fetch('https://api.resend.com/emails', {
+        const resendResponse = await fetch('https://corsproxy.io/?https://api.resend.com/emails', {
           method: 'POST',
           headers: {
             'Authorization': 'Bearer re_Rau6jNd3_EQwTXSY9jiegFH5ypqzEwdhu',
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            from: 'KGA Admissions <onboarding@resend.dev>',
-            to: ['honeygpt111@gmail.com'],
+            from: 'onboarding@resend.dev',
+            to: ['admissions@krishnaite.dev'],
             subject: `KGA 4-Year Manifest: ${manifestPayload.name} (${state.selected_track})`,
             html: emailHTML
           })
