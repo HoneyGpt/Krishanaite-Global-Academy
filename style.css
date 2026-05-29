@@ -2221,3 +2221,81 @@ body.dashboard-body {
     width: 100%;
   }
 }
+
+/* ==========================================================================
+   4-Year Sovereign Forge Manifest & Form Outlines
+   ========================================================================== */
+.mandatory-directive-banner {
+  background: rgba(217, 56, 58, 0.04);
+  border: 2px solid var(--red);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 28px;
+  box-shadow: 4px 4px 0px var(--black-shadow);
+  text-align: left;
+}
+
+.mandatory-directive-banner h4 {
+  color: var(--red);
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mandatory-directive-banner p {
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: hsla(0, 0%, 7%, 0.9);
+}
+
+.manifest-modal-container {
+  max-width: 850px !important;
+}
+
+.manifest-section-divider {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  color: var(--red);
+  margin: 32px 0 16px 0;
+  border-bottom: 1.5px solid var(--black);
+  padding-bottom: 6px;
+}
+
+.manifest-section-divider:first-of-type {
+  margin-top: 16px;
+}
+
+.form-grid-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-bottom: 16px;
+}
+
+.conditional-field {
+  display: none;
+  animation: fadeIn 0.4s ease forwards;
+}
+
+.conditional-field.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .form-grid-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+

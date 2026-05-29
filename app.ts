@@ -699,6 +699,36 @@ async function initDashboardController() {
   const fileUploaderInput = document.getElementById('file-uploader-input') as HTMLInputElement;
   const uploadedDossierList = document.getElementById('uploaded-dossier-list');
 
+  // 4-Year Sovereign Forge Manifest Modal DOM Bindings
+  const modalSovereignManifest = document.getElementById('modal-sovereign-manifest');
+  const closeManifestModal = document.getElementById('close-manifest-modal');
+  const btnCancelManifest = document.getElementById('btn-cancel-manifest');
+  const btnSubmitManifest = document.getElementById('btn-submit-manifest');
+  const manifestDossierForm = document.getElementById('manifest-dossier-form') as HTMLFormElement;
+
+  // Manifest inputs
+  const manifestName = document.getElementById('manifest-name') as HTMLInputElement;
+  const manifestEmail = document.getElementById('manifest-email') as HTMLInputElement;
+  const manifestPhone = document.getElementById('manifest-phone') as HTMLInputElement;
+  const manifestAge = document.getElementById('manifest-age') as HTMLInputElement;
+  const manifestGender = document.getElementById('manifest-gender') as HTMLSelectElement;
+  const manifestResidence = document.getElementById('manifest-residence') as HTMLInputElement;
+  const manifestQualification = document.getElementById('manifest-qualification') as HTMLSelectElement;
+  const manifestEnrolled = document.getElementById('manifest-enrolled') as HTMLSelectElement;
+  const manifestHasSpecialization = document.getElementById('manifest-has-specialization') as HTMLSelectElement;
+  const manifestSpecialization = document.getElementById('manifest-specialization') as HTMLInputElement;
+  const manifestDisclosureCheck = document.getElementById('manifest-disclosure-check') as HTMLInputElement;
+  
+  const manifestFatherName = document.getElementById('manifest-father-name') as HTMLInputElement;
+  const manifestMotherName = document.getElementById('manifest-mother-name') as HTMLInputElement;
+  const manifestGuardianName = document.getElementById('manifest-guardian-name') as HTMLInputElement;
+  const manifestFatherOccup = document.getElementById('manifest-father-occup') as HTMLInputElement;
+  const manifestMotherOccup = document.getElementById('manifest-mother-occup') as HTMLInputElement;
+  const manifestIncome = document.getElementById('manifest-income') as HTMLSelectElement;
+
+  const groupSpecializationSpec = document.getElementById('group-specialization-spec');
+  const groupDisclosureAgree = document.getElementById('group-disclosure-agree');
+
   // 2. Fetch User Profile credentials
   let applicantName = user.user_metadata?.full_name || user.user_metadata?.name || "Candidate";
   let applicantKId = user.user_metadata?.k_id || "";
@@ -734,6 +764,7 @@ async function initDashboardController() {
     fellowship_claimed: string | null;
     uploaded_documents: string[];
     submitted: boolean;
+    manifest_data?: any;
   }
 
   let state: DashboardState = {
@@ -778,6 +809,13 @@ async function initDashboardController() {
           }
         }
         if (record.application_status === 'submitted') state.submitted = true;
+        if (record.manifest_data) {
+          try {
+            state.manifest_data = typeof record.manifest_data === 'string'
+              ? JSON.parse(record.manifest_data)
+              : record.manifest_data;
+          } catch (e) {}
+        }
       }
     } catch (e) {
       console.warn("DB state load failed, using local caching metadata:", e);
@@ -799,17 +837,23 @@ async function initDashboardController() {
 
     // 3. Sync to public registrations and applicants tables
     try {
-      const dbRecord = {
+      const dbRecord: any = {
         selected_track: state.selected_track,
         fellowship_claimed: state.fellowship_claimed,
         documents_uploaded: JSON.stringify(state.uploaded_documents),
         application_status: state.submitted ? 'submitted' : 'draft',
+        manifest_data: state.manifest_data ? JSON.stringify(state.manifest_data) : null,
         verified: true
       };
 
       const { error: err1 } = await supabase.from('registrations').update(dbRecord).eq('email', email);
       if (err1) {
-        await supabase.from('applicants').update(dbRecord).eq('email', email);
+        // Retry without manifest_data column in case column doesn't exist in registrations
+        delete dbRecord.manifest_data;
+        const { error: err2 } = await supabase.from('registrations').update(dbRecord).eq('email', email);
+        if (err2) {
+          await supabase.from('applicants').update(dbRecord).eq('email', email);
+        }
       }
     } catch (e) {
       console.warn("DB tables sync failed:", e);
@@ -998,7 +1042,11 @@ async function initDashboardController() {
   // C. Modals Opening Click Listeners
   if (btnStartApp && modalPrograms) {
     btnStartApp.addEventListener('click', () => {
-      modalPrograms.classList.add('active');
+      if (state.selected_track && !state.submitted) {
+        prefillAndOpenManifest();
+      } else {
+        modalPrograms.classList.add('active');
+      }
     });
   }
 
@@ -1035,6 +1083,7 @@ async function initDashboardController() {
       state.selected_track = "Sovereign Path (Systems & Strategy)";
       closeModal(modalPrograms);
       saveDashboardState();
+      prefillAndOpenManifest();
     });
   }
 
@@ -1043,6 +1092,7 @@ async function initDashboardController() {
       state.selected_track = "Vanguard Forge (GPU & Optimization)";
       closeModal(modalPrograms);
       saveDashboardState();
+      prefillAndOpenManifest();
     });
   }
 
@@ -1194,6 +1244,181 @@ async function initDashboardController() {
       if (state.submitted) {
         alert("Genesis gate unlocked! Redirecting candidate to secure exam portal on Unstop.");
         window.location.href = "https://unstop.com";
+      }
+    });
+  }
+
+  // J. 4-Year Academic Manifest Modal Controllers & Event Handlers
+  const triggerSpecializationUI = (val: string) => {
+    if (val === "Yes") {
+      if (groupSpecializationSpec) groupSpecializationSpec.classList.add('active');
+      if (groupDisclosureAgree) groupDisclosureAgree.classList.remove('active');
+      if (manifestSpecialization) manifestSpecialization.required = true;
+      if (manifestDisclosureCheck) manifestDisclosureCheck.required = false;
+    } else if (val === "No") {
+      if (groupDisclosureAgree) groupDisclosureAgree.classList.add('active');
+      if (groupSpecializationSpec) groupSpecializationSpec.classList.remove('active');
+      if (manifestSpecialization) manifestSpecialization.required = false;
+      if (manifestDisclosureCheck) manifestDisclosureCheck.required = true;
+    } else {
+      if (groupSpecializationSpec) groupSpecializationSpec.classList.remove('active');
+      if (groupDisclosureAgree) groupDisclosureAgree.classList.remove('active');
+    }
+  };
+
+  const prefillAndOpenManifest = () => {
+    if (manifestName && !manifestName.value) manifestName.value = applicantName;
+    if (manifestEmail && !manifestEmail.value) manifestEmail.value = email;
+    
+    // Load existing draft if saved
+    if (state.manifest_data) {
+      const d = state.manifest_data;
+      if (d.name) manifestName.value = d.name;
+      if (d.email) manifestEmail.value = d.email;
+      if (d.phone) manifestPhone.value = d.phone;
+      if (d.age) manifestAge.value = d.age;
+      if (d.gender) manifestGender.value = d.gender;
+      if (d.residence) manifestResidence.value = d.residence;
+      if (d.qualification) manifestQualification.value = d.qualification;
+      if (d.enrolled) manifestEnrolled.value = d.enrolled;
+      
+      if (d.has_specialization) {
+        manifestHasSpecialization.value = d.has_specialization;
+        triggerSpecializationUI(d.has_specialization);
+      }
+      if (d.specialization) manifestSpecialization.value = d.specialization;
+      if (d.disclosure !== undefined) manifestDisclosureCheck.checked = d.disclosure;
+      
+      if (d.father_name) manifestFatherName.value = d.father_name;
+      if (d.mother_name) manifestMotherName.value = d.mother_name;
+      if (d.guardian_name) manifestGuardianName.value = d.guardian_name;
+      if (d.father_occup) manifestFatherOccup.value = d.father_occup;
+      if (d.mother_occup) manifestMotherOccup.value = d.mother_occup;
+      if (d.income) manifestIncome.value = d.income;
+    }
+    
+    if (modalSovereignManifest) modalSovereignManifest.classList.add('active');
+  };
+
+  if (manifestHasSpecialization) {
+    manifestHasSpecialization.addEventListener('change', () => {
+      triggerSpecializationUI(manifestHasSpecialization.value);
+    });
+  }
+
+  if (closeManifestModal) closeManifestModal.addEventListener('click', () => closeModal(modalSovereignManifest));
+  if (btnCancelManifest) btnCancelManifest.addEventListener('click', () => closeModal(modalSovereignManifest));
+
+  if (btnSubmitManifest && manifestDossierForm) {
+    btnSubmitManifest.addEventListener('click', async (e) => {
+      e.preventDefault();
+      
+      // Basic HTML5 validation
+      if (!manifestDossierForm.checkValidity()) {
+        manifestDossierForm.reportValidity();
+        return;
+      }
+
+      // Check conditional requirements
+      if (manifestHasSpecialization.value === "No" && !manifestDisclosureCheck.checked) {
+        alert("You must agree to the Academy's instructional terms and framework to proceed.");
+        return;
+      }
+
+      // Collect all form values
+      const manifestPayload = {
+        name: manifestName.value.trim(),
+        email: manifestEmail.value.trim(),
+        phone: manifestPhone.value.trim(),
+        age: manifestAge.value.trim(),
+        gender: manifestGender.value,
+        residence: manifestResidence.value.trim(),
+        qualification: manifestQualification.value,
+        enrolled: manifestEnrolled.value,
+        has_specialization: manifestHasSpecialization.value,
+        specialization: manifestSpecialization.value.trim(),
+        disclosure: manifestDisclosureCheck.checked,
+        father_name: manifestFatherName.value.trim(),
+        mother_name: manifestMotherName.value.trim(),
+        guardian_name: manifestGuardianName.value.trim(),
+        father_occup: manifestFatherOccup.value.trim(),
+        mother_occup: manifestMotherOccup.value.trim(),
+        income: manifestIncome.value
+      };
+
+      // Set state values
+      state.manifest_data = manifestPayload;
+      state.submitted = true;
+      closeModal(modalSovereignManifest);
+      
+      // Save state to Supabase & local storage
+      await saveDashboardState();
+
+      alert("Genesis Manifest Submitted and Locked Successfully!\n\nSyncing academic dossier and triggering admissions secure email notifications...");
+
+      // Execute Resend API Post call
+      try {
+        const emailHTML = `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 2px solid #111111; border-radius: 16px; padding: 32px; background-color: #FDF5E6;">
+            <h2 style="font-family: Georgia, serif; color: #D9383A; border-bottom: 2px solid #111111; padding-bottom: 12px; margin-top: 0;">KGA Genesis Manifest Record</h2>
+            <p style="font-size: 14px; color: #555555; font-style: italic;">A new candidate has submitted their comprehensive 4-Year Academic Manifest for the Genesis Cohort.</p>
+            
+            <h3 style="font-family: Georgia, serif; color: #111111; border-bottom: 1px solid #111111; padding-bottom: 4px; margin-top: 24px;">1. Primary Identity</h3>
+            <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+              <tr><td style="padding: 6px 0; font-weight: bold; width: 40%;">Full Legal Name:</td><td style="padding: 6px 0;">${manifestPayload.name}</td></tr>
+              <tr><td style="padding: 6px 0; font-weight: bold;">Email Address:</td><td style="padding: 6px 0;">${manifestPayload.email}</td></tr>
+              <tr><td style="padding: 6px 0; font-weight: bold;">Phone Number:</td><td style="padding: 6px 0;">${manifestPayload.phone}</td></tr>
+              <tr><td style="padding: 6px 0; font-weight: bold;">Age / Gender:</td><td style="padding: 6px 0;">${manifestPayload.age} / ${manifestPayload.gender}</td></tr>
+              <tr><td style="padding: 6px 0; font-weight: bold;">Residence:</td><td style="padding: 6px 0;">${manifestPayload.residence}</td></tr>
+            </table>
+
+            <h3 style="font-family: Georgia, serif; color: #111111; border-bottom: 1px solid #111111; padding-bottom: 4px; margin-top: 24px;">2. Academic Status</h3>
+            <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+              <tr><td style="padding: 6px 0; font-weight: bold; width: 40%;">Qualification:</td><td style="padding: 6px 0;">${manifestPayload.qualification}</td></tr>
+              <tr><td style="padding: 6px 0; font-weight: bold;">Currently Enrolled:</td><td style="padding: 6px 0;">${manifestPayload.enrolled}</td></tr>
+              <tr><td style="padding: 6px 0; font-weight: bold;">Has Specialization:</td><td style="padding: 6px 0;">${manifestPayload.has_specialization}</td></tr>
+              \${manifestPayload.has_specialization === 'Yes' ? \`<tr><td style="padding: 6px 0; font-weight: bold; color: #D9383A;">Specialization:</td><td style="padding: 6px 0; font-weight: bold; color: #D9383A;">\${manifestPayload.specialization}</td></tr>\` : ''}
+              <tr><td style="padding: 6px 0; font-weight: bold;">KGA Terms Agreed:</td><td style="padding: 6px 0;">\${manifestPayload.disclosure ? 'Yes (Genesis Charter Guidelines)' : 'No'}</td></tr>
+            </table>
+
+            <h3 style="font-family: Georgia, serif; color: #111111; border-bottom: 1px solid #111111; padding-bottom: 4px; margin-top: 24px;">3. Family & Financial Profile</h3>
+            <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+              <tr><td style="padding: 6px 0; font-weight: bold; width: 40%;">Father's Name:</td><td style="padding: 6px 0;">\${manifestPayload.father_name || 'N/A'}</td></tr>
+              <tr><td style="padding: 6px 0; font-weight: bold;">Mother's Name:</td><td style="padding: 6px 0;">\${manifestPayload.mother_name || 'N/A'}</td></tr>
+              <tr><td style="padding: 6px 0; font-weight: bold;">Guardian's Name:</td><td style="padding: 6px 0;">\${manifestPayload.guardian_name || 'N/A'}</td></tr>
+              <tr><td style="padding: 6px 0; font-weight: bold;">Father's Occupation:</td><td style="padding: 6px 0;">\${manifestPayload.father_occup || 'N/A'}</td></tr>
+              <tr><td style="padding: 6px 0; font-weight: bold;">Mother's Occupation:</td><td style="padding: 6px 0;">\${manifestPayload.mother_occup || 'N/A'}</td></tr>
+              <tr style="color: #D4AF37; font-weight: bold;"><td style="padding: 6px 0;">Annual Income Bracket:</td><td style="padding: 6px 0;">\${manifestPayload.income}</td></tr>
+            </table>
+            
+            <div style="margin-top: 32px; border-top: 2px dashed #111111; padding-top: 16px; text-align: center; font-size: 12px; color: #777777;">
+              &copy; 2026 Krishnaite Global Academy. Under Sovereign Charter. Secure Admission Gateways.
+            </div>
+          </div>
+        `;
+
+        const resendResponse = await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer re_Rau6jNd3_EQwTXSY9jiegFH5ypqzEwdhu',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            from: 'KGA Admissions <onboarding@resend.dev>',
+            to: ['honeygpt111@gmail.com'],
+            subject: `KGA 4-Year Manifest: \${manifestPayload.name} (\${state.selected_track})`,
+            html: emailHTML
+          })
+        });
+
+        if (resendResponse.ok) {
+          console.log("Resend email dispatch successful!");
+        } else {
+          const errText = await resendResponse.text();
+          console.warn("Resend email dispatch rejected by server (CORS / Sandboxed domain):", errText);
+        }
+      } catch (err) {
+        console.warn("Resend email post request bypassed by client CORS restrictions. Application remains safely synced in Supabase:", err);
       }
     });
   }
