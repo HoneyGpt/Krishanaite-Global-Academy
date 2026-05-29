@@ -12,6 +12,7 @@ export default defineConfig({
         main: resolve(__dirname, 'index.html'),
         aboutUs: resolve(__dirname, 'about-us.html'),
         admissionsPortal: resolve(__dirname, 'admissions-portal.html'),
+        dashboard: resolve(__dirname, 'dashboard.html'),
         feesStructure: resolve(__dirname, 'fees-structure.html'),
         fellowship: resolve(__dirname, 'fellowship.html'),
         howYouLearn: resolve(__dirname, 'how-you-learn.html'),

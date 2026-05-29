@@ -14,6 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initTrackPanelTilt();
   initSmoothScroll();
   initModalControls();
+  if (window.location.pathname.includes('dashboard.html')) {
+    initDashboardController();
+  }
 });
 
 /**
@@ -350,17 +353,17 @@ function initModalControls() {
             Your unique Krishnaite ID: <strong style="color: var(--red); font-size: 1.15rem;">${verifiedKId}</strong> is now fully activated.
           </p>
           <p class="modal-intro" style="font-size: 0.85rem; font-style: italic; color: var(--red); margin-top: 20px;">
-            Unlocking manifest... Redirecting to secure Unstop entrance exam in 5 seconds.
+            Unlocking manifest... Redirecting to your personal KGA Dashboard in 3 seconds.
           </p>
           <div class="modal-cta-box" style="margin-top: 24px; display: flex; justify-content: center;">
-            <a href="https://unstop.com" class="entrance-exam-btn" style="text-decoration: none; background: var(--red); color: var(--bg-peach); border-color: var(--black);">
-              Proceed to Exam
+            <a href="dashboard.html" class="entrance-exam-btn" style="text-decoration: none; background: var(--red); color: var(--bg-peach); border-color: var(--black);">
+              Proceed to Dashboard
             </a>
           </div>
         `;
         setTimeout(() => {
-          window.location.href = "https://unstop.com";
-        }, 5000);
+          window.location.href = "dashboard.html";
+        }, 3000);
       }
     } catch (err) {
       console.error("Session verification fetch failed:", err);
@@ -449,17 +452,17 @@ function initModalControls() {
             Your unique Krishnaite ID: <strong style="color: var(--red); font-size: 1.15rem;">${verifiedKId}</strong> is now fully activated.
           </p>
           <p class="modal-intro" style="font-size: 0.85rem; font-style: italic; color: var(--red); margin-top: 20px;">
-            Unlocking manifest... Redirecting to secure Unstop entrance exam in 5 seconds.
+            Unlocking manifest... Redirecting to your personal KGA Dashboard in 3 seconds.
           </p>
           <div class="modal-cta-box" style="margin-top: 24px; display: flex; justify-content: center;">
-            <a href="https://unstop.com" class="entrance-exam-btn" style="text-decoration: none; background: var(--red); color: var(--bg-peach); border-color: var(--black);">
-              Proceed to Exam
+            <a href="dashboard.html" class="entrance-exam-btn" style="text-decoration: none; background: var(--red); color: var(--bg-peach); border-color: var(--black);">
+              Proceed to Dashboard
             </a>
           </div>
         `;
         setTimeout(() => {
-          window.location.href = "https://unstop.com";
-        }, 5000);
+          window.location.href = "dashboard.html";
+        }, 3000);
       } else {
         modalHeader.innerHTML = `
           <span class="modal-badge" style="background: var(--black); color: var(--red); border-color: var(--red);">Verification Failed</span>
@@ -571,8 +574,8 @@ function initModalControls() {
 
       if (found) {
         if (verified) {
-          alert(`Welcome back, ${name}.\n\nIdentity authenticated successfully.\nProceeding to secure Unstop entrance exam...`);
-          window.location.href = 'https://unstop.com';
+          alert(`Welcome back, ${name}.\n\nIdentity authenticated successfully.\nProceeding to your KGA Dashboard...`);
+          window.location.href = 'dashboard.html';
         } else {
           alert(`Identity Manifest Found for ${name}.\n\nHowever, email verification is still pending.\nPlease verify your email via the link sent to your inbox.`);
         }
@@ -609,4 +612,593 @@ function initModalControls() {
       });
     });
   }
+}
+
+/**
+ * 9. KGA Applicant Dashboard Controller
+ * Manages applicant application status, fellowships modal claims, dossiers uploader, 
+ * active session synchronization, and dynamically unlocks the entrance exam.
+ */
+async function initDashboardController() {
+  if (!supabase) return;
+
+  // 1. Session Protection Filter
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session || !session.user) {
+    alert("Unauthorized session. Please authenticate your identity first.");
+    window.location.href = "admissions-portal.html";
+    return;
+  }
+
+  const user = session.user;
+  const email = user.email || "";
+
+  // Dynamic DOM Bindings
+  const candidateName = document.getElementById('candidate-name');
+  const candidateId = document.getElementById('candidate-id');
+  const btnLogout = document.getElementById('btn-logout');
+  
+  // Dashboard Status LEDs
+  const statusTrackLed = document.getElementById('status-track-led');
+  const statusTrackText = document.getElementById('status-track-text');
+  const statusExamLed = document.getElementById('status-exam-led');
+  const statusExamText = document.getElementById('status-exam-text');
+
+  // Sidebar Menu Nav Active states
+  const draftsCountEl = document.getElementById('drafts-count');
+  
+  // Quick Actions cards and buttons
+  const cardPrograms = document.getElementById('card-programs');
+  const btnStartApp = document.getElementById('btn-start-app');
+  
+  const cardFellowships = document.getElementById('card-fellowships');
+  const btnClaimGrant = document.getElementById('btn-claim-grant');
+  
+  const cardDocuments = document.getElementById('card-documents');
+  const btnUploadDocs = document.getElementById('btn-upload-docs');
+  
+  const cardExam = document.getElementById('card-exam');
+  const btnStartExam = document.getElementById('btn-start-exam');
+  const examIconSvg = document.getElementById('exam-icon-svg');
+
+  // Notification Bell Controls
+  const bellBtn = document.getElementById('bell-btn');
+  const bellTray = document.getElementById('bell-tray');
+  const bellBadge = document.getElementById('bell-badge');
+
+  // Bottom Application Status Canvas
+  const emptyState = document.getElementById('empty-state');
+  const draftState = document.getElementById('draft-state');
+  const draftTitleText = document.getElementById('draft-title-text');
+  const progressBar = document.getElementById('progress-bar');
+  const progressPercent = document.getElementById('progress-percent');
+  const detailTrackName = document.getElementById('detail-track-name');
+  const detailFellowshipStatus = document.getElementById('detail-fellowship-status');
+  const detailDocsStatus = document.getElementById('detail-docs-status');
+  const btnDiscardDraft = document.getElementById('btn-discard-draft');
+  const btnSubmitApplication = document.getElementById('btn-submit-application');
+
+  // Modals Overlay Elements
+  const modalPrograms = document.getElementById('modal-programs');
+  const closeProgramsModal = document.getElementById('close-programs-modal');
+  const btnCancelPrograms = document.getElementById('btn-cancel-programs');
+  const selectTrackSovereign = document.getElementById('select-track-sovereign');
+  const selectTrackVanguard = document.getElementById('select-track-vanguard');
+
+  const modalFellowships = document.getElementById('modal-fellowships');
+  const closeFellowshipsModal = document.getElementById('close-fellowships-modal');
+  const btnCancelFellowships = document.getElementById('btn-cancel-fellowships');
+  const claimGrantMerit = document.getElementById('claim-grant-merit');
+  const claimGrantEquity = document.getElementById('claim-grant-equity');
+  const claimGrantNone = document.getElementById('claim-grant-none');
+
+  const modalDocuments = document.getElementById('modal-documents');
+  const closeDocumentsModal = document.getElementById('close-documents-modal');
+  const btnCloseVaultModal = document.getElementById('btn-close-vault-modal');
+  const uploadDropzone = document.getElementById('upload-dropzone');
+  const fileUploaderInput = document.getElementById('file-uploader-input') as HTMLInputElement;
+  const uploadedDossierList = document.getElementById('uploaded-dossier-list');
+
+  // 2. Fetch User Profile credentials
+  let applicantName = user.user_metadata?.full_name || user.user_metadata?.name || "Candidate";
+  let applicantKId = user.user_metadata?.k_id || "";
+
+  // Attempt database sync for Name and KGA-ID
+  try {
+    const { data: regData } = await supabase.from('registrations').select('*').eq('email', email);
+    if (regData && regData.length > 0) {
+      applicantKId = regData[0].k_id || applicantKId;
+      applicantName = regData[0].name || applicantName;
+    } else {
+      const { data: appData } = await supabase.from('applicants').select('*').eq('email', email);
+      if (appData && appData.length > 0) {
+        applicantKId = appData[0].k_id || applicantKId;
+        applicantName = appData[0].name || applicantName;
+      }
+    }
+  } catch (e) {
+    console.warn("DB credentials check failed, falling back to local session data:", e);
+  }
+
+  if (!applicantKId) {
+    applicantKId = "KGA-ID-TEMP";
+  }
+
+  // Update DOM headers
+  if (candidateName) candidateName.textContent = applicantName;
+  if (candidateId) candidateId.textContent = applicantKId;
+
+  // Initialize Global Dashboard state structure
+  interface DashboardState {
+    selected_track: string | null;
+    fellowship_claimed: string | null;
+    uploaded_documents: string[];
+    submitted: boolean;
+  }
+
+  let state: DashboardState = {
+    selected_track: null,
+    fellowship_claimed: null,
+    uploaded_documents: [],
+    submitted: false
+  };
+
+  // 3. Dynamic Local & Database State Synchronization
+  const loadDashboardState = async () => {
+    // A. Check Supabase Auth user metadata first (contains unified schema state)
+    if (user.user_metadata?.kga_dashboard_state) {
+      state = { ...state, ...user.user_metadata.kga_dashboard_state };
+    }
+    
+    // B. Check LocalStorage fallback
+    const localCached = localStorage.getItem('kga_dashboard_state_' + email);
+    if (localCached) {
+      try {
+        const parsed = JSON.parse(localCached);
+        state = { ...state, ...parsed };
+      } catch (e) {}
+    }
+
+    // C. Check database tables for details
+    try {
+      const { data: regData } = await supabase.from('registrations').select('*').eq('email', email);
+      if (regData && regData.length > 0) {
+        const record = regData[0];
+        if (record.selected_track) state.selected_track = record.selected_track;
+        if (record.fellowship_claimed) state.fellowship_claimed = record.fellowship_claimed;
+        if (record.documents_uploaded) {
+          try {
+            state.uploaded_documents = Array.isArray(record.documents_uploaded) 
+              ? record.documents_uploaded 
+              : JSON.parse(record.documents_uploaded);
+          } catch (e) {
+            if (typeof record.documents_uploaded === 'string') {
+              state.uploaded_documents = record.documents_uploaded.split(',').filter(Boolean);
+            }
+          }
+        }
+        if (record.application_status === 'submitted') state.submitted = true;
+      }
+    } catch (e) {
+      console.warn("DB state load failed, using local caching metadata:", e);
+    }
+  };
+
+  const saveDashboardState = async () => {
+    // 1. Cache to local storage
+    localStorage.setItem('kga_dashboard_state_' + email, JSON.stringify(state));
+
+    // 2. Sync to Supabase Auth User metadata (so it persists across all devices serverless)
+    try {
+      await supabase.auth.updateUser({
+        data: { kga_dashboard_state: state }
+      });
+    } catch (e) {
+      console.warn("Auth user metadata sync failed:", e);
+    }
+
+    // 3. Sync to public registrations and applicants tables
+    try {
+      const dbRecord = {
+        selected_track: state.selected_track,
+        fellowship_claimed: state.fellowship_claimed,
+        documents_uploaded: JSON.stringify(state.uploaded_documents),
+        application_status: state.submitted ? 'submitted' : 'draft',
+        verified: true
+      };
+
+      const { error: err1 } = await supabase.from('registrations').update(dbRecord).eq('email', email);
+      if (err1) {
+        await supabase.from('applicants').update(dbRecord).eq('email', email);
+      }
+    } catch (e) {
+      console.warn("DB tables sync failed:", e);
+    }
+
+    // Trigger re-render
+    renderDashboard();
+  };
+
+  // 4. State Rendering & Status Management
+  const renderDashboard = () => {
+    const hasTrack = state.selected_track !== null;
+    const hasFellowship = state.fellowship_claimed !== null;
+    const docsCount = state.uploaded_documents.length;
+    const isCompleted = hasTrack && docsCount >= 1;
+    const isSubmitted = state.submitted;
+
+    // A. Update Navigation Counters & Status Indicators
+    if (draftsCountEl) {
+      draftsCountEl.textContent = (hasTrack && !isSubmitted) ? "1" : "0";
+    }
+
+    // Sidebar LEDs
+    if (statusTrackLed && statusTrackText) {
+      if (isSubmitted) {
+        statusTrackLed.className = "status-led green";
+        statusTrackText.textContent = "Track Enrolled";
+      } else if (hasTrack) {
+        statusTrackLed.className = "status-led yellow";
+        statusTrackText.textContent = "Draft Track Active";
+      } else {
+        statusTrackLed.className = "status-led white";
+        statusTrackText.textContent = "Track Unselected";
+      }
+    }
+
+    if (statusExamLed && statusExamText) {
+      if (isSubmitted) {
+        statusExamLed.className = "status-led green";
+        statusExamText.textContent = "Exam Unlocked";
+      } else {
+        statusExamLed.className = "status-led red";
+        statusExamText.textContent = "Exam Locked";
+      }
+    }
+
+    // B. Render Bottom Status Panel
+    if (!hasTrack) {
+      if (emptyState) emptyState.style.display = 'block';
+      if (draftState) draftState.style.display = 'none';
+    } else {
+      if (emptyState) emptyState.style.display = 'none';
+      if (draftState) draftState.style.display = 'block';
+
+      // Update Track and details text
+      if (draftTitleText) {
+        draftTitleText.textContent = isSubmitted 
+          ? `${state.selected_track} Enrolled` 
+          : `${state.selected_track} Application Draft`;
+      }
+      if (detailTrackName) detailTrackName.textContent = state.selected_track;
+      
+      if (detailFellowshipStatus) {
+        detailFellowshipStatus.textContent = state.fellowship_claimed 
+          ? `Claimed: ${state.fellowship_claimed}` 
+          : "Tuition Fellowship Pending";
+      }
+
+      if (detailDocsStatus) {
+        detailDocsStatus.textContent = docsCount > 0 
+          ? `${docsCount} Document(s) Uploaded Dossier` 
+          : "0 Documents Uploaded (Transcripts required)";
+      }
+
+      // Calculate progress percentage
+      let progress = 40; // Track selection is 40%
+      if (hasFellowship) progress += 30; // Fellowship is 30%
+      if (docsCount > 0) progress += 30; // Documents uploaded is 30%
+      if (isSubmitted) progress = 100;
+
+      if (progressPercent) progressPercent.textContent = `${progress}%`;
+      if (progressBar) progressBar.style.width = `${progress}%`;
+
+      // Submission button state
+      if (btnSubmitApplication) {
+        if (isSubmitted) {
+          btnSubmitApplication.textContent = "Application Submitted";
+          (btnSubmitApplication as HTMLButtonElement).disabled = true;
+          if (btnDiscardDraft) (btnDiscardDraft as HTMLButtonElement).disabled = true;
+        } else {
+          btnSubmitApplication.textContent = "Submit Completed Application";
+          (btnSubmitApplication as HTMLButtonElement).disabled = !isCompleted;
+          if (btnDiscardDraft) (btnDiscardDraft as HTMLButtonElement).disabled = false;
+        }
+      }
+    }
+
+    // C. Render Quick Action Cards State
+    // Programs card
+    if (btnStartApp) {
+      if (isSubmitted) {
+        btnStartApp.querySelector('span')!.textContent = "Enrolled";
+        (btnStartApp as HTMLButtonElement).disabled = true;
+      } else if (hasTrack) {
+        btnStartApp.querySelector('span')!.textContent = "Change Track";
+      } else {
+        btnStartApp.querySelector('span')!.textContent = "+ Start App";
+      }
+    }
+
+    // Fellowship card
+    if (btnClaimGrant) {
+      if (isSubmitted) {
+        btnClaimGrant.querySelector('span')!.textContent = "Fellowship Secured";
+        (btnClaimGrant as HTMLButtonElement).disabled = true;
+      } else if (hasFellowship) {
+        btnClaimGrant.querySelector('span')!.textContent = "Change Claim";
+      } else {
+        btnClaimGrant.querySelector('span')!.textContent = "+ Claim";
+      }
+    }
+
+    // Documents card
+    if (btnUploadDocs) {
+      if (isSubmitted) {
+        btnUploadDocs.querySelector('span')!.textContent = "Dossier Closed";
+        (btnUploadDocs as HTMLButtonElement).disabled = true;
+      } else {
+        btnUploadDocs.querySelector('span')!.textContent = docsCount > 0 ? `Upload (${docsCount})` : "Upload";
+      }
+    }
+
+    // Unstop Exam gate card unlocking mechanism
+    if (cardExam && btnStartExam && examIconSvg) {
+      if (isSubmitted) {
+        // Completely unlock card
+        cardExam.classList.remove('disabled');
+        (btnStartExam as HTMLButtonElement).disabled = false;
+        btnStartExam.querySelector('span')!.textContent = "Initiate Genesis Gate";
+        btnStartExam.className = "action-card-btn primary";
+        
+        // Update SVG icon to unlock state
+        examIconSvg.innerHTML = `
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 9.9-1"></path>
+        `;
+      } else {
+        // Keep locked
+        cardExam.classList.add('disabled');
+        (btnStartExam as HTMLButtonElement).disabled = true;
+        btnStartExam.querySelector('span')!.textContent = "Locked";
+        btnStartExam.className = "action-card-btn secondary";
+        examIconSvg.innerHTML = `
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        `;
+      }
+    }
+  };
+
+  // 5. Wire Interactive Events & Modals Controls
+  
+  // A. Log out button
+  if (btnLogout) {
+    btnLogout.addEventListener('click', async (e) => {
+      e.preventDefault();
+      await supabase.auth.signOut();
+      alert("Your session has been securely closed. Redirecting to home chamber.");
+      window.location.href = "index.html";
+    });
+  }
+
+  // B. Notification Bell toggle
+  if (bellBtn && bellTray) {
+    bellBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      bellTray.classList.toggle('active');
+      if (bellBadge) bellBadge.style.display = 'none'; // Clear notification badge
+    });
+    
+    document.addEventListener('click', () => {
+      bellTray.classList.remove('active');
+    });
+  }
+
+  // C. Modals Opening Click Listeners
+  if (btnStartApp && modalPrograms) {
+    btnStartApp.addEventListener('click', () => {
+      modalPrograms.classList.add('active');
+    });
+  }
+
+  if (btnClaimGrant && modalFellowships) {
+    btnClaimGrant.addEventListener('click', () => {
+      modalFellowships.classList.add('active');
+    });
+  }
+
+  if (btnUploadDocs && modalDocuments) {
+    btnUploadDocs.addEventListener('click', () => {
+      modalDocuments.classList.add('active');
+      renderUploadedDossier();
+    });
+  }
+
+  // D. Modals Closing Click Listeners
+  const closeModal = (modal: HTMLElement | null) => {
+    if (modal) modal.classList.remove('active');
+  };
+
+  if (closeProgramsModal) closeProgramsModal.addEventListener('click', () => closeModal(modalPrograms));
+  if (btnCancelPrograms) btnCancelPrograms.addEventListener('click', () => closeModal(modalPrograms));
+  
+  if (closeFellowshipsModal) closeFellowshipsModal.addEventListener('click', () => closeModal(modalFellowships));
+  if (btnCancelFellowships) btnCancelFellowships.addEventListener('click', () => closeModal(modalFellowships));
+  
+  if (closeDocumentsModal) closeDocumentsModal.addEventListener('click', () => closeModal(modalDocuments));
+  if (btnCloseVaultModal) btnCloseVaultModal.addEventListener('click', () => closeModal(modalDocuments));
+
+  // E. Program Track selection handlers
+  if (selectTrackSovereign) {
+    selectTrackSovereign.addEventListener('click', () => {
+      state.selected_track = "Sovereign Path (Systems & Strategy)";
+      closeModal(modalPrograms);
+      saveDashboardState();
+    });
+  }
+
+  if (selectTrackVanguard) {
+    selectTrackVanguard.addEventListener('click', () => {
+      state.selected_track = "Vanguard Forge (GPU & Optimization)";
+      closeModal(modalPrograms);
+      saveDashboardState();
+    });
+  }
+
+  // F. Fellowships grant claim handlers
+  if (claimGrantMerit) {
+    claimGrantMerit.addEventListener('click', () => {
+      state.fellowship_claimed = "Genesis Merit Fellowship (25%)";
+      closeModal(modalFellowships);
+      saveDashboardState();
+    });
+  }
+
+  if (claimGrantEquity) {
+    claimGrantEquity.addEventListener('click', () => {
+      state.fellowship_claimed = "Charter Equity Subsidy (15%)";
+      closeModal(modalFellowships);
+      saveDashboardState();
+    });
+  }
+
+  if (claimGrantNone) {
+    claimGrantNone.addEventListener('click', () => {
+      state.fellowship_claimed = "None (Standard Admission)";
+      closeModal(modalFellowships);
+      saveDashboardState();
+    });
+  }
+
+  // G. Document Vault Files Uploader & Dossier Manager
+  const renderUploadedDossier = () => {
+    if (!uploadedDossierList) return;
+    uploadedDossierList.innerHTML = "";
+    
+    if (state.uploaded_documents.length === 0) {
+      uploadedDossierList.innerHTML = `
+        <div style="font-size: 0.8rem; color: hsla(0,0%,7%,0.5); text-align: center; padding: 12px; border: 1.5px dashed rgba(17,17,17,0.15); border-radius: 8px;">
+          No transcripts uploaded yet. Complete dossiers require transcripts.
+        </div>
+      `;
+      return;
+    }
+
+    state.uploaded_documents.forEach((doc, idx) => {
+      const item = document.createElement('div');
+      item.className = "uploaded-doc-item";
+      item.innerHTML = `
+        <div class="doc-info">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+          </svg>
+          <span>${doc}</span>
+        </div>
+        <button class="btn-remove-doc" data-index="${idx}">&times;</button>
+      `;
+      uploadedDossierList.appendChild(item);
+    });
+
+    // Wire delete buttons
+    const removeBtns = uploadedDossierList.querySelectorAll('.btn-remove-doc');
+    removeBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const idx = parseInt((e.target as HTMLElement).getAttribute('data-index') || "0");
+        state.uploaded_documents.splice(idx, 1);
+        saveDashboardState();
+        renderUploadedDossier();
+      });
+    });
+  };
+
+  if (uploadDropzone && fileUploaderInput) {
+    uploadDropzone.addEventListener('click', () => {
+      fileUploaderInput.click();
+    });
+
+    fileUploaderInput.addEventListener('change', () => {
+      if (fileUploaderInput.files && fileUploaderInput.files.length > 0) {
+        for (let i = 0; i < fileUploaderInput.files.length; i++) {
+          const file = fileUploaderInput.files[i];
+          if (state.uploaded_documents.length < 5) {
+            state.uploaded_documents.push(file.name);
+          }
+        }
+        saveDashboardState();
+        renderUploadedDossier();
+      }
+    });
+
+    // Drag over effect support
+    uploadDropzone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadDropzone.style.borderColor = "var(--gold)";
+      uploadDropzone.style.background = "rgba(212, 175, 55, 0.08)";
+    });
+
+    uploadDropzone.addEventListener('dragleave', () => {
+      uploadDropzone.style.borderColor = "var(--black)";
+      uploadDropzone.style.background = "rgba(253, 245, 230, 0.4)";
+    });
+
+    uploadDropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadDropzone.style.borderColor = "var(--black)";
+      uploadDropzone.style.background = "rgba(253, 245, 230, 0.4)";
+      
+      const files = e.dataTransfer?.files;
+      if (files && files.length > 0) {
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          if (state.uploaded_documents.length < 5) {
+            state.uploaded_documents.push(file.name);
+          }
+        }
+        saveDashboardState();
+        renderUploadedDossier();
+      }
+    });
+  }
+
+  // H. Bottom Panel Discard and Submit Actions
+  if (btnDiscardDraft) {
+    btnDiscardDraft.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (confirm("Are you absolutely sure you want to discard your program application draft under the Sovereign Charter? This clears your selected track.")) {
+        state.selected_track = null;
+        state.fellowship_claimed = null;
+        state.uploaded_documents = [];
+        state.submitted = false;
+        saveDashboardState();
+      }
+    });
+  }
+
+  if (btnSubmitApplication) {
+    btnSubmitApplication.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (confirm("Confirm submit. This will securely lock your KGA specialisation dossiers and unlock the entrance exam gates.")) {
+        state.submitted = true;
+        saveDashboardState();
+        alert("Genesis Dossier Submitted Successfully!\n\nYour entrance exam gate is now fully active. Initiate 'Unstop Exam' to secure your seat.");
+      }
+    });
+  }
+
+  // I. Exam button click handler
+  if (btnStartExam) {
+    btnStartExam.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (state.submitted) {
+        alert("Genesis gate unlocked! Redirecting candidate to secure exam portal on Unstop.");
+        window.location.href = "https://unstop.com";
+      }
+    });
+  }
+
+  // 6. Run Initial load & Render cycle
+  await loadDashboardState();
+  renderDashboard();
 }

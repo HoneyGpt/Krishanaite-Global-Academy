@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Genesis Dashboard | Krishnaite Global Academy</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Manage your KGA program applications, claim fellowships, upload credentials, and unlock the Genesis gate entrance exam.">
+  
+  <!-- Style Sheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="dashboard-body">
+
+  <!-- Background Canvas for Grid & Floating Particle Shapes -->
+  <div class="canvas-bg">
+    <div class="perspective-grid" id="grid"></div>
+    <div class="floating-shape shape-1" id="shape1"></div>
+    <div class="floating-shape shape-2" id="shape2"></div>
+    <div class="floating-shape shape-3" id="shape3"></div>
+  </div>
+
+  <div class="dashboard-layout">
+    
+    <!-- 1. The Obsidian Sidebar (Left Anchor) -->
+    <aside class="obsidian-sidebar">
+      <a href="index.html" class="sidebar-brand">
+        <div class="logo-icon"></div>
+        <span>Krishnaite</span>
+      </a>
+      
+      <span class="sidebar-sect-title">Navigation</span>
+      <ul class="sidebar-menu">
+        <li class="sidebar-menu-item active" id="menu-dashboard">
+          <a href="#">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li class="sidebar-menu-item" id="menu-drafts">
+          <a href="#">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            <span>Drafts (<span id="drafts-count">0</span>)</span>
+          </a>
+        </li>
+        <li class="sidebar-menu-item" id="menu-completed">
+          <a href="#">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <span>Completed</span>
+          </a>
+        </li>
+        <li class="sidebar-menu-item" id="menu-vault">
+          <a href="#">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+            </svg>
+            <span>Document Vault</span>
+          </a>
+        </li>
+        <li class="sidebar-menu-item" id="menu-recs">
+          <a href="#">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9.663 17h4.673M12 3v1m6.364.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 0 1-2 2h0a2 2 0 0 1-2-2v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+            </svg>
+            <span>Recommendations</span>
+          </a>
+        </li>
+      </ul>
+      
+      <span class="sidebar-sect-title">Admission Status</span>
+      <div class="sidebar-status-box">
+        <div class="status-indicator">
+          <span class="status-led green" id="status-verified-led"></span>
+          <span id="status-verified-text">Identity Verified</span>
+        </div>
+        <div class="status-indicator">
+          <span class="status-led white" id="status-track-led"></span>
+          <span id="status-track-text">Track Unselected</span>
+        </div>
+        <div class="status-indicator">
+          <span class="status-led red" id="status-exam-led"></span>
+          <span id="status-exam-text">Exam Locked</span>
+        </div>
+      </div>
+      
+      <span class="sidebar-sect-title" style="margin-top: 24px;">Support</span>
+      <ul class="sidebar-menu" style="margin-bottom: 0;">
+        <li class="sidebar-menu-item" id="menu-contact">
+          <a href="#">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+            <span>Contact Admin</span>
+          </a>
+        </li>
+        <li class="sidebar-menu-item" id="menu-settings">
+          <a href="#">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+            <span>Settings</span>
+          </a>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- 2. Main Canvas (Right Container) -->
+    <main class="main-canvas">
+      
+      <!-- Dashboard Header Glass Card -->
+      <header class="dashboard-header">
+        <div class="header-intro">
+          <h1>Welcome back, <span id="candidate-name">Candidate</span>.</h1>
+          <p style="font-size: 0.85rem; color: hsla(0,0%,7%,0.6); margin-top: 4px;">Candidate ID: <strong id="candidate-id" style="color: var(--black);">KGA-ID-XXXX</strong></p>
+        </div>
+        
+        <div class="header-actions">
+          <button class="notification-bell-btn" id="bell-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span class="notification-badge" id="bell-badge"></span>
+          </button>
+          
+          <!-- Dropdown notifications tray -->
+          <div class="notification-dropdown" id="bell-tray">
+            <h4 style="font-family: var(--font-sans); font-size: 0.9rem; font-weight: 700; margin-bottom: 12px; border-bottom: 1.5px solid var(--black); padding-bottom: 6px;">Notifications</h4>
+            <div id="notifications-list">
+              <div class="notification-item">Welcome to Krishnaite Global Academy. Please initiate your track selection to proceed.</div>
+              <div class="notification-item">Your academic registration credentials have been successfully locked inside our database under the Genesis Charter.</div>
+            </div>
+          </div>
+          
+          <button class="cta-header-btn" id="btn-logout" style="background: var(--black); color: var(--bg-peach); border-radius: 8px; font-size: 0.85rem; font-weight: 700; padding: 10px 20px;">Log Out</button>
+        </div>
+      </header>
+      
+      <!-- Quick Actions CSS Grid of 4 Cards -->
+      <h2 class="actions-section-title">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="stroke: var(--red);">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+        </svg>
+        Quick Actions
+      </h2>
+      <div class="quick-actions-grid">
+        
+        <!-- 1. KGA Programs Card -->
+        <div class="action-card" id="card-programs">
+          <div class="action-card-header">
+            <div class="action-card-title">
+              <div class="action-card-icon-container">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                  <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"></path>
+                </svg>
+              </div>
+              <h3>KGA Programs</h3>
+            </div>
+          </div>
+          <p>Select your educational specialization. Initiate your high-performance Sovereign Forge or Vanguard track.</p>
+          <button class="action-card-btn primary" id="btn-start-app">
+            <span>+ Start App</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 5"></polyline>
+            </svg>
+          </button>
+        </div>
+        
+        <!-- 2. Fellowships Card -->
+        <div class="action-card" id="card-fellowships">
+          <div class="action-card-header">
+            <div class="action-card-title">
+              <div class="action-card-icon-container">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+              </div>
+              <h3>Fellowships</h3>
+            </div>
+          </div>
+          <p>Apply for the KGA Merit & Equity Fellowship to claim up to 25% tuition subsidies. Credentials verification required.</p>
+          <button class="action-card-btn primary" id="btn-claim-grant">
+            <span>+ Claim</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </button>
+        </div>
+        
+        <!-- 3. Upload Docs Card -->
+        <div class="action-card" id="card-documents">
+          <div class="action-card-header">
+            <div class="action-card-title">
+              <div class="action-card-icon-container">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="17 8 12 3 7 8"></polyline>
+                  <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+              </div>
+              <h3>Upload Docs</h3>
+            </div>
+          </div>
+          <p>Submit your verified identification documents and official academic transcripts to complete your secure dossier.</p>
+          <button class="action-card-btn primary" id="btn-upload-docs">
+            <span>Upload</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="19" x2="12" y2="5"></line>
+              <polyline points="5 12 12 5 19 12"></polyline>
+            </svg>
+          </button>
+        </div>
+        
+        <!-- 4. Unstop Exam Card -->
+        <div class="action-card disabled" id="card-exam">
+          <div class="action-card-header">
+            <div class="action-card-title">
+              <div class="action-card-icon-container">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="exam-icon-svg">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+              </div>
+              <h3>Unstop Exam</h3>
+            </div>
+          </div>
+          <p>Access the secure Genesis Gate evaluation portal. This link unlocks only after track selection and document vaults are activated.</p>
+          <button class="action-card-btn secondary" id="btn-start-exam" disabled>
+            <span>Locked</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+          </button>
+        </div>
+        
+      </div>
+      
+      <!-- Bottom Section: Application Canvas (Dynamically Swaps Empty / Active Draft states) -->
+      <h2 class="actions-section-title">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="stroke: var(--gold);">
+          <line x1="18" y1="20" x2="18" y2="10"></line>
+          <line x1="12" y1="20" x2="12" y2="4"></line>
+          <line x1="6" y1="20" x2="6" y2="14"></line>
+        </svg>
+        Application Status
+      </h2>
+      <div class="status-canvas-card" id="status-canvas">
+        
+        <!-- Default State: Empty Status Box -->
+        <div class="empty-status-box" id="empty-state">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          <h4>You have no active drafts.</h4>
+          <p>Click "Start App" above in the quick actions cards panel to initialize your application and specialisation track.</p>
+        </div>
+        
+        <!-- Active Draft State (Hidden by default, shown by app.ts) -->
+        <div class="draft-card" id="draft-state" style="display: none;">
+          <div class="draft-card-header">
+            <div class="draft-program-title">
+              <h4 id="draft-title-text">Sovereign Forge Track Application</h4>
+              <p>Admission Cycle: Genesis Cohort</p>
+            </div>
+            <div class="draft-step-progress">
+              <span>Progress: <strong id="progress-percent">50%</strong></span>
+              <div class="progress-bar-container">
+                <div class="progress-bar-fill" id="progress-bar"></div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="draft-details-grid">
+            <div class="draft-detail-item">
+              <h5>Specialisation Track</h5>
+              <p id="detail-track-name">Sovereign Path (Systems & Strategy)</p>
+            </div>
+            <div class="draft-detail-item">
+              <h5>Tuition Fellowship Grant</h5>
+              <p id="detail-fellowship-status">Tuition Fellowship Pending</p>
+            </div>
+            <div class="draft-detail-item">
+              <h5>Academic Credentials Dossier</h5>
+              <p id="detail-docs-status">0 Documents Uploaded (Transcripts required)</p>
+            </div>
+            <div class="draft-detail-item">
+              <h5>Identity Status</h5>
+              <p style="color: #34A853;">Verified via Resend Auth</p>
+            </div>
+          </div>
+          
+          <div class="draft-actions">
+            <button class="action-card-btn secondary" id="btn-discard-draft" style="color: var(--red); border-color: var(--black); background: transparent;">Discard Draft</button>
+            <button class="action-card-btn primary" id="btn-submit-application">Submit Completed Application</button>
+          </div>
+        </div>
+        
+      </div>
+      
+    </main>
+  </div>
+
+  <!-- ==========================================================================
+       Dashboard Overlays and Modals Panel
+       ========================================================================== -->
+  
+  <!-- 1. KGA Programs Overlay Modal -->
+  <div class="dashboard-modal-overlay" id="modal-programs">
+    <div class="dashboard-modal-container">
+      <button class="modal-close" id="close-programs-modal">&times;</button>
+      <div class="dashboard-modal-header">
+        <h3>Select Specialisation Track</h3>
+        <p>Initialize your cohort profile by choosing one of the two core paths.</p>
+      </div>
+      
+      <div style="display: flex; flex-direction: column; gap: 20px; margin-bottom: 28px;">
+        <!-- Sovereign Path Box -->
+        <div class="scarcity-box" id="select-track-sovereign" style="cursor: pointer; text-align: left; padding: 24px; border-color: var(--black);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <h4 style="margin: 0; color: var(--gold); font-size: 1.3rem;">Track I: The Sovereign Path</h4>
+            <span class="track-badge" style="margin: 0; padding: 4px 10px; font-size: 0.7rem; background: var(--gold); border-color: var(--black); box-shadow: none;">Specialisation</span>
+          </div>
+          <p style="font-size: 0.85rem; line-height: 1.4; color: hsla(0,0%,7%,0.85);">
+            Focuses heavily on high-integrity systems engineering, memory-safe OS kernels (Rust), core databases, distributed cryptosystems, and historical imperial statecraft frameworks.
+          </p>
+        </div>
+        
+        <!-- Vanguard Path Box -->
+        <div class="scarcity-box" id="select-track-vanguard" style="cursor: pointer; text-align: left; padding: 24px; border-color: var(--black);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <h4 style="margin: 0; color: var(--red); font-size: 1.3rem;">Track II: The Vanguard Forge</h4>
+            <span class="track-badge" style="margin: 0; padding: 4px 10px; font-size: 0.7rem; background: var(--black); color: var(--bg-peach); border-color: var(--black); box-shadow: none;">Specialisation</span>
+          </div>
+          <p style="font-size: 0.85rem; line-height: 1.4; color: hsla(0,0%,7%,0.85);">
+            Focuses heavily on compiler engineering, GPGPU kernel acceleration, compiler pipelines (LLVM), bare-metal performance optimization, and deep tech product commercialization.
+          </p>
+        </div>
+      </div>
+      
+      <div style="display: flex; justify-content: flex-end; gap: 16px;">
+        <button class="action-card-btn secondary" id="btn-cancel-programs" style="margin: 0;">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Fellowship Grant Overlay Modal -->
+  <div class="dashboard-modal-overlay" id="modal-fellowships">
+    <div class="dashboard-modal-container">
+      <button class="modal-close" id="close-fellowships-modal">&times;</button>
+      <div class="dashboard-modal-header">
+        <h3>Tuition Fellowship Claims</h3>
+        <p>Apply for subsidies under the KGA Sovereign Charter guidelines.</p>
+      </div>
+      
+      <div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 28px;">
+        <!-- Grant Option 1 -->
+        <div class="scarcity-box" id="claim-grant-merit" style="cursor: pointer; text-align: left; padding: 20px; border-color: var(--black);">
+          <h4 style="margin: 0 0 6px 0; font-size: 1.15rem; color: var(--red);">Genesis Merit Fellowship (25% Tuition Subsidy)</h4>
+          <p style="font-size: 0.8rem; line-height: 1.4;">
+            Granted to top percentile exam candidates. Requires an compromise-free 93% standard threshold in mock evaluations and high structural performance.
+          </p>
+        </div>
+        
+        <!-- Grant Option 2 -->
+        <div class="scarcity-box" id="claim-grant-equity" style="cursor: pointer; text-align: left; padding: 20px; border-color: var(--black);">
+          <h4 style="margin: 0 0 6px 0; font-size: 1.15rem; color: var(--gold);">Charter Equity Subsidy (15% Tuition Subsidy)</h4>
+          <p style="font-size: 0.8rem; line-height: 1.4;">
+            Need-based subsidy designed under structural inclusion protocols. Requires financial ledger declaration proofs (less than 3 Lakhs threshold).
+          </p>
+        </div>
+        
+        <!-- No Grant option -->
+        <div class="scarcity-box" id="claim-grant-none" style="cursor: pointer; text-align: left; padding: 20px; border-color: var(--black);">
+          <h4 style="margin: 0 0 6px 0; font-size: 1.15rem; color: var(--black);">Standard Admission Ledger (No Grant)</h4>
+          <p style="font-size: 0.8rem; line-height: 1.4;">
+            Proceed with normal tuition structure allocations. Standard fee rates apply without document grant checks.
+          </p>
+        </div>
+      </div>
+      
+      <div style="display: flex; justify-content: flex-end; gap: 16px;">
+        <button class="action-card-btn secondary" id="btn-cancel-fellowships" style="margin: 0;">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Documents Vault Upload Modal -->
+  <div class="dashboard-modal-overlay" id="modal-documents">
+    <div class="dashboard-modal-container">
+      <button class="modal-close" id="close-documents-modal">&times;</button>
+      <div class="dashboard-modal-header">
+        <h3>Document Vault Uploader</h3>
+        <p>Upload your academic and identification transcripts to activate your admission profile.</p>
+      </div>
+      
+      <!-- Hidden file input -->
+      <input type="file" id="file-uploader-input" style="display: none;" multiple accept=".pdf,.png,.jpg,.jpeg">
+      
+      <!-- Upload Dropzone -->
+      <div class="upload-dropzone" id="upload-dropzone">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="17 8 12 3 7 8"></polyline>
+          <line x1="12" y1="3" x2="12" y2="15"></line>
+        </svg>
+        <h4 style="font-size: 1rem; font-family: var(--font-sans); margin-bottom: 4px;">Drag and drop transcripts here</h4>
+        <p style="font-size: 0.8rem; color: hsla(0,0%,7%,0.65);">or click to browse local storage (.pdf, .png, .jpg up to 10MB)</p>
+      </div>
+      
+      <h4 style="font-size: 0.85rem; text-transform: uppercase; font-family: var(--font-sans); letter-spacing: 0.05em; margin-bottom: 12px;">Uploaded Dossier</h4>
+      <div class="uploaded-docs-list" id="uploaded-dossier-list">
+        <!-- Will be filled by app.ts -->
+      </div>
+      
+      <div style="display: flex; justify-content: flex-end; gap: 16px;">
+        <button class="action-card-btn primary" id="btn-close-vault-modal" style="margin: 0; padding: 12px 28px;">Finish Uploads</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main interactive JS linking Vite bundles -->
+  <script type="module" src="/app.ts"></script>
+</body>
+</html>
