@@ -257,9 +257,57 @@ function initModalControls() {
   const portalConsole = document.querySelector('.portal-console');
   const modalHeader = document.querySelector('.modal-header');
 
+  // Check active Supabase Auth session (triggered after email confirmation redirect)
+  const checkSession = async () => {
+    if (!supabase) return;
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session && session.user && modalHeader) {
+        const user = session.user;
+        const verifiedName = user.user_metadata?.name || "Candidate";
+        const verifiedKId = user.user_metadata?.k_id || "KGA-ID-TEMP";
+
+        // Auto-update public registrations table status
+        try {
+          await supabase.from('registrations').update({ verified: true }).eq('email', user.email);
+        } catch (e) {}
+
+        if (manifestForm) (manifestForm as HTMLElement).style.display = 'none';
+        if (portalConsole) (portalConsole as HTMLElement).style.display = 'none';
+        const loginForm = document.getElementById('login-form');
+        if (loginForm) (loginForm as HTMLElement).style.display = 'none';
+
+        modalHeader.innerHTML = `
+          <span class="modal-badge" style="background: var(--black); color: var(--gold); border-color: var(--gold);">Identity Verified</span>
+          <h2 style="font-size: 2.2rem; font-family: var(--font-serif); margin-bottom: 24px; color: var(--black);">Verification Successful</h2>
+          <p class="modal-intro">
+            Welcome to the Academy, <strong>${verifiedName}</strong>. Your permanent active credentials have been verified.<br>
+            Your unique Krishnaite ID: <strong style="color: var(--red); font-size: 1.15rem;">${verifiedKId}</strong> is now fully activated.
+          </p>
+          <p class="modal-intro" style="font-size: 0.85rem; font-style: italic; color: var(--red); margin-top: 20px;">
+            Unlocking manifest... Redirecting to secure Unstop entrance exam in 5 seconds.
+          </p>
+          <div class="modal-cta-box" style="margin-top: 24px; display: flex; justify-content: center;">
+            <a href="https://unstop.com" class="entrance-exam-btn" style="text-decoration: none; background: var(--red); color: var(--bg-peach); border-color: var(--black);">
+              Proceed to Exam
+            </a>
+          </div>
+        `;
+        setTimeout(() => {
+          window.location.href = "https://unstop.com";
+        }, 5000);
+      }
+    } catch (err) {
+      console.error("Session verification fetch failed:", err);
+    }
+  };
+  checkSession();
+
   if (token && modalHeader) {
     if (manifestForm) (manifestForm as HTMLElement).style.display = 'none';
     if (portalConsole) (portalConsole as HTMLElement).style.display = 'none';
+    const loginForm = document.getElementById('login-form');
+    if (loginForm) (loginForm as HTMLElement).style.display = 'none';
     
     modalHeader.innerHTML = `
       <span class="modal-badge" style="background: var(--black); color: var(--gold); border-color: var(--gold);">Identity Authenticating</span>
@@ -402,8 +450,26 @@ function initModalControls() {
       let name = "Candidate";
       let verified = false;
 
-      // Query Supabase registrations & applicants
+      // Primary: Authenticate using real Supabase Auth
       if (supabase) {
+        try {
+          const { data: authData, error: authErr } = await supabase.auth.signInWithPassword({
+            email: email,
+            password: k_id // Since their password is their Krishnaite ID
+          });
+
+          if (!authErr && authData.user) {
+            found = true;
+            name = authData.user.user_metadata?.name || "Candidate";
+            verified = authData.user.email_confirmed_at ? true : false;
+          }
+        } catch (err) {
+          console.error("Supabase Auth signin fail:", err);
+        }
+      }
+
+      // Secondary Fallback: Query registrations custom table directly if auth was bypassed
+      if (!found && supabase) {
         try {
           const { data: regData } = await supabase.from('registrations').select('*').eq('email', email);
           if (regData && regData.length > 0) {
@@ -414,24 +480,12 @@ function initModalControls() {
               verified = matched.verified;
             }
           }
-          
-          if (!found) {
-            const { data: appData } = await supabase.from('applicants').select('*').eq('email', email);
-            if (appData && appData.length > 0) {
-              const matched = appData.find((r: any) => (r.k_id ? r.k_id.replace(/[\s]/g, '') : '') === k_id.replace(/[\s]/g, ''));
-              if (matched) {
-                found = true;
-                name = matched.name;
-                verified = matched.verified;
-              }
-            }
-          }
         } catch (err) {
-          console.error("Supabase login check failed:", err);
+          console.error("Supabase table fallback check failed:", err);
         }
       }
 
-      // Query Local Cache Fallback
+      // Tertiary Fallback: Query Local Cache
       if (!found) {
         const cachedData = localStorage.getItem('kga_applicants');
         if (cachedData) {
@@ -455,7 +509,7 @@ function initModalControls() {
           alert(`Welcome back, ${name}.\n\nIdentity authenticated successfully.\nProceeding to secure Unstop entrance exam...`);
           window.location.href = 'https://unstop.com';
         } else {
-          alert(`Identity Manifest Found for ${name}.\n\nHowever, email verification is still pending.\nPlease verify your email via the link to unlock the entrance exam.`);
+          alert(`Identity Manifest Found for ${name}.\n\nHowever, email verification is still pending.\nPlease verify your email via the link sent to your inbox.`);
         }
       } else {
         alert("Identity manifest not found.\nPlease register a new Krishnaite ID or check your credentials.");
@@ -469,7 +523,7 @@ function initModalControls() {
       const email = (document.getElementById('email-addr') as HTMLInputElement).value;
       const phone = (document.getElementById('phone-num') as HTMLInputElement).value;
       
-      // Generate a mock unique Krishnaite ID
+      // Generate a unique Krishnaite ID
       const randomNum = Math.floor(1000 + Math.random() * 9000);
       const k_id = `KGA-ID-${randomNum}`;
       const token = Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2);
@@ -492,33 +546,43 @@ function initModalControls() {
       cachedRecords.push(record);
       localStorage.setItem('kga_applicants', JSON.stringify(cachedRecords));
 
-      // 2. Submit to Supabase directly
+      // 2. Submit to Supabase directly and trigger Real Supabase Auth SignUp
       let supabaseSuccess = false;
       if (supabase) {
         try {
+          // Insert row into registrations table
           const { error: err1 } = await supabase.from('registrations').insert([record]);
           if (!err1) {
             supabaseSuccess = true;
           } else {
-            console.warn("registrations table fail, trying applicants table...", err1);
+            console.warn("registrations table insert fail:", err1);
             const { error: err2 } = await supabase.from('applicants').insert([record]);
             if (!err2) supabaseSuccess = true;
           }
-        } catch (err) {
-          console.error("Supabase direct insert fail", err);
-        }
-      }
 
-      // 3. Fallback Post to local Flask server if running locally
-      if (!supabaseSuccess) {
-        try {
-          await fetch('/api/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email, phone, k_id, verification_token: token })
+          // Trigger secure Supabase Auth SignUp to dispatch real verification email via SMTP (Resend)
+          const { data: authData, error: authErr } = await supabase.auth.signUp({
+            email: email,
+            password: k_id, // Use the generated Krishnaite ID as password
+            options: {
+              data: {
+                name: name,
+                phone: phone,
+                k_id: k_id
+              },
+              emailRedirectTo: `${window.location.origin}${window.location.pathname}`
+            }
           });
-        } catch (e) {
-          console.log("Flask server register offline");
+
+          if (authErr) {
+            console.error("Supabase Auth SignUp fail:", authErr);
+          } else {
+            console.log("Supabase Auth SignUp successful, verification email dispatched via Resend!");
+            supabaseSuccess = true;
+          }
+
+        } catch (err) {
+          console.error("Supabase operations fail:", err);
         }
       }
 
