@@ -1,4 +1,11 @@
 /* Interactive systems for Krishnaite Global Academy */
+import { createBrowserClient } from "@supabase/ssr";
+
+const supabaseUrl = (import.meta as any).env.VITE_SUPABASE_URL || 'https://xzuharogabpeumqpjoib.supabase.co';
+const supabaseKey = (import.meta as any).env.VITE_SUPABASE_PUBLISHABLE_KEY || 'sb_publishable_DczjutUY01_TpXmXUifVGQ_vby6-SLt';
+
+const supabase = createBrowserClient(supabaseUrl, supabaseKey);
+
 
 document.addEventListener('DOMContentLoaded', () => {
   initHeroParallax();
@@ -31,21 +38,22 @@ function initHeroParallax() {
     const normY = y / (rect.height / 2);
 
     floatCards.forEach(card => {
-      const speed = parseFloat(card.getAttribute('data-speed')) || 1.5;
+      const element = card as HTMLElement;
+      const speed = parseFloat(element.getAttribute('data-speed') || '1.5') || 1.5;
       
       // Calculate shifts
       const cardShiftX = normX * 15 * speed;
       const cardShiftY = normY * 15 * speed;
       
       // Apply translation
-      card.style.transform = `translate(${cardShiftX}px, ${cardShiftY}px)`;
+      element.style.transform = `translate(${cardShiftX}px, ${cardShiftY}px)`;
       
       // Adjust shadow offset in reverse to make shadow stay physically fixed
-      if (card.classList.contains('floating-card')) {
+      if (element.classList.contains('floating-card')) {
         const defaultShadowOffset = 12; // 12px default
         const newShadowX = defaultShadowOffset - cardShiftX;
         const newShadowY = defaultShadowOffset - cardShiftY;
-        card.style.boxShadow = `${newShadowX}px ${newShadowY}px 0px var(--black-shadow)`;
+        element.style.boxShadow = `${newShadowX}px ${newShadowY}px 0px var(--black-shadow)`;
       }
     });
   });
@@ -53,9 +61,10 @@ function initHeroParallax() {
   // Reset positions smoothly on mouse leave
   interactiveZone.addEventListener('mouseleave', () => {
     floatCards.forEach(card => {
-      card.style.transform = '';
-      if (card.classList.contains('floating-card')) {
-        card.style.boxShadow = '12px 12px 0px var(--black-shadow)';
+      const element = card as HTMLElement;
+      element.style.transform = '';
+      if (element.classList.contains('floating-card')) {
+        element.style.boxShadow = '12px 12px 0px var(--black-shadow)';
       }
     });
   });
@@ -94,7 +103,7 @@ function initBackgroundElements() {
 
   // Perspective Grid Tilting based on mouse moves globally
   document.addEventListener('mousemove', (e) => {
-    const grid = document.getElementById('grid');
+    const grid = document.getElementById('grid') as HTMLElement;
     if (!grid) return;
     
     const w = window.innerWidth;
@@ -152,8 +161,9 @@ function initTrackPanelTilt() {
   const panels = document.querySelectorAll('.track-panel');
   
   panels.forEach(panel => {
-    panel.addEventListener('mousemove', (e) => {
-      const rect = panel.getBoundingClientRect();
+    const element = panel as HTMLElement;
+    element.addEventListener('mousemove', (e: MouseEvent) => {
+      const rect = element.getBoundingClientRect();
       const x = e.clientX - rect.left; // x position within element
       const y = e.clientY - rect.top;  // y position within element
       
@@ -161,26 +171,26 @@ function initTrackPanelTilt() {
       const percentY = (y / rect.height - 0.5) * 2; // -1 to 1
       
       // Tilt the panel slightly toward the cursor
-      panel.style.transform = `perspective(800px) rotateY(${percentX * 5}deg) rotateX(${-percentY * 5}deg) translateY(-12px) scale(1.01)`;
+      element.style.transform = `perspective(800px) rotateY(${percentX * 5}deg) rotateX(${-percentY * 5}deg) translateY(-12px) scale(1.01)`;
       
       // Keep shadows in reverse
       const shadowX = 16 - percentX * 8;
       const shadowY = 16 - percentY * 8;
-      panel.style.boxShadow = `${shadowX}px ${shadowY}px 0px var(--black-shadow)`;
+      element.style.boxShadow = `${shadowX}px ${shadowY}px 0px var(--black-shadow)`;
       
       // Glowing highlight spot inside border
-      if (panel.classList.contains('sovereign-path')) {
-        panel.style.borderColor = `hsl(47, 75%, ${50 + percentX * 10}%)`;
+      if (element.classList.contains('sovereign-path')) {
+        element.style.borderColor = `hsl(47, 75%, ${50 + percentX * 10}%)`;
       } else {
-        panel.style.borderColor = `hsl(359, 75%, ${52 + percentX * 10}%)`;
+        element.style.borderColor = `hsl(359, 75%, ${52 + percentX * 10}%)`;
       }
     });
 
-    panel.addEventListener('mouseleave', () => {
+    element.addEventListener('mouseleave', () => {
       // Smooth reset
-      panel.style.transform = '';
-      panel.style.boxShadow = '16px 16px 0px var(--black-shadow)';
-      panel.style.borderColor = '';
+      element.style.transform = '';
+      element.style.boxShadow = '16px 16px 0px var(--black-shadow)';
+      element.style.borderColor = '';
     });
   });
 }
@@ -191,9 +201,10 @@ function initTrackPanelTilt() {
 function initSmoothScroll() {
   const anchors = document.querySelectorAll('a[href^="#"]');
   anchors.forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-      const targetId = this.getAttribute('href');
-      if (targetId === '#') return;
+    const element = anchor as HTMLAnchorElement;
+    element.addEventListener('click', function(e) {
+      const targetId = element.getAttribute('href');
+      if (!targetId || targetId === '#') return;
       
       const targetEl = document.querySelector(targetId);
       if (targetEl) {
@@ -236,14 +247,7 @@ function initModalControls() {
     });
   }
 
-  // Initialize Supabase Client dynamically on client side
-  let supabase = null;
-  if (window.supabase) {
-    const supabaseUrl = 'https://xzuharogabpeumqpjoib.supabase.co';
-    const supabaseKey = 'sb_publishable_DczjutUY01_TpXmXUifVGQ_vby6-SLt';
-    supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-    console.log("Supabase client initialized successfully on front-end.");
-  }
+  // Supabase client is initialized globally at the top of the file using @supabase/ssr
 
   // Handle email verification link logic on load
   const urlParams = new URLSearchParams(window.location.search);
@@ -254,8 +258,8 @@ function initModalControls() {
   const modalHeader = document.querySelector('.modal-header');
 
   if (token && modalHeader) {
-    if (manifestForm) manifestForm.style.display = 'none';
-    if (portalConsole) portalConsole.style.display = 'none';
+    if (manifestForm) (manifestForm as HTMLElement).style.display = 'none';
+    if (portalConsole) (portalConsole as HTMLElement).style.display = 'none';
     
     modalHeader.innerHTML = `
       <span class="modal-badge" style="background: var(--black); color: var(--gold); border-color: var(--gold);">Identity Authenticating</span>
@@ -296,7 +300,7 @@ function initModalControls() {
           // Check registrations table
           const { data: regData } = await supabase.from('registrations').select('*');
           if (regData && regData.length > 0) {
-            const matched = regData.find(r => (r.verification_token ? r.verification_token.replace(/[\s\n\r]/g, '') : '') === token);
+            const matched = regData.find((r: any) => (r.verification_token ? r.verification_token.replace(/[\s\n\r]/g, '') : '') === token);
             if (matched) {
               verifiedName = matched.name;
               verifiedKId = matched.k_id;
@@ -309,7 +313,7 @@ function initModalControls() {
             // Check applicants table
             const { data: appData } = await supabase.from('applicants').select('*');
             if (appData && appData.length > 0) {
-              const matched = appData.find(r => (r.verification_token ? r.verification_token.replace(/[\s\n\r]/g, '') : '') === token);
+              const matched = appData.find((r: any) => (r.verification_token ? r.verification_token.replace(/[\s\n\r]/g, '') : '') === token);
               if (matched) {
                 verifiedName = matched.name;
                 verifiedKId = matched.k_id;
@@ -438,9 +442,9 @@ function initModalControls() {
     manifestForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       
-      const name = document.getElementById('full-name').value;
-      const email = document.getElementById('email-addr').value;
-      const phone = document.getElementById('phone-num').value;
+      const name = (document.getElementById('full-name') as HTMLInputElement).value;
+      const email = (document.getElementById('email-addr') as HTMLInputElement).value;
+      const phone = (document.getElementById('phone-num') as HTMLInputElement).value;
       
       // Generate a mock unique Krishnaite ID
       const randomNum = Math.floor(1000 + Math.random() * 9000);
@@ -506,7 +510,7 @@ function initModalControls() {
 
       if (successPortal && displayKId && displayEmail && successVerifyUrl) {
         // Hide form
-        manifestForm.style.display = 'none';
+        (manifestForm as HTMLElement).style.display = 'none';
         
         // Update header block
         const modalHeader = document.querySelector('.modal-header');
@@ -520,13 +524,13 @@ function initModalControls() {
 
         // Hide portal console buttons
         if (portalConsole) {
-          portalConsole.style.display = 'none';
+          (portalConsole as HTMLElement).style.display = 'none';
         }
 
         // Populate elements
         displayKId.textContent = k_id;
         displayEmail.textContent = email;
-        successVerifyUrl.value = verification_url;
+        (successVerifyUrl as HTMLInputElement).value = verification_url;
         successPortal.style.display = 'block';
 
         // Bind Copy URL logic

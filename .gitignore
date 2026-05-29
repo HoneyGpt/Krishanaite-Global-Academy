@@ -1,0 +1,14 @@
+# Dependencies
+node_modules/
+
+# Production builds
+dist/
+.next/
+out/
+
+# TypeScript build info
+*.tsbuildinfo
+
+# Local environment secret overrides
+.env.local
+.env.*.local
