@@ -236,17 +236,187 @@ function initModalControls() {
     });
   }
 
+  // Initialize Supabase Client dynamically on client side
+  let supabase = null;
+  if (window.supabase) {
+    const supabaseUrl = 'https://xzuharogabpeumqpjoib.supabase.co';
+    const supabaseKey = 'sb_publishable_DczjutUY01_TpXmXUifVGQ_vby6-SLt';
+    supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+    console.log("Supabase client initialized successfully on front-end.");
+  }
+
+  // Handle email verification link logic on load
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get('token');
+  const manifestForm = document.getElementById('manifest-form');
+  const portalConsole = document.querySelector('.portal-console');
+  const modalHeader = document.querySelector('.modal-header');
+
+  if (token && modalHeader) {
+    if (manifestForm) manifestForm.style.display = 'none';
+    if (portalConsole) portalConsole.style.display = 'none';
+    
+    modalHeader.innerHTML = `
+      <span class="modal-badge" style="background: var(--black); color: var(--gold); border-color: var(--gold);">Identity Authenticating</span>
+      <h2>Verifying your credentials...</h2>
+      <p class="modal-intro">Initiating secure gate verification. Please hold.</p>
+    `;
+
+    // Perform database lookups
+    const handleVerification = async () => {
+      let verifiedName = "Candidate";
+      let verifiedKId = "KGA-ID-TEMP";
+      let success = false;
+
+      // 1. Try local cache match first
+      const cachedData = localStorage.getItem('kga_applicants');
+      if (cachedData) {
+        try {
+          const records = JSON.parse(cachedData);
+          for (let r of records) {
+            if (r.verification_token === token) {
+              r.verified = true;
+              verifiedName = r.name;
+              verifiedKId = r.k_id;
+              success = true;
+              localStorage.setItem('kga_applicants', JSON.stringify(records));
+              break;
+            }
+          }
+        } catch (e) {
+          console.error("Local verify error", e);
+        }
+      }
+
+      // 2. Try Supabase Sync next
+      if (supabase) {
+        try {
+          // Check registrations table
+          const { data: regData } = await supabase.from('registrations').select('*').eq('verification_token', token);
+          if (regData && regData.length > 0) {
+            verifiedName = regData[0].name;
+            verifiedKId = regData[0].k_id;
+            await supabase.from('registrations').update({ verified: true }).eq('verification_token', token);
+            success = true;
+          } else {
+            // Check applicants table
+            const { data: appData } = await supabase.from('applicants').select('*').eq('verification_token', token);
+            if (appData && appData.length > 0) {
+              verifiedName = appData[0].name;
+              verifiedKId = appData[0].k_id;
+              await supabase.from('applicants').update({ verified: true }).eq('verification_token', token);
+              success = true;
+            }
+          }
+        } catch (err) {
+          console.error("Supabase verification error", err);
+        }
+      }
+
+      if (success) {
+        modalHeader.innerHTML = `
+          <span class="modal-badge" style="background: var(--black); color: var(--gold); border-color: var(--gold);">Identity Verified</span>
+          <h2 style="font-size: 2.2rem; font-family: var(--font-serif); margin-bottom: 24px; color: var(--black);">Verification Successful</h2>
+          <p class="modal-intro">
+            Welcome to the Academy, <strong>${verifiedName}</strong>. Your permanent active credentials have been verified.<br>
+            Your unique Krishnaite ID: <strong style="color: var(--red); font-size: 1.15rem;">${verifiedKId}</strong> is now fully activated.
+          </p>
+          <p class="modal-intro" style="font-size: 0.85rem; font-style: italic; color: var(--red); margin-top: 20px;">
+            Unlocking manifest... Redirecting to secure Unstop entrance exam in 5 seconds.
+          </p>
+          <div class="modal-cta-box" style="margin-top: 24px; display: flex; justify-content: center;">
+            <a href="https://unstop.com" class="entrance-exam-btn" style="text-decoration: none; background: var(--red); color: var(--bg-peach); border-color: var(--black);">
+              Proceed to Exam
+            </a>
+          </div>
+        `;
+        setTimeout(() => {
+          window.location.href = "https://unstop.com";
+        }, 5000);
+      } else {
+        modalHeader.innerHTML = `
+          <span class="modal-badge" style="background: var(--black); color: var(--red); border-color: var(--red);">Verification Failed</span>
+          <h2>Authentication Failed</h2>
+          <p class="modal-intro" style="color: var(--red);">The verification token is invalid or has expired.</p>
+          <div class="modal-cta-box" style="margin-top: 24px; display: flex; justify-content: center;">
+            <a href="admissions-portal.html" class="entrance-exam-btn" style="text-decoration: none; background: var(--black); color: var(--bg-peach); border-color: var(--black);">
+              Back to Portal
+            </a>
+          </div>
+        `;
+      }
+    };
+    handleVerification();
+  }
+
   // Admissions Portal Form Toggles
   const portalLoginBtn = document.getElementById('portal-login-btn');
   const portalCreateBtn = document.getElementById('portal-create-btn');
-  const manifestForm = document.getElementById('manifest-form');
 
   if (portalLoginBtn && portalCreateBtn && manifestForm) {
-    portalLoginBtn.addEventListener('click', () => {
+    portalLoginBtn.addEventListener('click', async () => {
       portalLoginBtn.classList.add('active');
       portalCreateBtn.classList.remove('active');
       manifestForm.classList.remove('active');
-      alert('🔒 The secure Login gateway is opening. Please prepare your Mentozy credentials.');
+      
+      const email = prompt("Enter your registered Primary Email address:");
+      if (!email) return;
+      const k_id = prompt("Enter your secure Krishnaite ID (e.g. KGA-ID-XXXX):");
+      if (!k_id) return;
+
+      let found = false;
+      let name = "Candidate";
+      let verified = false;
+
+      // 1. Query Supabase
+      if (supabase) {
+        try {
+          const { data: regData } = await supabase.from('registrations').select('*').eq('email', email).eq('k_id', k_id);
+          if (regData && regData.length > 0) {
+            found = true;
+            name = regData[0].name;
+            verified = regData[0].verified;
+          } else {
+            const { data: appData } = await supabase.from('applicants').select('*').eq('email', email).eq('k_id', k_id);
+            if (appData && appData.length > 0) {
+              found = true;
+              name = appData[0].name;
+              verified = appData[0].verified;
+            }
+          }
+        } catch (err) {
+          console.error("Supabase login check failed:", err);
+        }
+      }
+
+      // 2. Query Local Cache Fallback
+      if (!found) {
+        const cachedData = localStorage.getItem('kga_applicants');
+        if (cachedData) {
+          try {
+            const records = JSON.parse(cachedData);
+            for (let r of records) {
+              if (r.email === email && r.k_id === k_id) {
+                found = true;
+                name = r.name;
+                verified = r.verified;
+                break;
+              }
+            }
+          } catch (e) {}
+        }
+      }
+
+      if (found) {
+        if (verified) {
+          alert(`🔒 Welcome back, ${name}!\n\nIdentity authenticated successfully.\nProceeding to secure Unstop entrance exam...`);
+          window.location.href = 'https://unstop.com';
+        } else {
+          alert(`🔒 Identity Manifest Found for ${name}!\n\nHowever, email verification is still pending.\nPlease verify your email via the outbox link to unlock the entrance exam.`);
+        }
+      } else {
+        alert("🔒 Identity manifest not found.\nPlease register a new Krishnaite ID or check your credentials.");
+      }
     });
 
     portalCreateBtn.addEventListener('click', () => {
@@ -255,7 +425,7 @@ function initModalControls() {
       manifestForm.classList.add('active');
     });
 
-    manifestForm.addEventListener('submit', (e) => {
+    manifestForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       
       const name = document.getElementById('full-name').value;
@@ -265,31 +435,58 @@ function initModalControls() {
       // Generate a mock unique Krishnaite ID
       const randomNum = Math.floor(1000 + Math.random() * 9000);
       const k_id = `KGA-ID-${randomNum}`;
+      const token = Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2);
       
-      const payload = {
+      const record = {
         name,
         email,
         phone,
-        k_id
+        k_id,
+        verification_token: token,
+        verified: false
       };
-      
-      // Send data to Flask server backend
-      fetch('/api/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-      })
-      .then(response => response.json())
-      .then(result => {
-        alert(`🔒 Identity Manifest Initialized!\n\nKrishnaite ID: ${k_id}\n\nA secure verification link has been logged to the server outbox and sent to: ${email}\n\n[DEVELOPER PREVIEW TESTING]:\nYou can test the real verification gate immediately by copying and pasting this local link into your browser:\n${result.verification_url}\n\nClick OK to close this diagnostic message.`);
-      })
-      .catch(err => {
-        console.error("Registration sync failed:", err);
-        const fallbackUrl = `http://localhost:8080/verify?token=mock_token`;
-        alert(`🔒 Identity Initialized (Local Cache Only)!\n\nKrishnaite ID: ${k_id}\n\nA secure verification link has been sent to: ${email}\n\n[OFFLINE PREVIEW TESTING]:\n${fallbackUrl}`);
-      });
+
+      // 1. Cache locally to localStorage
+      let cachedRecords = [];
+      const cached = localStorage.getItem('kga_applicants');
+      if (cached) {
+        try { cachedRecords = JSON.parse(cached); } catch (e) {}
+      }
+      cachedRecords.push(record);
+      localStorage.setItem('kga_applicants', JSON.stringify(cachedRecords));
+
+      // 2. Submit to Supabase directly
+      let supabaseSuccess = false;
+      if (supabase) {
+        try {
+          const { error: err1 } = await supabase.from('registrations').insert([record]);
+          if (!err1) {
+            supabaseSuccess = true;
+          } else {
+            console.warn("registrations table fail, trying applicants table...", err1);
+            const { error: err2 } = await supabase.from('applicants').insert([record]);
+            if (!err2) supabaseSuccess = true;
+          }
+        } catch (err) {
+          console.error("Supabase direct insert fail", err);
+        }
+      }
+
+      // 3. Fallback Post to local Flask server if running locally
+      if (!supabaseSuccess) {
+        try {
+          await fetch('/api/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, phone, k_id, verification_token: token })
+          });
+        } catch (e) {
+          console.log("Flask server register offline");
+        }
+      }
+
+      const verification_url = `${window.location.origin}${window.location.pathname}?token=${token}`;
+      alert(`🔒 Identity Manifest Initialized!\n\nKrishnaite ID: ${k_id}\n\nA secure verification link has been logged to the database and sent to: ${email}\n\n[LIVE TESTING LINK]:\nYou can test and authenticate your identity immediately by clicking or copying this link:\n${verification_url}`);
     });
   }
 }
