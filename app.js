@@ -283,13 +283,12 @@ function initModalControls() {
       })
       .then(response => response.json())
       .then(result => {
-        alert(`🔒 Identity Initialized Successfully!\n\nKrishnaite ID: ${k_id}\n\nA secure verification link has been dispatched to: ${email}\n\nYou must confirm your email to unlock the full application manifest and access the Unstop entrance exam!`);
-        window.location.href = 'https://unstop.com';
+        alert(`🔒 Identity Manifest Initialized!\n\nKrishnaite ID: ${k_id}\n\nA secure verification link has been logged to the server outbox and sent to: ${email}\n\n[DEVELOPER PREVIEW TESTING]:\nYou can test the real verification gate immediately by copying and pasting this local link into your browser:\n${result.verification_url}\n\nClick OK to close this diagnostic message.`);
       })
       .catch(err => {
         console.error("Registration sync failed:", err);
-        alert(`🔒 Identity Initialized (Local Cache Only)!\n\nKrishnaite ID: ${k_id}\n\nA secure verification link has been dispatched to: ${email}\n\nYou must confirm your email to unlock the full application manifest and access the Unstop entrance exam!`);
-        window.location.href = 'https://unstop.com';
+        const fallbackUrl = `http://localhost:8080/verify?token=mock_token`;
+        alert(`🔒 Identity Initialized (Local Cache Only)!\n\nKrishnaite ID: ${k_id}\n\nA secure verification link has been sent to: ${email}\n\n[OFFLINE PREVIEW TESTING]:\n${fallbackUrl}`);
       });
     });
   }
