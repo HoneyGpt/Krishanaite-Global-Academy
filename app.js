@@ -232,7 +232,7 @@ function initModalControls() {
   if (fellowshipBtn) {
     fellowshipBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      alert('🔒 Fellowship Application gateway is opening. Please prepare your verified academic and financial credentials.');
+      alert('Fellowship Application gateway is opening. Please prepare your verified academic and financial credentials.');
     });
   }
 
@@ -247,7 +247,8 @@ function initModalControls() {
 
   // Handle email verification link logic on load
   const urlParams = new URLSearchParams(window.location.search);
-  const token = urlParams.get('token');
+  const rawToken = urlParams.get('token');
+  const token = rawToken ? rawToken.replace(/[\s\n\r]/g, '').replace(/%0A/gi, '') : null;
   const manifestForm = document.getElementById('manifest-form');
   const portalConsole = document.querySelector('.portal-console');
   const modalHeader = document.querySelector('.modal-header');
@@ -274,7 +275,8 @@ function initModalControls() {
         try {
           const records = JSON.parse(cachedData);
           for (let r of records) {
-            if (r.verification_token === token) {
+            const cleanCachedToken = r.verification_token ? r.verification_token.replace(/[\s\n\r]/g, '') : '';
+            if (cleanCachedToken === token) {
               r.verified = true;
               verifiedName = r.name;
               verifiedKId = r.k_id;
@@ -292,20 +294,28 @@ function initModalControls() {
       if (supabase) {
         try {
           // Check registrations table
-          const { data: regData } = await supabase.from('registrations').select('*').eq('verification_token', token);
+          const { data: regData } = await supabase.from('registrations').select('*');
           if (regData && regData.length > 0) {
-            verifiedName = regData[0].name;
-            verifiedKId = regData[0].k_id;
-            await supabase.from('registrations').update({ verified: true }).eq('verification_token', token);
-            success = true;
-          } else {
-            // Check applicants table
-            const { data: appData } = await supabase.from('applicants').select('*').eq('verification_token', token);
-            if (appData && appData.length > 0) {
-              verifiedName = appData[0].name;
-              verifiedKId = appData[0].k_id;
-              await supabase.from('applicants').update({ verified: true }).eq('verification_token', token);
+            const matched = regData.find(r => (r.verification_token ? r.verification_token.replace(/[\s\n\r]/g, '') : '') === token);
+            if (matched) {
+              verifiedName = matched.name;
+              verifiedKId = matched.k_id;
+              await supabase.from('registrations').update({ verified: true }).eq('id', matched.id);
               success = true;
+            }
+          }
+          
+          if (!success) {
+            // Check applicants table
+            const { data: appData } = await supabase.from('applicants').select('*');
+            if (appData && appData.length > 0) {
+              const matched = appData.find(r => (r.verification_token ? r.verification_token.replace(/[\s\n\r]/g, '') : '') === token);
+              if (matched) {
+                verifiedName = matched.name;
+                verifiedKId = matched.k_id;
+                await supabase.from('applicants').update({ verified: true }).eq('id', matched.id);
+                success = true;
+              }
             }
           }
         } catch (err) {
@@ -409,13 +419,13 @@ function initModalControls() {
 
       if (found) {
         if (verified) {
-          alert(`🔒 Welcome back, ${name}!\n\nIdentity authenticated successfully.\nProceeding to secure Unstop entrance exam...`);
+          alert(`Welcome back, ${name}.\n\nIdentity authenticated successfully.\nProceeding to secure Unstop entrance exam...`);
           window.location.href = 'https://unstop.com';
         } else {
-          alert(`🔒 Identity Manifest Found for ${name}!\n\nHowever, email verification is still pending.\nPlease verify your email via the outbox link to unlock the entrance exam.`);
+          alert(`Identity Manifest Found for ${name}.\n\nHowever, email verification is still pending.\nPlease verify your email via the outbox link to unlock the entrance exam.`);
         }
       } else {
-        alert("🔒 Identity manifest not found.\nPlease register a new Krishnaite ID or check your credentials.");
+        alert("Identity manifest not found.\nPlease register a new Krishnaite ID or check your credentials.");
       }
     });
 
@@ -485,8 +495,67 @@ function initModalControls() {
         }
       }
 
+      const successPortal = document.getElementById('success-portal-container');
+      const displayKId = document.getElementById('display-k-id');
+      const displayEmail = document.getElementById('display-email');
+      const successVerifyUrl = document.getElementById('success-verify-url');
+      const btnCopyUrl = document.getElementById('btn-copy-url');
+      const btnVerifyTest = document.getElementById('btn-verify-test');
+
       const verification_url = `${window.location.origin}${window.location.pathname}?token=${token}`;
-      alert(`🔒 Identity Manifest Initialized!\n\nKrishnaite ID: ${k_id}\n\nA secure verification link has been logged to the database and sent to: ${email}\n\n[LIVE TESTING LINK]:\nYou can test and authenticate your identity immediately by clicking or copying this link:\n${verification_url}`);
+
+      if (successPortal && displayKId && displayEmail && successVerifyUrl) {
+        // Hide form
+        manifestForm.style.display = 'none';
+        
+        // Update header block
+        const modalHeader = document.querySelector('.modal-header');
+        if (modalHeader) {
+          modalHeader.innerHTML = `
+            <span class="modal-badge" style="background: var(--black); color: var(--gold); border-color: var(--gold);">Identity Manifest Initialized</span>
+            <h2>Identity Manifest Created Successfully</h2>
+            <p class="modal-intro">Follow the instructions below to verify your credentials and unlock the Genesis Cohort entrance exam gate.</p>
+          `;
+        }
+
+        // Hide portal console buttons
+        if (portalConsole) {
+          portalConsole.style.display = 'none';
+        }
+
+        // Populate elements
+        displayKId.textContent = k_id;
+        displayEmail.textContent = email;
+        successVerifyUrl.value = verification_url;
+        successPortal.style.display = 'block';
+
+        // Bind Copy URL logic
+        if (btnCopyUrl) {
+          btnCopyUrl.onclick = (e) => {
+            e.preventDefault();
+            navigator.clipboard.writeText(verification_url).then(() => {
+              btnCopyUrl.textContent = "Copied";
+              btnCopyUrl.style.background = "var(--gold)";
+              btnCopyUrl.style.color = "var(--black)";
+              setTimeout(() => {
+                btnCopyUrl.textContent = "Copy";
+                btnCopyUrl.style.background = "var(--black)";
+                btnCopyUrl.style.color = "var(--bg-peach)";
+              }, 2000);
+            }).catch(err => {
+              console.error("Clipboard copy failed: ", err);
+            });
+          };
+        }
+
+        // Bind Verify Now test logic
+        if (btnVerifyTest) {
+          btnVerifyTest.onclick = (e) => {
+            e.preventDefault();
+            window.location.href = verification_url;
+          };
+        }
+      }
     });
   }
 }

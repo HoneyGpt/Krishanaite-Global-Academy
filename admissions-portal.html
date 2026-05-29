@@ -293,6 +293,47 @@
           </div>
         </form>
 
+        <!-- Success Portal Container -->
+        <div id="success-portal-container" style="display: none; margin-top: 40px; text-align: left;">
+          <h2 class="about-section-title" style="margin-top: 20px;">Identity Manifest Initialized</h2>
+          <p class="sect-intro" style="margin-bottom: 24px;">Your academic registration profile has been successfully generated.</p>
+          
+          <div class="form-section" style="background: rgba(212, 175, 55, 0.08); border-color: var(--gold);">
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+              <div>
+                <span style="font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--black); display: block; margin-bottom: 4px;">Krishnaite ID</span>
+                <span id="display-k-id" style="font-family: var(--font-serif); font-size: 1.8rem; font-weight: 700; color: var(--red); letter-spacing: 0.02em;">KGA-ID-TEMP</span>
+              </div>
+              
+              <div style="border-top: 1px solid rgba(0,0,0,0.1); padding-top: 16px;">
+                <span style="font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--black); display: block; margin-bottom: 4px;">Associated Email</span>
+                <span id="display-email" style="font-family: var(--font-sans); font-size: 1.05rem; font-weight: 500; color: var(--black);"></span>
+              </div>
+              
+              <div style="border-top: 1px solid rgba(0,0,0,0.1); padding-top: 16px; display: flex; flex-direction: column; gap: 8px;">
+                <label for="success-verify-url" style="font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--black);">Secure Verification Link</label>
+                <div style="display: flex; gap: 12px; align-items: stretch; width: 100%;">
+                  <input type="text" id="success-verify-url" readonly style="flex-grow: 1; padding: 12px 16px; border: 2px solid var(--black); border-radius: 8px; background: var(--bg-peach); font-family: var(--font-sans); font-size: 0.9rem; font-weight: 500; color: var(--black);" value="">
+                  <button id="btn-copy-url" class="console-btn" style="margin: 0; padding: 0 24px; font-size: 0.85rem; border-radius: 8px; background: var(--black); color: var(--bg-peach); border-color: var(--black); height: auto; box-shadow: 2px 2px 0px var(--black-shadow);">Copy</button>
+                </div>
+                <span style="font-size: 0.8rem; color: hsla(0, 0%, 7%, 0.7); line-height: 1.4;">
+                  Copy this link to verify your identity. Falsification or loss of access keys will disqualify your credentials under the Genesis Charter.
+                </span>
+              </div>
+            </div>
+          </div>
+          
+          <div style="display: flex; gap: 16px; margin-top: 32px;">
+            <button id="btn-verify-test" class="entrance-exam-btn" style="flex-grow: 1; background: var(--red); color: var(--bg-peach); border-color: var(--black); justify-content: center; font-size: 1rem; padding: 18px 24px;">
+              Verify Now (Test Link)
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+            </button>
+          </div>
+        </div>
+
       </div>
     </section>
   </main>
