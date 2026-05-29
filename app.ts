@@ -257,20 +257,85 @@ function initModalControls() {
   const portalConsole = document.querySelector('.portal-console');
   const modalHeader = document.querySelector('.modal-header');
 
-  // Check active Supabase Auth session (triggered after email confirmation redirect)
+  // Check active Supabase Auth session (triggered after email confirmation redirect or Google OAuth)
   const checkSession = async () => {
     if (!supabase) return;
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (session && session.user && modalHeader) {
         const user = session.user;
-        const verifiedName = user.user_metadata?.name || "Candidate";
-        const verifiedKId = user.user_metadata?.k_id || "KGA-ID-TEMP";
+        let verifiedName = user.user_metadata?.full_name || user.user_metadata?.name || "Candidate";
+        let verifiedKId = user.user_metadata?.k_id || "";
 
-        // Auto-update public registrations table status
+        // 1. Try to find existing registration in registrations/applicants
         try {
-          await supabase.from('registrations').update({ verified: true }).eq('email', user.email);
-        } catch (e) {}
+          let foundRecord: any = null;
+          let isRegistrations = true;
+          
+          if (user.email) {
+            // Check registrations table first
+            const { data: regData, error: regErr } = await supabase.from('registrations').select('*').eq('email', user.email);
+            if (!regErr && regData && regData.length > 0) {
+              foundRecord = regData[0];
+              isRegistrations = true;
+            } else {
+              // Check applicants table as fallback
+              const { data: appData, error: appErr } = await supabase.from('applicants').select('*').eq('email', user.email);
+              if (!appErr && appData && appData.length > 0) {
+                foundRecord = appData[0];
+                isRegistrations = false;
+              }
+            }
+          }
+
+          if (foundRecord) {
+            verifiedKId = foundRecord.k_id || verifiedKId;
+            verifiedName = foundRecord.name || verifiedName;
+            
+            // Ensure verified is set to true
+            if (!foundRecord.verified && user.email) {
+              const table = isRegistrations ? 'registrations' : 'applicants';
+              await supabase.from(table).update({ verified: true }).eq('email', user.email);
+            }
+          } else if (user.email) {
+            // No record found: this is a Google OAuth sign-in for the first time!
+            // Let's generate a unique Krishnaite ID
+            const randomNum = Math.floor(1000 + Math.random() * 9000);
+            verifiedKId = `KGA-ID-${randomNum}`;
+            
+            const record = {
+              name: verifiedName,
+              email: user.email,
+              phone: user.phone || "",
+              k_id: verifiedKId,
+              verification_token: "",
+              verified: true
+            };
+
+            // Insert into registrations first, fallback to applicants
+            const { error: err1 } = await supabase.from('registrations').insert([record]);
+            if (err1) {
+              console.warn("registrations insert failed on session check, trying applicants:", err1);
+              await supabase.from('applicants').insert([record]);
+            }
+            
+            // Also attempt to update the Supabase Auth user metadata with the generated k_id
+            // so that subsequent auth sessions can retrieve it instantly!
+            try {
+              await supabase.auth.updateUser({
+                data: { k_id: verifiedKId }
+              });
+            } catch (metaErr) {
+              console.warn("Could not update auth user metadata:", metaErr);
+            }
+          }
+        } catch (e) {
+          console.error("Error syncing Google OAuth session with registrations table:", e);
+        }
+
+        if (!verifiedKId) {
+          verifiedKId = "KGA-ID-TEMP";
+        }
 
         if (manifestForm) (manifestForm as HTMLElement).style.display = 'none';
         if (portalConsole) (portalConsole as HTMLElement).style.display = 'none';
@@ -516,138 +581,7 @@ function initModalControls() {
       }
     });
 
-    manifestForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const name = (document.getElementById('full-name') as HTMLInputElement).value;
-      const email = (document.getElementById('email-addr') as HTMLInputElement).value;
-      const phone = (document.getElementById('phone-num') as HTMLInputElement).value;
-      
-      // Generate a unique Krishnaite ID
-      const randomNum = Math.floor(1000 + Math.random() * 9000);
-      const k_id = `KGA-ID-${randomNum}`;
-      const token = Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2);
-      
-      const record = {
-        name,
-        email,
-        phone,
-        k_id,
-        verification_token: token,
-        verified: false
-      };
 
-      // 1. Cache locally to localStorage
-      let cachedRecords = [];
-      const cached = localStorage.getItem('kga_applicants');
-      if (cached) {
-        try { cachedRecords = JSON.parse(cached); } catch (e) {}
-      }
-      cachedRecords.push(record);
-      localStorage.setItem('kga_applicants', JSON.stringify(cachedRecords));
-
-      // 2. Submit to Supabase directly and trigger Real Supabase Auth SignUp
-      let supabaseSuccess = false;
-      if (supabase) {
-        try {
-          // Insert row into registrations table
-          const { error: err1 } = await supabase.from('registrations').insert([record]);
-          if (!err1) {
-            supabaseSuccess = true;
-          } else {
-            console.warn("registrations table insert fail:", err1);
-            const { error: err2 } = await supabase.from('applicants').insert([record]);
-            if (!err2) supabaseSuccess = true;
-          }
-
-          // Trigger secure Supabase Auth SignUp to dispatch real verification email via SMTP (Resend)
-          const { data: authData, error: authErr } = await supabase.auth.signUp({
-            email: email,
-            password: k_id, // Use the generated Krishnaite ID as password
-            options: {
-              data: {
-                name: name,
-                phone: phone,
-                k_id: k_id
-              },
-              emailRedirectTo: `${window.location.origin}${window.location.pathname}`
-            }
-          });
-
-          if (authErr) {
-            console.error("Supabase Auth SignUp fail:", authErr);
-          } else {
-            console.log("Supabase Auth SignUp successful, verification email dispatched via Resend!");
-            supabaseSuccess = true;
-          }
-
-        } catch (err) {
-          console.error("Supabase operations fail:", err);
-        }
-      }
-
-      const successPortal = document.getElementById('success-portal-container');
-      const displayKId = document.getElementById('display-k-id');
-      const displayEmail = document.getElementById('display-email');
-      const successVerifyUrl = document.getElementById('success-verify-url');
-      const btnCopyUrl = document.getElementById('btn-copy-url');
-      const btnVerifyTest = document.getElementById('btn-verify-test');
-
-      const verification_url = `${window.location.origin}${window.location.pathname}?token=${token}`;
-
-      if (successPortal && displayKId && displayEmail && successVerifyUrl) {
-        // Hide form
-        (manifestForm as HTMLElement).style.display = 'none';
-        
-        // Update header block
-        const modalHeader = document.querySelector('.modal-header');
-        if (modalHeader) {
-          modalHeader.innerHTML = `
-            <span class="modal-badge" style="background: var(--black); color: var(--gold); border-color: var(--gold);">Identity Manifest Initialized</span>
-            <h2>Identity Manifest Created Successfully</h2>
-            <p class="modal-intro">Follow the instructions below to verify your credentials and unlock the Genesis Cohort entrance exam gate.</p>
-          `;
-        }
-
-        // Hide portal console buttons
-        if (portalConsole) {
-          (portalConsole as HTMLElement).style.display = 'none';
-        }
-
-        // Populate elements
-        displayKId.textContent = k_id;
-        displayEmail.textContent = email;
-        (successVerifyUrl as HTMLInputElement).value = verification_url;
-        successPortal.style.display = 'block';
-
-        // Bind Copy URL logic
-        if (btnCopyUrl) {
-          btnCopyUrl.onclick = (e) => {
-            e.preventDefault();
-            navigator.clipboard.writeText(verification_url).then(() => {
-              btnCopyUrl.textContent = "Copied";
-              btnCopyUrl.style.background = "var(--gold)";
-              btnCopyUrl.style.color = "var(--black)";
-              setTimeout(() => {
-                btnCopyUrl.textContent = "Copy";
-                btnCopyUrl.style.background = "var(--black)";
-                btnCopyUrl.style.color = "var(--bg-peach)";
-              }, 2000);
-            }).catch(err => {
-              console.error("Clipboard copy failed: ", err);
-            });
-          };
-        }
-
-        // Bind Verify Now test logic
-        if (btnVerifyTest) {
-          btnVerifyTest.onclick = (e) => {
-            e.preventDefault();
-            window.location.href = verification_url;
-          };
-        }
-      }
-    });
 
     // 2. Google OAuth Integration
     const googleBtns = document.querySelectorAll('.google-auth-btn');
