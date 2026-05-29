@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Genesis Fellowship | Krishnaite Global Academy</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Official allocation guidelines, eligibility criteria, and application protocol for the Genesis Fellowship at Krishnaite Global Academy.">
+  
+  <!-- Style Sheet -->
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Unique standalone page overrides */
+    .detail-page-section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 140px 4% 80px 4%;
+      position: relative;
+      z-index: 10;
+    }
+
+    .detail-card-container {
+      background: var(--white-glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 2px solid var(--black);
+      border-radius: 28px;
+      width: 100%;
+      max-width: 1000px;
+      padding: 60px 48px;
+      box-shadow: 20px 20px 0px var(--black-shadow);
+      animation: float-straight 15s ease-in-out infinite alternate;
+      transition: var(--transition-smooth);
+      position: relative;
+    }
+
+    .detail-card-container:hover {
+      transform: translateY(-8px) scale(1.005);
+      box-shadow: 26px 26px 0px var(--black-shadow);
+    }
+
+    /* Back Button styling */
+    .back-home-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--black);
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 32px;
+      align-self: flex-start;
+      border: 1.5px solid var(--black);
+      padding: 8px 16px;
+      border-radius: 50px;
+      background: var(--gold);
+      box-shadow: 3px 3px 0px var(--black);
+      transition: var(--transition-fast);
+      cursor: pointer;
+    }
+
+    .back-home-link:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 5px 5px 0px var(--black);
+      background: var(--red);
+      color: var(--bg-peach);
+    }
+
+    .back-home-link svg {
+      transition: transform 0.25s ease;
+    }
+
+    .back-home-link:hover svg {
+      transform: translateX(-4px);
+    }
+
+    /* Info Blocks without Emojis */
+    .fellowship-section-title {
+      font-size: 1.4rem;
+      margin-top: 40px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid var(--black);
+      padding-bottom: 10px;
+      color: var(--black);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 700;
+    }
+
+    .info-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    .info-list li {
+      background: rgba(253, 245, 230, 0.5);
+      border: 1.5px solid var(--black);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 4px 4px 0px var(--black-shadow);
+      line-height: 1.6;
+    }
+
+    .info-list li h5 {
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      color: var(--red);
+      margin-bottom: 8px;
+    }
+
+    .info-list li p {
+      font-size: 0.92rem;
+      color: hsla(0, 0%, 7%, 0.85);
+    }
+
+    .bold-accent {
+      font-weight: 700;
+      color: var(--black);
+    }
+
+    /* Custom straight vertical float without any angular tilting/rotation */
+    @keyframes float-straight {
+      0% {
+        transform: translateY(0);
+      }
+      100% {
+        transform: translateY(-16px);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Canvas for Grid & Floating Particle Shapes -->
+  <div class="canvas-bg">
+    <div class="perspective-grid" id="grid"></div>
+    <div class="floating-shape shape-1" id="shape1"></div>
+    <div class="floating-shape shape-2" id="shape2"></div>
+    <div class="floating-shape shape-3" id="shape3"></div>
+  </div>
+
+  <!-- Glass panel header with gold / black outlines -->
+  <header id="main-header">
+    <a href="index.html" class="logo" id="header-logo">
+      <div class="logo-icon"></div>
+      <span>Krishnaite</span>
+    </a>
+    <nav id="header-nav">
+      <a href="index.html#hero" id="nav-home">The Forge</a>
+      <a href="about-us.html" id="nav-about">About Us</a>
+      <a href="how-you-learn.html" id="nav-culture">How You Learn</a>
+      <a href="fellowship.html" id="nav-fellowship" style="color: var(--red);">Fellowship</a>
+      <a href="sovereign-forge.html" id="nav-sovereign">Sovereign Forge</a>
+      <a href="vanguard-launchpad.html" id="nav-vanguard">Vanguard Launchpad</a>
+    </nav>
+    <a href="admissions-portal.html" class="cta-header-btn" id="cta-enroll-header" style="background: var(--red); color: var(--bg-peach);">Apply Now</a>
+  </header>
+
+  <main>
+    <section class="detail-page-section">
+      <!-- Back Navigation Pill -->
+      <a onclick="if (document.referrer && document.referrer.includes(window.location.hostname)) { history.back(); } else { window.location.href = 'index.html#scarcity-block'; }" class="back-home-link">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        Back to Academy
+      </a>
+
+      <!-- Large Suspended Standalone Layout Panel -->
+      <div class="detail-card-container" id="detail-panel">
+        
+        <!-- Header Section -->
+        <div class="modal-header">
+          <span class="modal-badge" style="background: var(--black); color: var(--gold); border-color: var(--gold);">The Genesis Fellowship</span>
+          <h2>The Merit & Equity Allocation</h2>
+          <blockquote class="modal-quote" style="border-left-color: var(--gold); color: var(--black); font-style: italic;">
+            "True architectural sovereignty is built on raw execution, not financial background. We ensure that the sharpest minds have a seat at the Forge."
+          </blockquote>
+          <p class="modal-intro">
+            The Krishnaite Academy operates as a strict meritocracy. We recognize that some of the most capable, visionary engineers emerge from environments where access to high-tier capital is constrained. To ensure these elite minds are not gated out of our ecosystem, we have established the Genesis Fellowship. This is not standard financial aid; it is a highly competitive grant reserved strictly for the top percentile of academic performers.
+          </p>
+        </div>
+
+        <div class="modal-body">
+          
+          <!-- Fellowship Allocation -->
+          <h3 class="fellowship-section-title">The Fellowship Allocation</h3>
+          <p class="modal-intro" style="margin-bottom: 24px;">
+            Candidates who successfully pass the rigorous application gate will be awarded a <span class="bold-accent" style="color: var(--red);">20% to 25% direct subsidy</span> on their core annual tuition for either the Sovereign Forge (4-Year) or the Vanguard Launchpad (2-Year) track.
+          </p>
+
+          <!-- Eligibility Gate -->
+          <h3 class="fellowship-section-title">The Eligibility Gate</h3>
+          <p class="sect-intro" style="margin-bottom: 20px; font-weight: 600;">Candidates must simultaneously meet both of the following uncompromising criteria:</p>
+          
+          <ul class="info-list">
+            <li>
+              <h5>1. Elite Academic Proof (The 93% Standard)</h5>
+              <p>You must possess an absolute minimum of <span class="bold-accent">93% aggregate</span> in your most recent academic grading cycle (12th-grade board examinations or recent university semesters). We demand proof of extreme discipline and traditional academic dominance before transitioning you to our execution-based model.</p>
+            </li>
+            <li>
+              <h5>2. The Financial Threshold</h5>
+              <p>You must provide legal documentation proving a total annual family income of <span class="bold-accent">strictly less than ₹3,00,000</span>.</p>
+            </li>
+          </ul>
+
+          <p class="modal-intro" style="font-size: 0.88rem; font-style: italic; margin-top: -16px; margin-bottom: 32px; color: hsla(0, 0%, 7%, 0.65);">
+            Note: Meeting these minimum thresholds qualifies you for review but does not guarantee an allocation. The final 4 seats are awarded based on absolute rank.
+          </p>
+
+          <!-- Application Protocol -->
+          <h3 class="fellowship-section-title">The Application Protocol</h3>
+          <p class="sect-intro" style="margin-bottom: 20px; font-weight: 600;">If you meet the structural requirements above, you must prepare the following documentation to initiate your Fellowship claim:</p>
+          
+          <ul class="info-list">
+            <li>
+              <h5>Official Academic Transcripts</h5>
+              <p>Verified mark sheets proving your 93%+ standing in your last completed cycle.</p>
+            </li>
+            <li>
+              <h5>Government-Issued Income Certificate</h5>
+              <p>Valid and current legal documentation verifying your family's annual income is strictly below the ₹3 Lakh threshold.</p>
+            </li>
+            <li>
+              <h5>The Unstop Entrance Exam Benchmark</h5>
+              <p>You must first take and achieve a top-tier rank in our official Logic & Systems Thinking Entrance Exam.</p>
+            </li>
+          </ul>
+
+          <!-- Terms & Conditions -->
+          <h3 class="fellowship-section-title">Terms & Conditions of Sovereignty</h3>
+          <ul class="info-list">
+            <li>
+              <h5>Maintenance of Merit</h5>
+              <p>The 20% to 25% subsidy is maintained year-over-year strictly on the condition that the candidate maintains peak performance within the Academy, ships their required digital platforms on time, and upholds the highest standards of our code of conduct.</p>
+            </li>
+            <li>
+              <h5>Verification Standard</h5>
+              <p>Any falsification of academic records or financial documentation will result in immediate, non-negotiable, and permanent expulsion from the Krishnaite Academy network.</p>
+            </li>
+          </ul>
+
+          <!-- Fellowship Action Button -->
+          <div class="modal-cta-box" style="margin-top: 48px;">
+            <a href="#" class="entrance-exam-btn" id="fellowship-apply-btn" style="background: var(--black); color: var(--gold); border-color: var(--gold);">
+              Submit Fellowship Application & Documents
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+                <polyline points="10 9 9 9 8 9"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Modern Royal Footer -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand" id="footer-logo-block">
+        <h4>Krishnaite</h4>
+        <p> Fusing absolute gravitational independence with the mythological structures of royal architecture and the iron law of memory execution. </p>
+      </div>
+      <div class="footer-links" id="footer-sect-paths">
+        <h5>The Paths</h5>
+        <ul>
+          <li><a href="index.html#hero">The Forge Chamber</a></li>
+          <li><a href="sovereign-forge.html">The Sovereign Path</a></li>
+          <li><a href="vanguard-launchpad.html">The Vanguard Forge</a></li>
+        </ul>
+      </div>
+      <div class="footer-links" id="footer-sect-details">
+        <h5>Academy Details</h5>
+        <ul>
+          <li><a href="fees-structure.html">Financial Ledger</a></li>
+          <li><a href="fellowship.html">Genesis Fellowship</a></li>
+          <li><a href="how-you-learn.html">How You Learn</a></li>
+          <li><a href="about-us.html">About Us</a></li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="footer-meta" id="footer-bottom-row">
+      <p>&copy; 2026 Krishnaite Global Academy. All rights reserved. Under Sovereign Charter.</p>
+      <div class="footer-coords" id="coords-text">
+        Location: <span>45.1098° N, 15.2001° E</span> | Latency: <span>0.003ms</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Main interactive JS for grids & tilts -->
+  <script src="app.js"></script>
+</body>
+</html>

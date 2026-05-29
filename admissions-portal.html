@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Admissions Portal | Krishnaite Global Academy</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Register your official academic and personal details to initiate your Krishnaite ID and proceed to the secure entrance exam.">
+  
+  <!-- Style Sheet -->
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Unique standalone page overrides */
+    .detail-page-section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 140px 4% 80px 4%;
+      position: relative;
+      z-index: 10;
+    }
+
+    .detail-card-container {
+      background: var(--white-glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 2px solid var(--black);
+      border-radius: 28px;
+      width: 100%;
+      max-width: 1000px;
+      padding: 60px 48px;
+      box-shadow: 20px 20px 0px var(--black-shadow);
+      animation: float-straight 15s ease-in-out infinite alternate;
+      transition: var(--transition-smooth);
+      position: relative;
+    }
+
+    .detail-card-container:hover {
+      transform: translateY(-8px) scale(1.002);
+      box-shadow: 26px 26px 0px var(--black-shadow);
+    }
+
+    /* Form Styling */
+    .portal-form {
+      margin-top: 40px;
+      display: none; /* Controlled by Create ID action button */
+      transition: var(--transition-smooth);
+    }
+
+    .portal-form.active {
+      display: block;
+    }
+
+    .form-section {
+      background: rgba(253, 245, 230, 0.45);
+      border: 1.5px solid var(--black);
+      border-radius: 20px;
+      padding: 32px;
+      margin-bottom: 28px;
+      box-shadow: 6px 6px 0px var(--black-shadow);
+    }
+
+    .form-section h3 {
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      color: var(--red);
+      margin-bottom: 20px;
+      border-bottom: 1.5px solid var(--black);
+      padding-bottom: 8px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .form-group label {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--black);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group input[type="tel"],
+    .form-group select {
+      padding: 14px 18px;
+      border: 2px solid var(--black);
+      border-radius: 8px;
+      background: var(--bg-peach);
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--black);
+      transition: var(--transition-fast);
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--red);
+      background: #fff;
+      box-shadow: 0 0 10px rgba(217, 56, 58, 0.15);
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--black);
+      border-radius: 4px;
+      cursor: pointer;
+      accent-color: var(--red);
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .checkbox-group label {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: hsla(0, 0%, 7%, 0.85);
+      cursor: pointer;
+    }
+
+    /* Action console floating styles */
+    .portal-console {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin: 36px 0;
+    }
+
+    .console-btn {
+      padding: 16px 36px;
+      font-family: var(--font-sans);
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border: 2px solid var(--black);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: var(--transition-fast);
+      box-shadow: 4px 4px 0px var(--black);
+    }
+
+    .console-btn.login-btn {
+      background: var(--white-glass);
+      color: var(--black);
+    }
+
+    .console-btn.login-btn:hover {
+      background: var(--black);
+      color: var(--bg-peach);
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0px var(--black);
+    }
+
+    .console-btn.create-btn {
+      background: var(--gold);
+      color: var(--black);
+    }
+
+    .console-btn.create-btn:hover {
+      background: var(--red);
+      color: var(--bg-peach);
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0px var(--black);
+    }
+
+    .console-btn.active {
+      transform: translate(2px, 2px);
+      box-shadow: 0px 0px 0px var(--black);
+    }
+
+    /* Custom straight vertical float without any angular tilting/rotation */
+    @keyframes float-straight {
+      0% {
+        transform: translateY(0);
+      }
+      100% {
+        transform: translateY(-16px);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Canvas for Grid & Floating Particle Shapes -->
+  <div class="canvas-bg">
+    <div class="perspective-grid" id="grid"></div>
+    <div class="floating-shape shape-1" id="shape1"></div>
+    <div class="floating-shape shape-2" id="shape2"></div>
+    <div class="floating-shape shape-3" id="shape3"></div>
+  </div>
+
+  <!-- Glass panel header with gold / black outlines -->
+  <header id="main-header">
+    <a href="index.html" class="logo" id="header-logo">
+      <div class="logo-icon"></div>
+      <span>Krishnaite</span>
+    </a>
+    <nav id="header-nav">
+      <a href="index.html#hero" id="nav-home">The Forge</a>
+      <a href="about-us.html" id="nav-about">About Us</a>
+      <a href="how-you-learn.html" id="nav-culture">How You Learn</a>
+      <a href="fellowship.html" id="nav-fellowship">Fellowship</a>
+      <a href="sovereign-forge.html" id="nav-sovereign">Sovereign Forge</a>
+      <a href="vanguard-launchpad.html" id="nav-vanguard">Vanguard Launchpad</a>
+    </nav>
+    <a href="admissions-portal.html" class="cta-header-btn" id="cta-enroll-header" style="background: var(--red); color: var(--bg-peach);">Apply Now</a>
+  </header>
+
+  <main>
+    <section class="detail-page-section">
+      <!-- Back Navigation Pill -->
+      <a onclick="if (document.referrer && document.referrer.includes(window.location.hostname)) { history.back(); } else { window.location.href = 'index.html'; }" class="back-home-link">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        Back to Academy
+      </a>
+
+      <!-- Large Suspended Standalone Layout Panel -->
+      <div class="detail-card-container" id="detail-panel">
+        
+        <!-- Header Section -->
+        <div class="modal-header">
+          <span class="modal-badge" style="background: var(--black); color: var(--gold); border-color: var(--gold);">The Admissions Portal</span>
+          <h2>Initialize Your Identity.</h2>
+          <p class="modal-intro">
+            To maintain the absolute integrity of the Genesis Cohort selection process, all candidates must register their primary credentials. Once verified, this will serve as your permanent access key to the Academy infrastructure.
+          </p>
+        </div>
+
+        <!-- Center buttons for Login or Create ID -->
+        <div class="portal-console">
+          <button class="console-btn login-btn" id="portal-login-btn">Log In</button>
+          <button class="console-btn create-btn" id="portal-create-btn">Create Krishnaite ID</button>
+        </div>
+
+        <!-- The Application Form -->
+        <form class="portal-form" id="manifest-form">
+          <h2 class="about-section-title" style="margin-top: 20px;">Create Krishnaite ID</h2>
+          <p class="sect-intro" style="margin-bottom: 24px;">Enter your details exactly as they appear on your legal documents.</p>
+
+          <!-- Primary Identification -->
+          <div class="form-section">
+            <div class="form-group">
+              <label for="full-name">Full Legal Name</label>
+              <input type="text" id="full-name" required placeholder="John Doe">
+            </div>
+            <div class="form-group">
+              <label for="email-addr">Primary Email Address (This will become your permanent login)</label>
+              <input type="email" id="email-addr" required placeholder="john.doe@example.com">
+            </div>
+            <div class="form-group">
+              <label for="phone-num">Verified Phone Number (Including Country Code)</label>
+              <input type="tel" id="phone-num" required placeholder="+91 98765 43210">
+            </div>
+          </div>
+
+          <!-- Initiate Verification -->
+          <h2 class="about-section-title" style="margin-top: 40px;">Initiate Verification</h2>
+          <p class="modal-intro" style="font-size: 0.95rem; margin-bottom: 24px;">
+            By clicking below, your credentials will be logged, and a secure verification link will be dispatched to your inbox. You must confirm your email to unlock the full application manifest and access the Unstop entrance exam.
+          </p>
+
+          <div class="modal-cta-box" style="margin-top: 24px;">
+            <button type="submit" class="entrance-exam-btn" style="background: var(--red); color: var(--bg-peach); border-color: var(--black); width: 100%; justify-content: center; cursor: pointer;">
+              Generate ID & Send Verification
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+              </svg>
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Modern Royal Footer -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand" id="footer-logo-block">
+        <h4>Krishnaite</h4>
+        <p> Fusing absolute gravitational independence with the mythological structures of royal architecture and the iron law of memory execution. </p>
+      </div>
+      <div class="footer-links" id="footer-sect-paths">
+        <h5>The Paths</h5>
+        <ul>
+          <li><a href="index.html#hero">The Forge Chamber</a></li>
+          <li><a href="sovereign-forge.html">The Sovereign Path</a></li>
+          <li><a href="vanguard-launchpad.html">The Vanguard Forge</a></li>
+        </ul>
+      </div>
+      <div class="footer-links" id="footer-sect-details">
+        <h5>Academy Details</h5>
+        <ul>
+          <li><a href="fees-structure.html">Financial Ledger</a></li>
+          <li><a href="fellowship.html">Genesis Fellowship</a></li>
+          <li><a href="how-you-learn.html">How You Learn</a></li>
+          <li><a href="about-us.html">About Us</a></li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="footer-meta" id="footer-bottom-row">
+      <p>&copy; 2026 Krishnaite Global Academy. All rights reserved. Under Sovereign Charter.</p>
+      <div class="footer-coords" id="coords-text">
+        Location: <span>45.1098° N, 15.2001° E</span> | Latency: <span>0.003ms</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Main interactive JS for grids & tilts -->
+  <script src="app.js"></script>
+</body>
+</html>

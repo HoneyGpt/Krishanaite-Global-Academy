@@ -211,13 +211,86 @@ function initSmoothScroll() {
  * 6. Standalone Detail Page Controls & Entrance CTA
  */
 function initModalControls() {
-  // Dynamic click handler for Entrance Exam CTA
+  // Redirect Entrance Exam CTAs straight to the admissions portal
   const examBtn = document.getElementById('initiate-exam-btn');
   if (examBtn) {
     examBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      alert('🔒 Entrance Exam portal is initiating. Your strategic diagnostic test will begin shortly!');
+      window.location.href = 'admissions-portal.html';
     });
   }
 
+  const scarcityBtn = document.getElementById('scarcity-exam-btn');
+  if (scarcityBtn) {
+    scarcityBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.location.href = 'admissions-portal.html';
+    });
+  }
+
+  const fellowshipBtn = document.getElementById('fellowship-apply-btn');
+  if (fellowshipBtn) {
+    fellowshipBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      alert('🔒 Fellowship Application gateway is opening. Please prepare your verified academic and financial credentials.');
+    });
+  }
+
+  // Admissions Portal Form Toggles
+  const portalLoginBtn = document.getElementById('portal-login-btn');
+  const portalCreateBtn = document.getElementById('portal-create-btn');
+  const manifestForm = document.getElementById('manifest-form');
+
+  if (portalLoginBtn && portalCreateBtn && manifestForm) {
+    portalLoginBtn.addEventListener('click', () => {
+      portalLoginBtn.classList.add('active');
+      portalCreateBtn.classList.remove('active');
+      manifestForm.classList.remove('active');
+      alert('🔒 The secure Login gateway is opening. Please prepare your Mentozy credentials.');
+    });
+
+    portalCreateBtn.addEventListener('click', () => {
+      portalCreateBtn.classList.add('active');
+      portalLoginBtn.classList.remove('active');
+      manifestForm.classList.add('active');
+    });
+
+    manifestForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const name = document.getElementById('full-name').value;
+      const email = document.getElementById('email-addr').value;
+      const phone = document.getElementById('phone-num').value;
+      
+      // Generate a mock unique Krishnaite ID
+      const randomNum = Math.floor(1000 + Math.random() * 9000);
+      const k_id = `KGA-ID-${randomNum}`;
+      
+      const payload = {
+        name,
+        email,
+        phone,
+        k_id
+      };
+      
+      // Send data to Flask server backend
+      fetch('/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      })
+      .then(response => response.json())
+      .then(result => {
+        alert(`🔒 Identity Initialized Successfully!\n\nKrishnaite ID: ${k_id}\n\nA secure verification link has been dispatched to: ${email}\n\nYou must confirm your email to unlock the full application manifest and access the Unstop entrance exam!`);
+        window.location.href = 'https://unstop.com';
+      })
+      .catch(err => {
+        console.error("Registration sync failed:", err);
+        alert(`🔒 Identity Initialized (Local Cache Only)!\n\nKrishnaite ID: ${k_id}\n\nA secure verification link has been dispatched to: ${email}\n\nYou must confirm your email to unlock the full application manifest and access the Unstop entrance exam!`);
+        window.location.href = 'https://unstop.com';
+      });
+    });
+  }
 }

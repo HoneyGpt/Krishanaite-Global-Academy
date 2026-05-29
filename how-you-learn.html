@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Execution Culture: How You Learn | Krishnaite Global Academy</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Explore the unique execution culture, founder-level blueprint, and reality-grounded mindset at Krishnaite Global Academy.">
+  
+  <!-- Style Sheet -->
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Unique standalone page overrides */
+    .detail-page-section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 140px 4% 80px 4%;
+      position: relative;
+      z-index: 10;
+    }
+
+    .detail-card-container {
+      background: var(--white-glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 2px solid var(--black);
+      border-radius: 28px;
+      width: 100%;
+      max-width: 1000px;
+      padding: 60px 48px;
+      box-shadow: 20px 20px 0px var(--black-shadow);
+      animation: float-straight 15s ease-in-out infinite alternate;
+      transition: var(--transition-smooth);
+      position: relative;
+    }
+
+    .detail-card-container:hover {
+      transform: translateY(-8px) scale(1.005);
+      box-shadow: 26px 26px 0px var(--black-shadow);
+    }
+
+    /* Back Button styling */
+    .back-home-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--black);
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 32px;
+      align-self: flex-start;
+      border: 1.5px solid var(--black);
+      padding: 8px 16px;
+      border-radius: 50px;
+      background: var(--gold);
+      box-shadow: 3px 3px 0px var(--black);
+      transition: var(--transition-fast);
+      cursor: pointer;
+    }
+
+    .back-home-link:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 5px 5px 0px var(--black);
+      background: var(--red);
+      color: var(--bg-peach);
+    }
+
+    .back-home-link svg {
+      transition: transform 0.25s ease;
+    }
+
+    .back-home-link:hover svg {
+      transform: translateX(-4px);
+    }
+
+    /* Info Blocks without Emojis */
+    .culture-section-title {
+      font-size: 1.4rem;
+      margin-top: 40px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid var(--black);
+      padding-bottom: 10px;
+      color: var(--black);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 700;
+    }
+
+    .info-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    .info-list li {
+      background: rgba(253, 245, 230, 0.5);
+      border: 1.5px solid var(--black);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 4px 4px 0px var(--black-shadow);
+      line-height: 1.6;
+    }
+
+    .info-list li h5 {
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      color: var(--red);
+      margin-bottom: 8px;
+    }
+
+    .info-list li p {
+      font-size: 0.92rem;
+      color: hsla(0, 0%, 7%, 0.85);
+    }
+
+    .bold-accent {
+      font-weight: 700;
+      color: var(--black);
+    }
+
+    /* Custom straight vertical float without any angular tilting/rotation */
+    @keyframes float-straight {
+      0% {
+        transform: translateY(0);
+      }
+      100% {
+        transform: translateY(-16px);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Canvas for Grid & Floating Particle Shapes -->
+  <div class="canvas-bg">
+    <div class="perspective-grid" id="grid"></div>
+    <div class="floating-shape shape-1" id="shape1"></div>
+    <div class="floating-shape shape-2" id="shape2"></div>
+    <div class="floating-shape shape-3" id="shape3"></div>
+  </div>
+
+  <!-- Glass panel header with gold / black outlines -->
+  <header id="main-header">
+    <a href="index.html" class="logo" id="header-logo">
+      <div class="logo-icon"></div>
+      <span>Krishnaite</span>
+    </a>
+    <nav id="header-nav">
+      <a href="index.html#hero" id="nav-home">The Forge</a>
+      <a href="how-you-learn.html" id="nav-culture" style="color: var(--red);">How You Learn</a>
+      <a href="fellowship.html" id="nav-fellowship">Fellowship</a>
+      <a href="sovereign-forge.html" id="nav-sovereign">Sovereign Forge</a>
+      <a href="vanguard-launchpad.html" id="nav-vanguard">Vanguard Launchpad</a>
+    </nav>
+    <a href="index.html#tracks" class="cta-header-btn" id="cta-enroll-header">All Tracks</a>
+  </header>
+
+  <main>
+    <section class="detail-page-section">
+      <!-- Back Navigation Pill -->
+      <a onclick="if (document.referrer && document.referrer.includes(window.location.hostname)) { history.back(); } else { window.location.href = 'index.html'; }" class="back-home-link">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        Back to Academy
+      </a>
+
+      <!-- Large Suspended Standalone Layout Panel -->
+      <div class="detail-card-container" id="detail-panel">
+        
+        <!-- Header Section -->
+        <div class="modal-header">
+          <span class="modal-badge" style="background: var(--black); color: var(--gold); border-color: var(--gold);">The Execution Culture</span>
+          <h2>How You Learn</h2>
+          <blockquote class="modal-quote" style="border-left-color: var(--gold); color: var(--black); font-style: italic;">
+            "We teach relentless growth, permanently grounded in reality. We do not tolerate recklessness, but we fiercely reward execution."
+          </blockquote>
+          <p class="modal-intro">
+            The Krishnaite Global Academy is not another coding bootcamp. It is the genesis of a completely new generation of technical operators. Earning your acceptance means you become a Krishnaite—a title that demands absolute discipline, uncompromising willpower, and the unusual, hyper-analytical mind of a true founder. We do not hold hands. From your very first year, you are taught to break the chains of traditional dependency, work independently, and grow with the maturity of a seasoned tech leader.
+          </p>
+        </div>
+
+        <div class="modal-body">
+          
+          <!-- The Krishnaite Blueprint -->
+          <h3 class="culture-section-title">The Krishnaite Blueprint</h3>
+          <p class="sect-intro" style="margin-bottom: 20px; font-weight: 600;">Your Operational Reality:</p>
+          
+          <ul class="info-list">
+            <li>
+              <h5>Founder-Level Execution</h5>
+              <p>You are not just learning syntax. By the time you leave this campus, you will know exactly how to build, launch, and scale your own startup, generating raw, organic traction without burning millions on useless ad campaigns.</p>
+            </li>
+            <li>
+              <h5>The Mentozy Ecosystem</h5>
+              <p>You will bypass standard learning tools and operate directly inside the Mentozy premium student dashboards, utilizing an elite, beta-tested infrastructure designed for high-velocity focus.</p>
+            </li>
+            <li>
+              <h5>Global Event Command</h5>
+              <p>Execution is tested in the real world. Based on your performance metrics, top-tier students will be actively deployed as operational managers and internal spectators in massive global hackathons. You will learn to manage pressure, code, and lead at scale.</p>
+            </li>
+            <li>
+              <h5>The Meritocracy Standard</h5>
+              <p>We operate on absolute merit. Every act of exceptional execution is structurally rewarded. Good faith, extreme discipline, and respect for the Academy's framework are the only metrics that earn you advancement.</p>
+            </li>
+          </ul>
+
+          <!-- The Reality-Grounded Mindset -->
+          <h3 class="culture-section-title">The Reality-Grounded Mindset</h3>
+          <p class="modal-intro" style="margin-bottom: 24px;">
+            Traditional colleges teach theoretical safety; bootcamps teach reckless speed. The Krishnaite Academy bridges the gap. We engineer your growth with intense maturity, forcing you to face the reality of server deployments, market traction, and system failures.
+          </p>
+          
+          <p class="modal-intro" style="font-weight: 600; color: var(--red); font-size: 1.1rem; text-align: center; margin-top: 24px; margin-bottom: 32px;">
+            When you graduate, you will not just be looking for a job. You will be fully equipped to architect your own empire.
+          </p>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Modern Royal Footer -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand" id="footer-logo-block">
+        <h4>Krishnaite</h4>
+        <p> Fusing absolute gravitational independence with the mythological structures of royal architecture and the iron law of memory execution. </p>
+      </div>
+      <div class="footer-links" id="footer-sect-paths">
+        <h5>The Paths</h5>
+        <ul>
+          <li><a href="index.html#hero">The Forge Chamber</a></li>
+          <li><a href="sovereign-forge.html">The Sovereign Path</a></li>
+          <li><a href="vanguard-launchpad.html">The Vanguard Forge</a></li>
+        </ul>
+      </div>
+      <div class="footer-links" id="footer-sect-details">
+        <h5>Academy Details</h5>
+        <ul>
+          <li><a href="fees-structure.html">Financial Ledger</a></li>
+          <li><a href="fellowship.html">Genesis Fellowship</a></li>
+          <li><a href="how-you-learn.html">How You Learn</a></li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="footer-meta" id="footer-bottom-row">
+      <p>&copy; 2026 Krishnaite Global Academy. All rights reserved. Under Sovereign Charter.</p>
+      <div class="footer-coords" id="coords-text">
+        Location: <span>45.1098° N, 15.2001° E</span> | Latency: <span>0.003ms</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Main interactive JS for grids & tilts -->
+  <script src="app.js"></script>
+</body>
+</html>
