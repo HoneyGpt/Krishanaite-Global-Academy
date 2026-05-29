@@ -648,5 +648,31 @@ function initModalControls() {
         }
       }
     });
+
+    // 2. Google OAuth Integration
+    const googleBtns = document.querySelectorAll('.google-auth-btn');
+    googleBtns.forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        if (!supabase) {
+          alert("Supabase client is not initialized.");
+          return;
+        }
+        try {
+          const { error } = await supabase.auth.signInWithOAuth({
+            provider: 'google',
+            options: {
+              redirectTo: `${window.location.origin}${window.location.pathname}`
+            }
+          });
+          if (error) {
+            console.error("Google Auth failed:", error.message);
+            alert("Google Authentication failed. Please try again.");
+          }
+        } catch (err) {
+          console.error("Google Auth error:", err);
+        }
+      });
+    });
   }
 }
