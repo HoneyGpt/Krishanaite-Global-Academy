@@ -1017,15 +1017,7 @@ async function initDashboardController() {
   // C. Modals Opening Click Listeners
   if (btnStartApp && modalPrograms) {
     btnStartApp.addEventListener('click', () => {
-      if (state.selected_track && !state.submitted) {
-        if (state.selected_track.includes("Vanguard")) {
-          window.location.href = "vanguard-manifest.html";
-        } else {
-          window.location.href = "sovereign-manifest.html";
-        }
-      } else {
-        modalPrograms.classList.add('active');
-      }
+      modalPrograms.classList.add('active');
     });
   }
 
