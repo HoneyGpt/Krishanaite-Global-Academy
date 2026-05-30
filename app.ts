@@ -20,6 +20,9 @@ document.addEventListener('DOMContentLoaded', () => {
   if (window.location.pathname.includes('sovereign-manifest.html') || window.location.pathname.includes('vanguard-manifest.html')) {
     initManifestController();
   }
+  if (window.location.pathname.includes('fellowship-manifest.html')) {
+    initFellowshipController();
+  }
 });
 
 /**
@@ -1024,9 +1027,9 @@ async function initDashboardController() {
     });
   }
 
-  if (btnClaimGrant && modalFellowships) {
+  if (btnClaimGrant) {
     btnClaimGrant.addEventListener('click', () => {
-      modalFellowships.classList.add('active');
+      window.location.href = "fellowship-manifest.html";
     });
   }
 
@@ -1668,4 +1671,296 @@ async function initManifestController() {
       input.addEventListener('change', handleAutoSave);
     });
   }
+}
+
+/**
+ * K. Dedicated Genesis Fellowship Manifest Controller
+ * For fellowship-manifest.html
+ */
+async function initFellowshipController() {
+  const sessionUser = await supabase.auth.getUser();
+  const user = sessionUser.data?.user;
+  if (!user || !user.email) {
+    alert("Candidate identity not authenticated. Redirecting to gateway admissions portal.");
+    window.location.href = "admissions-portal.html";
+    return;
+  }
+  const email = user.email;
+
+  // DOM elements
+  const fellowshipForm = document.getElementById('fellowship-dossier-form') as HTMLFormElement;
+  const fellowshipName = document.getElementById('fellowship-name') as HTMLInputElement;
+  const fellowshipKgaId = document.getElementById('fellowship-kga-id') as HTMLInputElement;
+  const fellowshipEmail = document.getElementById('fellowship-email') as HTMLInputElement;
+  const fellowshipPhone = document.getElementById('fellowship-phone') as HTMLInputElement;
+  const fellowshipProgram = document.getElementById('fellowship-program') as HTMLSelectElement;
+  const fellowshipAggregate = document.getElementById('fellowship-aggregate') as HTMLInputElement;
+  const fellowshipIncome = document.getElementById('fellowship-income') as HTMLInputElement;
+
+  const fellowshipDeclareIncome = document.getElementById('fellowship-declare-income') as HTMLInputElement;
+  const fellowshipDeclareAcademic = document.getElementById('fellowship-declare-academic') as HTMLInputElement;
+  const fellowshipDeclareAudit = document.getElementById('fellowship-declare-audit') as HTMLInputElement;
+
+  const btnSaveDraft = document.getElementById('btn-save-fellowship-draft');
+  const btnSubmitFellowship = document.getElementById('btn-submit-fellowship');
+
+  // Load candidate info from registrations/applicants
+  let applicantName = user.user_metadata?.full_name || user.user_metadata?.name || "Candidate";
+  let applicantKId = user.user_metadata?.k_id || "";
+
+  try {
+    const { data: regData } = await supabase.from('registrations').select('*').eq('email', email);
+    if (regData && regData.length > 0) {
+      applicantKId = regData[0].k_id || applicantKId;
+      applicantName = regData[0].name || applicantName;
+    }
+  } catch (e) {}
+
+  if (!applicantKId) {
+    applicantKId = "KGA-ID-TEMP";
+  }
+
+  // Prefill default fields
+  if (fellowshipName) fellowshipName.value = applicantName;
+  if (fellowshipEmail) fellowshipEmail.value = email;
+  if (fellowshipKgaId) fellowshipKgaId.value = applicantKId;
+
+  // Interface state
+  interface FellowshipState {
+    fellowship_claimed: string | null;
+    fellowship_data?: any;
+  }
+
+  let state: FellowshipState = {
+    fellowship_claimed: null
+  };
+
+  // Sync state loader
+  const loadState = async () => {
+    // A. Check LocalStorage fallback for fellowship state
+    const localDraft = localStorage.getItem('kga_fellowship_draft_' + email);
+    if (localDraft) {
+      try {
+        state.fellowship_data = JSON.parse(localDraft);
+      } catch (e) {}
+    }
+    
+    // B. Check dashboard state uploader
+    const localDashboard = localStorage.getItem('kga_dashboard_state_' + email);
+    if (localDashboard) {
+      try {
+        const parsed = JSON.parse(localDashboard);
+        state.fellowship_claimed = parsed.fellowship_claimed;
+      } catch (e) {}
+    }
+  };
+
+  // Prefill form values from fellowship_data draft
+  const prefillForm = () => {
+    if (!state.fellowship_data) return;
+    const d = state.fellowship_data;
+    if (d.name) fellowshipName.value = d.name;
+    if (d.kga_id) fellowshipKgaId.value = d.kga_id;
+    if (d.email) fellowshipEmail.value = d.email;
+    if (d.phone) fellowshipPhone.value = d.phone;
+    if (d.program) fellowshipProgram.value = d.program;
+    if (d.aggregate) fellowshipAggregate.value = d.aggregate;
+    if (d.income) fellowshipIncome.value = d.income;
+
+    if (d.declare_income !== undefined) fellowshipDeclareIncome.checked = d.declare_income;
+    if (d.declare_academic !== undefined) fellowshipDeclareAcademic.checked = d.declare_academic;
+    if (d.declare_audit !== undefined) fellowshipDeclareAudit.checked = d.declare_audit;
+  };
+
+  // Compile current payload
+  const getPayload = () => {
+    return {
+      name: fellowshipName?.value.trim() || "",
+      kga_id: fellowshipKgaId?.value.trim() || "",
+      email: fellowshipEmail?.value.trim() || "",
+      phone: fellowshipPhone?.value.trim() || "",
+      program: fellowshipProgram?.value || "",
+      aggregate: fellowshipAggregate?.value.trim() || "",
+      income: fellowshipIncome?.value.trim() || "",
+      declare_income: fellowshipDeclareIncome?.checked || false,
+      declare_academic: fellowshipDeclareAcademic?.checked || false,
+      declare_audit: fellowshipDeclareAudit?.checked || false
+    };
+  };
+
+  // Sync state saver
+  const saveState = async () => {
+    if (state.fellowship_data) {
+      localStorage.setItem('kga_fellowship_draft_' + email, JSON.stringify(state.fellowship_data));
+    }
+    
+    // Sync into dashboard state
+    const localDashboard = localStorage.getItem('kga_dashboard_state_' + email);
+    let dashState: any = {};
+    if (localDashboard) {
+      try { dashState = JSON.parse(localDashboard); } catch (e) {}
+    }
+    
+    dashState.fellowship_claimed = state.fellowship_claimed;
+    localStorage.setItem('kga_dashboard_state_' + email, JSON.stringify(dashState));
+
+    try {
+      await supabase.auth.updateUser({
+        data: { kga_dashboard_state: dashState }
+      });
+    } catch (e) {}
+
+    try {
+      const dbRecord: any = {
+        fellowship_claimed: state.fellowship_claimed,
+        verified: true
+      };
+      await supabase.from('registrations').update(dbRecord).eq('email', email);
+    } catch (e) {}
+  };
+
+  // 1. SAVE DRAFT BUTTON handler
+  if (btnSaveDraft) {
+    btnSaveDraft.addEventListener('click', async (e) => {
+      e.preventDefault();
+      state.fellowship_data = getPayload();
+      state.fellowship_claimed = state.fellowship_data.program ? `Pending Claim (${state.fellowship_data.program})` : null;
+      await saveState();
+      alert("Genesis Fellowship Claim draft saved successfully.\n\nReturning to your dashboard...");
+      window.location.href = "dashboard.html";
+    });
+  }
+
+  // 2. SUBMIT FELLOWSHIP BUTTON handler
+  if (btnSubmitFellowship) {
+    btnSubmitFellowship.addEventListener('click', async (e) => {
+      e.preventDefault();
+
+      if (fellowshipForm && !fellowshipForm.checkValidity()) {
+        fellowshipForm.reportValidity();
+        return;
+      }
+
+      // Check uncompromising threshold criteria
+      const aggVal = parseFloat(fellowshipAggregate.value);
+      const incVal = parseFloat(fellowshipIncome.value);
+
+      if (aggVal < 93) {
+        alert("Fellowship Eligibility Failure: Aggregate must be strictly 93% or higher.");
+        return;
+      }
+
+      if (incVal >= 300000) {
+        alert("Fellowship Eligibility Failure: Family Annual Income must be strictly below ₹3,00,000 INR.");
+        return;
+      }
+
+      if (!fellowshipDeclareIncome.checked || !fellowshipDeclareAcademic.checked || !fellowshipDeclareAudit.checked) {
+        alert("You must check and agree to all declarations & audit requirements to proceed.");
+        return;
+      }
+
+      const fellowshipPayload = getPayload();
+      state.fellowship_data = fellowshipPayload;
+      state.fellowship_claimed = `Secured Claim (${fellowshipPayload.program})`;
+      await saveState();
+
+      alert("Genesis Fellowship Claim Manifest Submitted & Locked Successfully!\n\nDispatching verified claims to secure admissions board...");
+
+      // Send Resend Email Dispatch
+      try {
+        const emailHTML = `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 2px solid #111111; border-radius: 16px; padding: 32px; background-color: #FDF5E6;">
+            <h2 style="font-family: Georgia, serif; color: #D9383A; border-bottom: 2px solid #111111; padding-bottom: 12px; margin-top: 0;">KGA Fellowship Manifest</h2>
+            <p style="font-size: 14px; color: #555555; font-style: italic;">A candidate has submitted an official Genesis Fellowship Merit & Equity Claim.</p>
+            
+            <h3 style="font-family: Georgia, serif; color: #111111; border-bottom: 1px solid #111111; padding-bottom: 4px; margin-top: 24px;">1. Primary Identity</h3>
+            <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+              <tr><td style="padding: 6px 0; font-weight: bold; width: 40%;">Full Legal Name:</td><td style="padding: 6px 0;">${fellowshipPayload.name}</td></tr>
+              <tr><td style="padding: 6px 0; font-weight: bold;">Krishnaite ID:</td><td style="padding: 6px 0;">${fellowshipPayload.kga_id}</td></tr>
+              <tr><td style="padding: 6px 0; font-weight: bold;">Email Address:</td><td style="padding: 6px 0;">${fellowshipPayload.email}</td></tr>
+              <tr><td style="padding: 6px 0; font-weight: bold;">Phone Number:</td><td style="padding: 6px 0;">${fellowshipPayload.phone}</td></tr>
+            </table>
+
+            <h3 style="font-family: Georgia, serif; color: #111111; border-bottom: 1px solid #111111; padding-bottom: 4px; margin-top: 24px;">2. Merit & Equity Verification</h3>
+            <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+              <tr><td style="padding: 6px 0; font-weight: bold; width: 40%;">Applied Program:</td><td style="padding: 6px 0;">${fellowshipPayload.program}</td></tr>
+              <tr><td style="padding: 6px 0; font-weight: bold; color: #D9383A;">Academic Aggregate:</td><td style="padding: 6px 0; font-weight: bold; color: #D9383A;">${fellowshipPayload.aggregate}%</td></tr>
+              <tr><td style="padding: 6px 0; font-weight: bold; color: #D4AF37;">Annual Family Income:</td><td style="padding: 6px 0; font-weight: bold; color: #D4AF37;">₹${parseFloat(fellowshipPayload.income).toLocaleString('en-IN')}</td></tr>
+            </table>
+
+            <h3 style="font-family: Georgia, serif; color: #111111; border-bottom: 1px solid #111111; padding-bottom: 4px; margin-top: 24px;">3. Declarations & Agreements</h3>
+            <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+              <tr><td style="padding: 6px 0; font-weight: bold; width: 40%;">Income Declaration:</td><td style="padding: 6px 0;">Agreed & Signed</td></tr>
+              <tr><td style="padding: 6px 0; font-weight: bold;">Academic Declaration:</td><td style="padding: 6px 0;">Agreed & Signed</td></tr>
+              <tr><td style="padding: 6px 0; font-weight: bold;">Audit Agreement:</td><td style="padding: 6px 0;">Agreed & Signed</td></tr>
+            </table>
+            
+            <div style="margin-top: 32px; border-top: 2px dashed #111111; padding-top: 16px; text-align: center; font-size: 12px; color: #777777;">
+              &copy; 2026 Krishnaite Global Academy. Under Sovereign Charter. Secure Admission Gateways.
+            </div>
+          </div>
+        `;
+
+        let resendResponse;
+        const payload = {
+          name: fellowshipPayload.name,
+          track: `Fellowship Claim (${fellowshipPayload.program})`,
+          html: emailHTML
+        };
+
+        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+        if (isLocal) {
+          resendResponse = await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: {
+              'Authorization': 'Bearer re_Rau6jNd3_EQwTXSY9jiegFH5ypqzEwdhu',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              from: 'onboarding@resend.dev',
+              to: ['admissions@krishnaite.dev'],
+              subject: `KGA Fellowship Manifest: ${fellowshipPayload.name} (${fellowshipPayload.kga_id})`,
+              html: emailHTML
+            })
+          });
+        } else {
+          resendResponse = await fetch('/api/send-email', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+          });
+        }
+
+        if (resendResponse && resendResponse.ok) {
+          console.log("Email fellowship manifest dispatch completed successfully!");
+        }
+      } catch (err) {
+        console.warn("Resend claim dispatch error:", err);
+      }
+
+      window.location.href = "dashboard.html";
+    });
+  }
+
+  // Auto-save on typing inside fellowshipForm
+  if (fellowshipForm) {
+    const handleAutoSave = () => {
+      state.fellowship_data = getPayload();
+      localStorage.setItem('kga_fellowship_draft_' + email, JSON.stringify(state.fellowship_data));
+    };
+
+    const inputs = fellowshipForm.querySelectorAll('input, select');
+    inputs.forEach(input => {
+      input.addEventListener('input', handleAutoSave);
+      input.addEventListener('change', handleAutoSave);
+    });
+  }
+
+  // Load and prefill
+  await loadState();
+  prefillForm();
 }

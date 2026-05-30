@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fellowship Manifest | Krishnaite Global Academy</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Complete your official Genesis Fellowship Merit & Equity manifest for tuition grants under the KGA Sovereign Charter.">
+  
+  <!-- Style Sheet -->
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+</head>
+<body class="dashboard-body">
+
+  <!-- Background Canvas for Grid & Floating Particle Shapes -->
+  <div class="canvas-bg">
+    <div class="perspective-grid" id="grid"></div>
+    <div class="floating-shape shape-1" id="shape1"></div>
+    <div class="floating-shape shape-2" id="shape2"></div>
+    <div class="floating-shape shape-3" id="shape3"></div>
+  </div>
+
+  <div class="dashboard-layout">
+    
+    <!-- 1. The Obsidian Sidebar (Left Anchor) -->
+    <aside class="obsidian-sidebar">
+      <a href="index.html" class="sidebar-brand">
+        <div class="logo-icon"></div>
+        <span>Krishnaite</span>
+      </a>
+      
+      <span class="sidebar-sect-title">Navigation</span>
+      <ul class="sidebar-menu">
+        <li class="sidebar-menu-item" id="menu-dashboard">
+          <a href="dashboard.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li class="sidebar-menu-item active" id="menu-manifest">
+          <a href="#">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span>Fellowship</span>
+          </a>
+        </li>
+      </ul>
+      
+      <span class="sidebar-sect-title">Admission Status</span>
+      <div class="sidebar-status-box">
+        <div class="status-indicator">
+          <span class="status-led green" id="status-verified-led"></span>
+          <span id="status-verified-text">Identity Verified</span>
+        </div>
+        <div class="status-indicator">
+          <span class="status-led yellow" id="status-track-led"></span>
+          <span id="status-track-text">Draft Track Active</span>
+        </div>
+        <div class="status-indicator">
+          <span class="status-led red" id="status-exam-led"></span>
+          <span id="status-exam-text">Exam Locked</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 2. Main Canvas (Right Container for Form) -->
+    <main class="main-canvas">
+      
+      <header class="dashboard-header" style="margin-bottom: 24px;">
+        <div class="header-intro">
+          <h1>The Genesis Fellowship [Merit & Equity Grant]</h1>
+          <p style="font-size: 0.85rem; color: hsla(0,0%,7%,0.6); margin-top: 4px;">Complete your fellowship manifest. All details must align precisely with your submitted core application.</p>
+        </div>
+        <div>
+          <a href="dashboard.html" class="cta-header-btn" style="background: transparent; color: var(--black); border: 1.5px solid var(--black); border-radius: 8px; font-size: 0.85rem; font-weight: 700; padding: 10px 20px; text-decoration: none;">&larr; Return to Dashboard</a>
+        </div>
+      </header>
+
+      <!-- Warning Directive Banner -->
+      <div class="mandatory-directive-banner" style="margin-bottom: 28px;">
+        <h4>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+            <line x1="12" y1="9" x2="12" y2="13"></line>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+          MANDATORY DIRECTIVE
+        </h4>
+        <p>This fellowship is strictly reserved for candidates demonstrating exceptional academic merit (93%+ aggregate) and financial need (family income strictly below ₹3,00,000 annually). Falsification of financial or academic records will result in an immediate and permanent ban from the Academy.</p>
+      </div>
+
+      <div class="status-canvas-card" style="padding: 32px; border-color: var(--black); background: rgba(253, 245, 230, 0.6); backdrop-filter: blur(10px); border-radius: 16px;">
+        <form id="fellowship-dossier-form" onsubmit="return false;" style="display: flex; flex-direction: column;">
+          
+          <!-- Section 1: Primary Identity -->
+          <h4 class="manifest-section-divider" style="margin-top: 0;">1. Primary Identity</h4>
+          
+          <div class="form-grid-row">
+            <div class="form-group">
+              <label for="fellowship-name">Full Legal Name</label>
+              <input type="text" id="fellowship-name" required placeholder="John Doe">
+            </div>
+            <div class="form-group">
+              <label for="fellowship-kga-id">Krishnaite ID</label>
+              <input type="text" id="fellowship-kga-id" required placeholder="KGA-ID-XXXX">
+            </div>
+          </div>
+
+          <div class="form-grid-row">
+            <div class="form-group">
+              <label for="fellowship-email">Primary Email Address</label>
+              <input type="email" id="fellowship-email" required placeholder="john.doe@example.com">
+            </div>
+            <div class="form-group">
+              <label for="fellowship-phone">Phone Number</label>
+              <input type="tel" id="fellowship-phone" required placeholder="+91 98765 43210">
+            </div>
+          </div>
+
+          <!-- Section 2: Merit & Equity Verification -->
+          <h4 class="manifest-section-divider">2. Merit & Equity Verification</h4>
+
+          <div class="form-grid-row">
+            <div class="form-group">
+              <label for="fellowship-program">Core Program Applied For</label>
+              <select id="fellowship-program" required>
+                <option value="" disabled selected>Select Track</option>
+                <option value="Sovereign Forge">The Sovereign Forge [4-Year]</option>
+                <option value="Vanguard Launchpad">The Vanguard Launchpad [2-Year]</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="fellowship-aggregate">Highest Academic Aggregate / Percentage</label>
+              <input type="number" id="fellowship-aggregate" required min="93" max="100" step="0.01" placeholder="95.5">
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 24px;">
+            <label for="fellowship-income">Verified Total Family Annual Income (INR)</label>
+            <input type="number" id="fellowship-income" required max="299999" min="0" placeholder="e.g., 250000">
+          </div>
+
+          <!-- Section 3: Declarations & Agreements -->
+          <h4 class="manifest-section-divider">3. Declarations & Agreements</h4>
+
+          <div class="form-group" style="margin-bottom: 16px;">
+            <div class="checkbox-group" style="display: flex; align-items: flex-start; gap: 10px;">
+              <input type="checkbox" id="fellowship-declare-income" required style="margin-top: 4px;">
+              <label for="fellowship-declare-income" style="font-size: 0.85rem; color: hsla(0,0%,7%,0.85); line-height: 1.4;">
+                <strong>Financial Declaration:</strong> I formally declare that my family's combined annual income from all sources is strictly below ₹3,00,000.
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 16px;">
+            <div class="checkbox-group" style="display: flex; align-items: flex-start; gap: 10px;">
+              <input type="checkbox" id="fellowship-declare-academic" required style="margin-top: 4px;">
+              <label for="fellowship-declare-academic" style="font-size: 0.85rem; color: hsla(0,0%,7%,0.85); line-height: 1.4;">
+                <strong>Academic Declaration:</strong> I formally declare that my previous academic aggregate is 93% or higher, and I can provide immediate government or board-issued proof.
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 24px;">
+            <div class="checkbox-group" style="display: flex; align-items: flex-start; gap: 10px;">
+              <input type="checkbox" id="fellowship-declare-audit" required style="margin-top: 4px;">
+              <label for="fellowship-declare-audit" style="font-size: 0.85rem; color: hsla(0,0%,7%,0.85); line-height: 1.4;">
+                <strong>Audit Agreement:</strong> I agree to a full financial and academic audit by Krishnaite Global Academy if my application is flagged for the fellowship track.
+              </label>
+            </div>
+          </div>
+
+          <!-- 📂 DOCUMENTATION DIRECTIVE -->
+          <div class="scarcity-box" style="margin-bottom: 32px; border-color: var(--black); background: rgba(212, 175, 55, 0.08); text-align: left; padding: 20px;">
+            <h4 style="margin: 0 0 8px 0; color: var(--gold); display: flex; align-items: center; gap: 8px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="stroke: var(--gold);">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+              </svg>
+              📂 DOCUMENTATION DIRECTIVE
+            </h4>
+            <p style="font-size: 0.85rem; line-height: 1.5; color: var(--black); margin: 0;">
+              Upon submitting this claim, kindly send your official Government-Issued Income Certificate and Verified Academic Mark Sheets (proving 93%+) to us directly via email at: <strong style="color: var(--red);">admissions@krishnaite.dev</strong>. Your fellowship status will remain strictly pending until these specific legal documents are received and authenticated.
+            </p>
+          </div>
+
+          <!-- Action Box: Separate Save Draft & Submit claims -->
+          <div style="display: flex; gap: 16px; justify-content: flex-end;">
+            <button class="action-card-btn secondary" id="btn-save-fellowship-draft" style="margin: 0; padding: 14px 28px; background: transparent; color: var(--black); border-color: var(--black);">Save Draft</button>
+            <button class="action-card-btn primary" id="btn-submit-fellowship" style="margin: 0; padding: 14px 28px;">Submit Fellowship Claim</button>
+          </div>
+
+        </form>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Main interactive JS linking Vite bundles -->
+  <script type="module" src="/app.ts"></script>
+</body>
+</html>
