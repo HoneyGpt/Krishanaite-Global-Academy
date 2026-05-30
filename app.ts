@@ -1568,8 +1568,8 @@ async function initManifestController() {
       try {
         const emailHTML = `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 2px solid #111111; border-radius: 16px; padding: 32px; background-color: #FDF5E6;">
-            <h2 style="font-family: Georgia, serif; color: #D9383A; border-bottom: 2px solid #111111; padding-bottom: 12px; margin-top: 0;">KGA Genesis Manifest Record</h2>
-            <p style="font-size: 14px; color: #555555; font-style: italic;">A new candidate has submitted their comprehensive 4-Year Academic Manifest for the Genesis Cohort.</p>
+            <h2 style="font-family: Georgia, serif; color: #D9383A; border-bottom: 2px solid #111111; padding-bottom: 12px; margin-top: 0;">KGA Genesis Manifest: ${state.selected_track || "Genesis Track"}</h2>
+            <p style="font-size: 14px; color: #555555; font-style: italic;">A new candidate has submitted their comprehensive ${(state.selected_track && state.selected_track.includes("Vanguard")) ? "2-Year Academic Manifest" : "4-Year Academic Manifest"} for the Genesis Cohort.</p>
             
             <h3 style="font-family: Georgia, serif; color: #111111; border-bottom: 1px solid #111111; padding-bottom: 4px; margin-top: 24px;">1. Primary Identity</h3>
             <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
@@ -1609,6 +1609,7 @@ async function initManifestController() {
         const payload = {
           name: manifestPayload.name,
           track: state.selected_track,
+          subject: `KGA ${(state.selected_track && state.selected_track.includes("Vanguard")) ? "2-Year" : "4-Year"} Manifest: ${manifestPayload.name} (${state.selected_track})`,
           html: emailHTML
         };
 
@@ -1625,7 +1626,7 @@ async function initManifestController() {
             body: JSON.stringify({
               from: 'onboarding@resend.dev',
               to: ['admissions@krishnaite.dev'],
-              subject: `KGA 4-Year Manifest: ${manifestPayload.name} (${state.selected_track})`,
+              subject: `KGA ${(state.selected_track && state.selected_track.includes("Vanguard")) ? "2-Year" : "4-Year"} Manifest: ${manifestPayload.name} (${state.selected_track})`,
               html: emailHTML
             })
           });
@@ -1906,6 +1907,7 @@ async function initFellowshipController() {
         const payload = {
           name: fellowshipPayload.name,
           track: `Fellowship Claim (${fellowshipPayload.program})`,
+          subject: `KGA Fellowship Manifest: ${fellowshipPayload.name} (${fellowshipPayload.kga_id})`,
           html: emailHTML
         };
 

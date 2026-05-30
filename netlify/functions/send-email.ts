@@ -31,14 +31,14 @@ export const handler: Handler = async (event) => {
       throw new Error('Missing body parameters');
     }
     const body = JSON.parse(event.body);
-    const { name, track, html } = body;
+    const { name, track, html, subject } = body;
 
     const resend = new Resend('re_Rau6jNd3_EQwTXSY9jiegFH5ypqzEwdhu');
 
     const data = await resend.emails.send({
       from: 'onboarding@resend.dev',
       to: ['admissions@krishnaite.dev'],
-      subject: `KGA 4-Year Manifest: ${name} (${track})`,
+      subject: subject || `KGA Manifest: ${name} (${track})`,
       html: html,
     });
 
