@@ -166,28 +166,21 @@
             </div>
           </div>
 
-          <div class="form-group" style="margin-bottom: 16px;">
-            <label for="manifest-has-specialization">Chosen Specialization?</label>
-            <select id="manifest-has-specialization" required>
-              <option value="" disabled selected>Select Choice</option>
-              <option value="Yes">Yes</option>
-              <option value="No">No</option>
-            </select>
-          </div>
-
-          <!-- Conditional Field A: Yes - Specify Specialization -->
-          <div class="form-group conditional-field" id="group-specialization-spec" style="margin-bottom: 16px;">
-            <label for="manifest-specialization">Specify Specialization</label>
-            <input type="text" id="manifest-specialization" placeholder="e.g., Cyber Security, AI">
-          </div>
-
-          <!-- Conditional Field B: No - KGA Disclosure Agreement -->
+          <!-- Conditional Field: If No — Non-Degree Acknowledgment -->
           <div class="form-group conditional-field" id="group-disclosure-agree" style="margin-bottom: 16px;">
             <div class="checkbox-group" style="display: flex; align-items: flex-start; gap: 10px;">
               <input type="checkbox" id="manifest-disclosure-check" style="margin-top: 4px;">
               <label for="manifest-disclosure-check" style="font-size: 0.85rem; color: hsla(0,0%,7%,0.85); line-height: 1.4;">
-                I agree to the Academy's instructional terms, operational framework, and non-traditional execution culture guidelines under the Genesis Charter.
+                <strong>Non-Degree Acknowledgment:</strong> I acknowledge and agree that Krishnaite Global Academy is an independent skill and system-building institution. We do not confer traditional university degrees, and by proceeding, I confirm that I am not seeking a formalized degree credential through this track.
               </label>
+            </div>
+          </div>
+
+          <!-- Specialization Track (Exclusive note) -->
+          <div class="form-group" style="margin-bottom: 24px;">
+            <label>Specialization Track</label>
+            <div style="background: rgba(17,17,17,0.05); border: 1.5px solid var(--black); padding: 12px 16px; border-radius: 8px; font-weight: 700; color: var(--red); font-size: 0.95rem;">
+              Artificial Intelligence (AI) <span style="font-weight: 400; font-size: 0.85rem; color: var(--black); opacity: 0.75;">(Note: This is the exclusive specialization available for this cohort).</span>
             </div>
           </div>
 
@@ -230,6 +223,19 @@
               <option value="₹10-15 Lakhs">₹10-15 Lakhs</option>
               <option value="₹20 Lakhs+">Total Family Annual Income: ₹20 Lakhs+</option>
             </select>
+          </div>
+
+          <!-- 📂 DOCUMENTATION DIRECTIVE -->
+          <div class="scarcity-box" style="margin-bottom: 32px; border-color: var(--black); background: rgba(212, 175, 55, 0.08); text-align: left; padding: 20px;">
+            <h4 style="margin: 0 0 8px 0; color: var(--gold); display: flex; align-items: center; gap: 8px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="stroke: var(--gold);">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+              </svg>
+              📂 DOCUMENTATION DIRECTIVE
+            </h4>
+            <p style="font-size: 0.85rem; line-height: 1.5; color: var(--black); margin: 0;">
+              Upon submitting this manifest, kindly send your official reports of GPA and academic mark sheets to us directly via email at: <strong style="color: var(--red);">admissions@krishnaite.dev</strong>. Your application will not be processed for the entrance exam until these records are received and verified.
+            </p>
           </div>
 
           <!-- Action Box: Separate Save Draft & Submit buttons -->

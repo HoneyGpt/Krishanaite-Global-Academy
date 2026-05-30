@@ -1248,8 +1248,6 @@ async function initManifestController() {
   const manifestResidence = document.getElementById('manifest-residence') as HTMLInputElement;
   const manifestQualification = document.getElementById('manifest-qualification') as HTMLSelectElement;
   const manifestEnrolled = document.getElementById('manifest-enrolled') as HTMLSelectElement;
-  const manifestHasSpecialization = document.getElementById('manifest-has-specialization') as HTMLSelectElement;
-  const manifestSpecialization = document.getElementById('manifest-specialization') as HTMLInputElement;
   const manifestDisclosureCheck = document.getElementById('manifest-disclosure-check') as HTMLInputElement;
   
   const manifestFatherName = document.getElementById('manifest-father-name') as HTMLInputElement;
@@ -1259,7 +1257,6 @@ async function initManifestController() {
   const manifestMotherOccup = document.getElementById('manifest-mother-occup') as HTMLInputElement;
   const manifestIncome = document.getElementById('manifest-income') as HTMLSelectElement;
 
-  const groupSpecializationSpec = document.getElementById('group-specialization-spec');
   const groupDisclosureAgree = document.getElementById('group-disclosure-agree');
 
   const btnSaveDraft = document.getElementById('btn-save-draft');
@@ -1324,19 +1321,12 @@ async function initManifestController() {
   };
 
   const triggerSpecializationUI = (val: string) => {
-    if (val === "Yes") {
-      if (groupSpecializationSpec) groupSpecializationSpec.classList.add('active');
-      if (groupDisclosureAgree) groupDisclosureAgree.classList.remove('active');
-      if (manifestSpecialization) manifestSpecialization.required = true;
-      if (manifestDisclosureCheck) manifestDisclosureCheck.required = false;
-    } else if (val === "No") {
+    if (val === "No") {
       if (groupDisclosureAgree) groupDisclosureAgree.classList.add('active');
-      if (groupSpecializationSpec) groupSpecializationSpec.classList.remove('active');
-      if (manifestSpecialization) manifestSpecialization.required = false;
       if (manifestDisclosureCheck) manifestDisclosureCheck.required = true;
     } else {
-      if (groupSpecializationSpec) groupSpecializationSpec.classList.remove('active');
       if (groupDisclosureAgree) groupDisclosureAgree.classList.remove('active');
+      if (manifestDisclosureCheck) manifestDisclosureCheck.required = false;
     }
   };
 
@@ -1353,11 +1343,10 @@ async function initManifestController() {
     if (d.qualification) manifestQualification.value = d.qualification;
     if (d.enrolled) manifestEnrolled.value = d.enrolled;
     
-    if (d.has_specialization) {
-      manifestHasSpecialization.value = d.has_specialization;
-      triggerSpecializationUI(d.has_specialization);
+    if (d.enrolled) {
+      manifestEnrolled.value = d.enrolled;
+      triggerSpecializationUI(d.enrolled);
     }
-    if (d.specialization) manifestSpecialization.value = d.specialization;
     if (d.disclosure !== undefined) manifestDisclosureCheck.checked = d.disclosure;
     
     if (d.father_name) manifestFatherName.value = d.father_name;
@@ -1397,10 +1386,10 @@ async function initManifestController() {
     } catch (e) {}
   };
 
-  // Bind change on HasSpecialization dropdown
-  if (manifestHasSpecialization) {
-    manifestHasSpecialization.addEventListener('change', () => {
-      triggerSpecializationUI(manifestHasSpecialization.value);
+  // Bind change on Currently Enrolled dropdown
+  if (manifestEnrolled) {
+    manifestEnrolled.addEventListener('change', () => {
+      triggerSpecializationUI(manifestEnrolled.value);
     });
   }
 
@@ -1415,8 +1404,8 @@ async function initManifestController() {
       residence: manifestResidence?.value.trim() || "",
       qualification: manifestQualification?.value || "",
       enrolled: manifestEnrolled?.value || "",
-      has_specialization: manifestHasSpecialization?.value || "",
-      specialization: manifestSpecialization?.value.trim() || "",
+      has_specialization: "Yes",
+      specialization: "Artificial Intelligence (AI)",
       disclosure: manifestDisclosureCheck?.checked || false,
       father_name: manifestFatherName?.value.trim() || "",
       mother_name: manifestMotherName?.value.trim() || "",
@@ -1449,8 +1438,8 @@ async function initManifestController() {
         return;
       }
 
-      if (manifestHasSpecialization.value === "No" && !manifestDisclosureCheck.checked) {
-        alert("You must agree to the Academy's instructional terms and framework to proceed.");
+      if (manifestEnrolled.value === "No" && !manifestDisclosureCheck.checked) {
+        alert("You must agree to the Non-Degree Acknowledgment framework to proceed.");
         return;
       }
 
