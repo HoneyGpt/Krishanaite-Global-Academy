@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (window.location.pathname.includes('dashboard.html')) {
     initDashboardController();
   }
-  if (window.location.pathname.includes('sovereign-manifest.html')) {
+  if (window.location.pathname.includes('sovereign-manifest.html') || window.location.pathname.includes('vanguard-manifest.html')) {
     initManifestController();
   }
 });
@@ -1018,7 +1018,11 @@ async function initDashboardController() {
   if (btnStartApp && modalPrograms) {
     btnStartApp.addEventListener('click', () => {
       if (state.selected_track && !state.submitted) {
-        window.location.href = "sovereign-manifest.html";
+        if (state.selected_track.includes("Vanguard")) {
+          window.location.href = "vanguard-manifest.html";
+        } else {
+          window.location.href = "sovereign-manifest.html";
+        }
       } else {
         modalPrograms.classList.add('active');
       }

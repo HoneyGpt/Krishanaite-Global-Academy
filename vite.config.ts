@@ -18,7 +18,8 @@ export default defineConfig({
         howYouLearn: resolve(__dirname, 'how-you-learn.html'),
         sovereignForge: resolve(__dirname, 'sovereign-forge.html'),
         vanguardLaunchpad: resolve(__dirname, 'vanguard-launchpad.html'),
-        sovereignManifest: resolve(__dirname, 'sovereign-manifest.html')
+        sovereignManifest: resolve(__dirname, 'sovereign-manifest.html'),
+        vanguardManifest: resolve(__dirname, 'vanguard-manifest.html')
       }
     }
   }
