@@ -2299,3 +2299,82 @@ body.dashboard-body {
   }
 }
 
+/* Floating Contact Admin Board Styling */
+.contact-floating-board {
+  position: fixed;
+  bottom: 90px;
+  left: 300px;
+  background: rgba(253, 245, 230, 0.95);
+  backdrop-filter: blur(15px);
+  border: 2px solid var(--black);
+  box-shadow: 12px 12px 0px var(--black-shadow);
+  padding: 24px;
+  border-radius: 12px;
+  z-index: 10000;
+  width: 320px;
+  font-family: var(--font-sans);
+  animation: float-straight 4s ease-in-out infinite;
+}
+
+.contact-floating-board h4 {
+  font-family: var(--font-serif);
+  color: var(--red);
+  margin: 0 0 16px 0;
+  border-bottom: 1.5px solid var(--black);
+  padding-bottom: 8px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.contact-floating-board .contact-item h5 {
+  margin: 0 0 4px 0;
+  font-size: 0.75rem;
+  color: var(--black);
+  opacity: 0.65;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-family: var(--font-sans);
+  font-weight: 700;
+}
+
+.contact-floating-board .contact-item a {
+  color: var(--black);
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-decoration: none;
+  border-bottom: 1.5px dashed var(--black);
+  transition: var(--transition-fast);
+}
+
+.contact-floating-board .contact-item a:hover {
+  color: var(--red);
+  border-bottom-color: var(--red);
+}
+
+.board-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--black);
+  transition: var(--transition-fast);
+  line-height: 1;
+}
+
+.board-close:hover {
+  color: var(--red);
+}
+
+@media (max-width: 900px) {
+  .contact-floating-board {
+    left: 20px;
+    bottom: 20px;
+    width: calc(100% - 40px);
+  }
+}
+

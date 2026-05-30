@@ -679,6 +679,7 @@ async function initDashboardController() {
   const detailFellowshipStatus = document.getElementById('detail-fellowship-status');
   const detailDocsStatus = document.getElementById('detail-docs-status');
   const btnDiscardDraft = document.getElementById('btn-discard-draft');
+  const btnContinueApplication = document.getElementById('btn-continue-application');
   const btnSubmitApplication = document.getElementById('btn-submit-application');
 
   // Modals Overlay Elements
@@ -918,10 +919,12 @@ async function initDashboardController() {
           btnSubmitApplication.textContent = "Application Submitted";
           (btnSubmitApplication as HTMLButtonElement).disabled = true;
           if (btnDiscardDraft) (btnDiscardDraft as HTMLButtonElement).disabled = true;
+          if (btnContinueApplication) (btnContinueApplication as HTMLButtonElement).disabled = true;
         } else {
           btnSubmitApplication.textContent = "Submit Completed Application";
           (btnSubmitApplication as HTMLButtonElement).disabled = !isCompleted;
           if (btnDiscardDraft) (btnDiscardDraft as HTMLButtonElement).disabled = false;
+          if (btnContinueApplication) (btnContinueApplication as HTMLButtonElement).disabled = false;
         }
       }
     }
@@ -1063,7 +1066,7 @@ async function initDashboardController() {
       state.selected_track = "Vanguard Forge (GPU & Optimization)";
       closeModal(modalPrograms);
       await saveDashboardState();
-      window.location.href = "sovereign-manifest.html";
+      window.location.href = "vanguard-manifest.html";
     });
   }
 
@@ -1192,8 +1195,83 @@ async function initDashboardController() {
         state.fellowship_claimed = null;
         state.uploaded_documents = [];
         state.submitted = false;
+        localStorage.removeItem('kga_manifest_draft_' + email);
         saveDashboardState();
       }
+    });
+  }
+
+  if (btnContinueApplication) {
+    btnContinueApplication.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (state.selected_track) {
+        if (state.selected_track.includes("Vanguard")) {
+          window.location.href = "vanguard-manifest.html";
+        } else {
+          window.location.href = "sovereign-manifest.html";
+        }
+      }
+    });
+  }
+
+  // Sidebar navigation elements click handlers
+  const menuDashboard = document.getElementById('menu-dashboard');
+  const menuDrafts = document.getElementById('menu-drafts');
+  const menuCompleted = document.getElementById('menu-completed');
+  const menuVault = document.getElementById('menu-vault');
+  const menuRecs = document.getElementById('menu-recs');
+
+  if (menuDashboard) {
+    menuDashboard.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  if (menuDrafts) {
+    menuDrafts.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (state.selected_track) {
+        if (state.submitted) {
+          alert("Your application is already submitted and locked under the Genesis Charter.");
+        } else {
+          if (state.selected_track.includes("Vanguard")) {
+            window.location.href = "vanguard-manifest.html";
+          } else {
+            window.location.href = "sovereign-manifest.html";
+          }
+        }
+      } else {
+        alert("You have no active drafts. Click 'Start App' to initialize your application.");
+      }
+    });
+  }
+
+  if (menuCompleted) {
+    menuCompleted.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (state.submitted) {
+        alert("Your application is fully completed and locked. Entrance exam gate is unlocked!");
+      } else {
+        alert("Please complete all sections of your manifest draft and submit to activate your dossier.");
+      }
+    });
+  }
+
+  if (menuVault) {
+    menuVault.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (modalDocuments) {
+        modalDocuments.classList.add('active');
+        renderUploadedDossier();
+      }
+    });
+  }
+
+  if (menuRecs) {
+    menuRecs.addEventListener('click', (e) => {
+      e.preventDefault();
+      alert("Recommendations under the Genesis Charter:\n\n1. Select Sovereign Path for low-level systems & distributed cryptography.\n2. Select Vanguard Forge for LLVM pipelines & high-performance GPU acceleration.");
     });
   }
 
@@ -1216,6 +1294,34 @@ async function initDashboardController() {
         alert("Genesis gate unlocked! Redirecting candidate to secure exam portal on Unstop.");
         window.location.href = "https://unstop.com";
       }
+    });
+  }
+
+  // J. Contact Admin Floating Board Controller
+  const menuContact = document.getElementById('menu-contact');
+  const contactBoard = document.getElementById('contact-board');
+  const closeContactBoard = document.getElementById('close-contact-board');
+
+  if (menuContact && contactBoard) {
+    menuContact.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      contactBoard.style.display = contactBoard.style.display === 'none' ? 'block' : 'none';
+    });
+
+    if (closeContactBoard) {
+      closeContactBoard.addEventListener('click', (e) => {
+        e.stopPropagation();
+        contactBoard.style.display = 'none';
+      });
+    }
+
+    document.addEventListener('click', () => {
+      contactBoard.style.display = 'none';
+    });
+
+    contactBoard.addEventListener('click', (e) => {
+      e.stopPropagation();
     });
   }
 }
@@ -1298,6 +1404,12 @@ async function initManifestController() {
         state = { ...state, ...JSON.parse(localCached) };
       } catch (e) {}
     }
+    const localDraft = localStorage.getItem('kga_manifest_draft_' + email);
+    if (localDraft) {
+      try {
+        state.manifest_data = JSON.parse(localDraft);
+      } catch (e) {}
+    }
     try {
       const { data: regData } = await supabase.from('registrations').select('*').eq('email', email);
       if (regData && regData.length > 0) {
@@ -1305,7 +1417,7 @@ async function initManifestController() {
         if (record.selected_track) state.selected_track = record.selected_track;
         if (record.fellowship_claimed) state.fellowship_claimed = record.fellowship_claimed;
         if (record.application_status === 'submitted') state.submitted = true;
-        if (record.manifest_data) {
+        if (record.manifest_data && !state.manifest_data) {
           try {
             state.manifest_data = typeof record.manifest_data === 'string'
               ? JSON.parse(record.manifest_data)
@@ -1356,6 +1468,9 @@ async function initManifestController() {
   // Sync state saver
   const saveState = async () => {
     localStorage.setItem('kga_dashboard_state_' + email, JSON.stringify(state));
+    if (state.manifest_data) {
+      localStorage.setItem('kga_manifest_draft_' + email, JSON.stringify(state.manifest_data));
+    }
     try {
       await supabase.auth.updateUser({
         data: { kga_dashboard_state: state }
@@ -1538,4 +1653,19 @@ async function initManifestController() {
   // Load and prefill
   await loadState();
   prefillForm();
+
+  // Enable auto-save on input or change events so draft progress is never lost
+  if (manifestDossierForm) {
+    const handleAutoSave = () => {
+      state.manifest_data = getPayload();
+      localStorage.setItem('kga_manifest_draft_' + email, JSON.stringify(state.manifest_data));
+      localStorage.setItem('kga_dashboard_state_' + email, JSON.stringify(state));
+    };
+
+    const inputs = manifestDossierForm.querySelectorAll('input, select, textarea');
+    inputs.forEach(input => {
+      input.addEventListener('input', handleAutoSave);
+      input.addEventListener('change', handleAutoSave);
+    });
+  }
 }

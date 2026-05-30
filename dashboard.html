@@ -107,15 +107,7 @@
             <span>Contact Admin</span>
           </a>
         </li>
-        <li class="sidebar-menu-item" id="menu-settings">
-          <a href="#">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="3"></circle>
-              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-            </svg>
-            <span>Settings</span>
-          </a>
-        </li>
+        <!-- Settings button removed -->
       </ul>
     </aside>
 
@@ -314,6 +306,7 @@
           
           <div class="draft-actions">
             <button class="action-card-btn secondary" id="btn-discard-draft" style="color: var(--red); border-color: var(--black); background: transparent;">Discard Draft</button>
+            <button class="action-card-btn primary" id="btn-continue-application" style="background: var(--gold); color: var(--black); border-color: var(--black); margin-right: auto;">Continue Application</button>
             <button class="action-card-btn primary" id="btn-submit-application">Submit Completed Application</button>
           </div>
         </div>
@@ -442,6 +435,22 @@
   </div>
 
   <!-- Active Sovereign Forge 4-Year Manifest Modal has been migrated to its own dedicated page at sovereign-manifest.html -->
+
+  <!-- Floating Contact Admin Board -->
+  <div class="contact-floating-board" id="contact-board" style="display: none;">
+    <button class="board-close" id="close-contact-board">&times;</button>
+    <h4>Contact Admin</h4>
+    <div style="display: flex; flex-direction: column; gap: 14px;">
+      <div class="contact-item">
+        <h5>Admissions Inquiry</h5>
+        <a href="mailto:admissions@krishnaite.dev">admissions@krishnaite.dev</a>
+      </div>
+      <div class="contact-item">
+        <h5>General Questions</h5>
+        <a href="mailto:hello@mentozy.app">hello@mentozy.app</a>
+      </div>
+    </div>
+  </div>
 
   <!-- Main interactive JS linking Vite bundles -->
   <script type="module" src="/app.ts"></script>
