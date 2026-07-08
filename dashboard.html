@@ -142,6 +142,46 @@
           <button class="cta-header-btn" id="btn-logout" style="background: var(--black); color: var(--bg-peach); border-radius: 8px; font-size: 0.85rem; font-weight: 700; padding: 10px 20px;">Log Out</button>
         </div>
       </header>
+
+      <!-- Application Progress Timeline -->
+      <div style="background: var(--white-glass); border: 2.5px solid var(--black); border-radius: 20px; padding: 24px; margin-bottom: 32px; box-shadow: 6px 6px 0px var(--black-shadow);">
+        <h3 style="font-family: var(--font-serif); font-size: 1.2rem; color: var(--black); margin-bottom: 16px; font-weight: 700;">Your Application Progress</h3>
+        <div style="display: flex; justify-content: space-between; align-items: center; position: relative; gap: 10px;">
+          <!-- Progress Line BG -->
+          <div style="position: absolute; left: 10%; right: 10%; height: 3px; background: hsla(0,0%,7%,0.1); z-index: 1;"></div>
+          
+          <!-- Steps -->
+          <div style="z-index: 2; text-align: center; width: 16%; display: flex; flex-direction: column; align-items: center; gap: 6px;">
+            <div style="width: 32px; height: 32px; border-radius: 50%; background: #34A853; border: 2px solid var(--black); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem;">1</div>
+            <span style="font-size: 0.72rem; font-weight: 700;">Account</span>
+          </div>
+
+          <div style="z-index: 2; text-align: center; width: 16%; display: flex; flex-direction: column; align-items: center; gap: 6px;">
+            <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--gold); border: 2px solid var(--black); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem;" id="step-track-indicator">2</div>
+            <span style="font-size: 0.72rem; font-weight: 700;">Track Selection</span>
+          </div>
+
+          <div style="z-index: 2; text-align: center; width: 16%; display: flex; flex-direction: column; align-items: center; gap: 6px;">
+            <div style="width: 32px; height: 32px; border-radius: 50%; background: #eee; border: 2px solid var(--black); color: var(--black); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem;" id="step-docs-indicator">3</div>
+            <span style="font-size: 0.72rem; font-weight: 700;">Docs Vault</span>
+          </div>
+
+          <div style="z-index: 2; text-align: center; width: 16%; display: flex; flex-direction: column; align-items: center; gap: 6px;">
+            <div style="width: 32px; height: 32px; border-radius: 50%; background: #eee; border: 2px solid var(--black); color: var(--black); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem;" id="step-exam-indicator">4</div>
+            <span style="font-size: 0.72rem; font-weight: 700;">Exam Gate</span>
+          </div>
+
+          <div style="z-index: 2; text-align: center; width: 16%; display: flex; flex-direction: column; align-items: center; gap: 6px;">
+            <div style="width: 32px; height: 32px; border-radius: 50%; background: #eee; border: 2px solid var(--black); color: var(--black); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem;">5</div>
+            <span style="font-size: 0.72rem; font-weight: 700;">Admissions Panel</span>
+          </div>
+
+          <div style="z-index: 2; text-align: center; width: 16%; display: flex; flex-direction: column; align-items: center; gap: 6px;">
+            <div style="width: 32px; height: 32px; border-radius: 50%; background: #eee; border: 2px solid var(--black); color: var(--black); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem;">6</div>
+            <span style="font-size: 0.72rem; font-weight: 700;">Onboarding</span>
+          </div>
+        </div>
+      </div>
       
       <!-- Quick Actions CSS Grid of 4 Cards -->
       <h2 class="actions-section-title">
@@ -311,6 +351,60 @@
           </div>
         </div>
         
+      </div>
+
+      <!-- Secondary Dashboard Row -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 28px; margin-top: 32px;">
+        
+        <!-- Left Panel: Deadlines & Resources -->
+        <div style="background: var(--white-glass); border: 2px solid var(--black); border-radius: 20px; padding: 28px; box-shadow: 6px 6px 0px var(--black-shadow);">
+          <h3 style="font-family: var(--font-serif); font-size: 1.25rem; color: var(--red); margin-bottom: 20px; border-bottom: 1.5px solid var(--black); padding-bottom: 6px;">Deadlines & Resources</h3>
+          
+          <div style="display: flex; flex-direction: column; gap: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; border-bottom: 1px dashed rgba(0,0,0,0.1); padding-bottom: 10px;">
+              <span>Logic Entrance Exam Deadline</span>
+              <strong style="color: var(--red);">July 1st, 2026</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; border-bottom: 1px dashed rgba(0,0,0,0.1); padding-bottom: 10px;">
+              <span>Document Verification Queue</span>
+              <strong>Within 48 Hours</strong>
+            </div>
+            
+            <h4 style="font-family: var(--font-serif); font-size: 1.05rem; margin-top: 10px; margin-bottom: 10px;">Admissions Material</h4>
+            <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px; padding: 0;">
+              <li><a href="fees-structure.html" style="color: var(--black); font-size: 0.85rem; font-weight: 600;">Download Curriculum Prospectus &rarr;</a></li>
+              <li><a href="fellowship.html" style="color: var(--black); font-size: 0.85rem; font-weight: 600;">Fellowship Eligibility Guide &rarr;</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Right Panel: Mentor Card & Parent Portal Access -->
+        <div style="background: var(--white-glass); border: 2px solid var(--black); border-radius: 20px; padding: 28px; box-shadow: 6px 6px 0px var(--black-shadow); display: flex; flex-direction: column; gap: 20px;">
+          
+          <!-- Mentor Profile Card Mock -->
+          <div>
+            <h3 style="font-family: var(--font-serif); font-size: 1.25rem; color: var(--red); margin-bottom: 16px; border-bottom: 1.5px solid var(--black); padding-bottom: 6px;">Your Admissions Officer</h3>
+            <div style="display: flex; align-items: center; gap: 16px; background: rgba(253, 245, 230, 0.45); border: 1.5px solid var(--black); border-radius: 12px; padding: 16px;">
+              <div style="width: 44px; height: 44px; border-radius: 50%; background: var(--gold); border: 1.5px solid var(--black); display: flex; align-items: center; justify-content: center; font-family: var(--font-serif); font-weight: 700; font-size: 1.2rem;">🏛️</div>
+              <div>
+                <h5 style="margin: 0; font-size: 0.95rem; font-weight: 700;">Officer Krishna</h5>
+                <p style="margin: 2px 0 0 0; font-size: 0.78rem; opacity: 0.7;">admissions@krishnaite.dev</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Parents View Panel -->
+          <div style="border-top: 1.5px solid var(--black); padding-top: 16px;">
+            <h4 style="font-family: var(--font-serif); font-size: 1.1rem; margin-bottom: 8px;">Parent Dashboard View</h4>
+            <p style="font-size: 0.78rem; opacity: 0.75; margin-bottom: 12px;">Generate a secure access key to share with parents to monitor your verification and enrollment updates.</p>
+            <div style="display: flex; gap: 10px;">
+              <input type="text" value="PARENT-VETTED-KGA-KEY" readonly style="flex: 1; padding: 8px 12px; font-size: 0.8rem; font-family: monospace; border: 1.5px solid var(--black); border-radius: 6px; background: white;" />
+              <button onclick="alert('Access Key copied to clipboard!')" style="padding: 8px 16px; font-size: 0.8rem; font-weight: 700; border: 1.5px solid var(--black); border-radius: 6px; background: var(--gold); cursor: pointer;">Copy</button>
+            </div>
+          </div>
+
+        </div>
+
       </div>
       
     </main>

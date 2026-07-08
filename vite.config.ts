@@ -20,7 +20,9 @@ export default defineConfig({
         vanguardLaunchpad: resolve(__dirname, 'vanguard-launchpad.html'),
         sovereignManifest: resolve(__dirname, 'sovereign-manifest.html'),
         vanguardManifest: resolve(__dirname, 'vanguard-manifest.html'),
-        fellowshipManifest: resolve(__dirname, 'fellowship-manifest.html')
+        fellowshipManifest: resolve(__dirname, 'fellowship-manifest.html'),
+        founders: resolve(__dirname, 'founders.html'),
+        mentozy: resolve(__dirname, 'mentozy.html')
       }
     }
   }

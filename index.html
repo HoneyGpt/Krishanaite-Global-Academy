@@ -34,8 +34,8 @@
       <a href="about-us.html" id="nav-about">About Us</a>
       <a href="how-you-learn.html" id="nav-culture">How You Learn</a>
       <a href="fellowship.html" id="nav-fellowship">Fellowship</a>
-      <a href="#sovereign" id="nav-sovereign">Sovereign Path</a>
-      <a href="#vanguard" id="nav-vanguard">Vanguard Forge</a>
+      <a href="founders.html" id="nav-founders">Founders</a>
+      <a href="mentozy.html" id="nav-mentozy">LMS Portal</a>
     </nav>
     <a href="admissions-portal.html" class="cta-header-btn" id="cta-enroll-header">Apply Now</a>
   </header>
@@ -54,23 +54,27 @@
         <div class="pre-title" id="hero-badge">
           <span></span> Elite Technical Academy
         </div>
-        <h1 class="hero-title" id="hero-main-title">
+        <h1 class="hero-title" id="hero-main-title" style="margin-bottom: 12px;">
           Krishnaite <br>
           <span class="gold-glow-text">Global Academy</span>
         </h1>
-        <p class="hero-desc" id="hero-subtitle">
-          Forging the next generation of elite engineers. We build true architects who command both deeply rooted traditional wisdom and relentless logical innovation.
+        <p class="hero-desc" id="hero-subtitle" style="max-width: 540px; margin-bottom: 24px; line-height: 1.6;">
+          Building self-sufficient software engineers through project-based execution, founder mentorship, cloud deployment, and AI-driven engineering.
         </p>
+        <div style="display: flex; gap: 16px; margin-bottom: 32px;">
+          <a href="admissions-portal.html" class="action-card-btn primary" style="padding: 12px 28px; font-size: 0.9rem; margin: 0; text-decoration: none; display: inline-block; background: var(--red); color: var(--bg-peach); border: 2.5px solid var(--black); border-radius: 50px; font-weight: 700; box-shadow: 4px 4px 0px var(--black); transition: var(--transition-fast);">Apply Now</a>
+          <a href="#tracks" class="action-card-btn secondary" style="padding: 12px 28px; font-size: 0.9rem; margin: 0; text-decoration: none; display: inline-block; color: var(--black); border: 2.5px solid var(--black); border-radius: 50px; font-weight: 700; background: transparent; box-shadow: 4px 4px 0px var(--black); transition: var(--transition-fast);">Explore Tracks</a>
+        </div>
       </div>
 
       <!-- Anti-gravity floating UI visuals & forge centerpiece -->
       <div class="hero-visual" id="hero-interactive-zone">
         <!-- Floating Card Left -->
         <div class="floating-card card-left" id="card-metrics" data-speed="-2">
-          <div class="card-icon">𓋹</div>
+          <div class="card-icon">🏛️</div>
           <div class="card-text">
-            <h4>Ancient Strategy</h4>
-            <p>12 High Sovereigns</p>
+            <h4>Genesis Cohort Seats</h4>
+            <p>35 Sovereign / 15 Vanguard</p>
           </div>
         </div>
 
@@ -236,14 +240,36 @@
         <div class="floating-card card-right" id="card-speed" data-speed="3">
           <div class="card-icon">⚡</div>
           <div class="card-text">
-            <h4>Compiler Core</h4>
-            <p>0.04ms Execution</p>
+            <h4>Accreditation standard</h4>
+            <p>100% Portfolio-Based Graduation</p>
           </div>
         </div>
 
         <!-- Suspended outline nodes -->
         <div class="suspended-node node-1" id="node-red" data-speed="1.5"></div>
         <div class="suspended-node node-2" id="node-gold" data-speed="-1"></div>
+      </div>
+
+      <!-- Why Parents Trust Krishnaite -->
+      <div class="scarcity-section" style="margin-top: 60px; margin-bottom: 30px; animation: none;">
+        <div class="scarcity-header">
+          <h3>Why Parents Trust Krishnaite</h3>
+          <p class="scarcity-subtitle">Vetted structures built for student outcome accountability.</p>
+        </div>
+        <div class="scarcity-grid">
+          <div class="scarcity-box gold-border" style="text-align: left; padding: 24px;">
+            <h4 style="color: var(--red); font-size: 1.15rem; margin-bottom: 8px;">Founder-Led Mentoring</h4>
+            <p>Direct weekly code reviews and live masterclasses from our founding operators. No outsourced assistants.</p>
+          </div>
+          <div class="scarcity-box gold-border" style="text-align: left; padding: 24px;">
+            <h4 style="color: var(--red); font-size: 1.15rem; margin-bottom: 8px;">Real Cloud Deployments</h4>
+            <p>Students write live compiler endpoints and database structures, hosting their portfolio on public URLs.</p>
+          </div>
+          <div class="scarcity-box gold-border" style="text-align: left; padding: 24px;">
+            <h4 style="color: var(--red); font-size: 1.15rem; margin-bottom: 8px;">Small Cohort Sizing</h4>
+            <p>Capped at 50 total candidates per year to maintain extreme individual attention and daily project reviews.</p>
+          </div>
+        </div>
       </div>
 
       <!-- The Scarcity & Allocation Section -->
@@ -336,7 +362,7 @@
               <div class="curriculum-item-bullet"></div>
               <div class="curriculum-text">
                 <h5>Ground-Up Systems Mastery</h5>
-                <p>Mastering digital literacy, command-line operations, and pure algorithmic logic before ever touching a modern framework.</p>
+                <p>Mastering digital literacy, command-line operations, and pure algorithmic logic. Vetted on memory-safe patterns, TCP sockets, and custom compilers.</p>
               </div>
             </div>
             
@@ -344,15 +370,15 @@
               <div class="curriculum-item-bullet"></div>
               <div class="curriculum-text">
                 <h5>The Execution Layer</h5>
-                <p>Transitioning from local isolated environments to highly complex, full-stack continuous integration and autonomous deployment pipelines.</p>
+                <p>Transitioning from local codebases to premium production environments using <strong>TypeScript</strong>, <strong>React</strong>, <strong>Next.js</strong>, and <strong>Node.js</strong> microservices.</p>
               </div>
             </div>
             
             <div class="curriculum-item">
               <div class="curriculum-item-bullet"></div>
               <div class="curriculum-text">
-                <h5>The Living Portfolio</h5>
-                <p>Zero traditional exams. You graduate solely by proving your architectural sovereignty—managing and deploying enterprise-grade code to live, production-grade URLs.</p>
+                <h5>The Living Portfolio & AI Integration</h5>
+                <p>Zero traditional exams. Graduate solely by building live web platforms configured with <strong>Docker</strong>, <strong>CI/CD</strong>, and custom <strong>LLM RAG networks</strong>.</p>
               </div>
             </div>
           </div>
@@ -389,23 +415,23 @@
               <div class="curriculum-item-bullet"></div>
               <div class="curriculum-text">
                 <h5>Bridging Theory to Reality</h5>
-                <p>Taking the raw theoretical concepts learned in classical college and directly applying them to live, hyper-modern server environments.</p>
+                <p>Translating academic computer science theories directly to live container architectures, REST API configurations, and cloud deployment pipelines.</p>
               </div>
             </div>
             
             <div class="curriculum-item">
               <div class="curriculum-item-bullet"></div>
               <div class="curriculum-text">
-                <h5>Rapid UI & Infrastructure</h5>
-                <p>Bypassing the low-level basics to immediately design pristine, fluid user interfaces and securely connect them to robust, distributed backend frameworks.</p>
+                <h5>Modern UI & Next.js Platforms</h5>
+                <p>Deploying responsive, beautiful frontends with <strong>React</strong> and <strong>Next.js</strong>, synced securely with relational database backends.</p>
               </div>
             </div>
             
             <div class="curriculum-item">
               <div class="curriculum-item-bullet"></div>
               <div class="curriculum-text">
-                <h5>The Capstone Platform</h5>
-                <p>Your ultimate graduation requirement: architect, design, program, and successfully publish your very first fully functioning, high-traffic digital platform.</p>
+                <h5>The AI Capstone Platform</h5>
+                <p>Graduate by designing and shipping a functional, high-traffic web service integrated with AI APIs and custom prompt templates.</p>
               </div>
             </div>
           </div>
@@ -421,6 +447,37 @@
           </div>
         </div>
 
+      </div>
+    </section>
+
+    <!-- CURRICULUM ROADMAP PATHWAYS -->
+    <section class="tracks-section" style="border-top: 1.5px solid var(--black); padding-top: 80px; margin-top: 60px;">
+      <div class="section-header">
+        <h2>Visual Architectural Roadmap</h2>
+        <p>The step-by-step engineering progression inside the Academy.</p>
+      </div>
+
+      <div class="scarcity-grid" style="max-width: 1000px; margin: 40px auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;">
+        <div style="background: rgba(253, 245, 230, 0.45); border: 2px solid var(--black); border-radius: 16px; padding: 24px; box-shadow: 6px 6px 0px var(--black-shadow);">
+          <div style="font-family: var(--font-serif); font-size: 2.2rem; color: var(--red); font-weight: 700; margin-bottom: 12px;">01</div>
+          <h4 style="margin-bottom: 8px; font-weight: 700;">Foundation Mastery</h4>
+          <p style="font-size: 0.8rem; opacity: 0.8;">Memory architecture, CLI pipelines, clean algorithms & low-level compiler structure.</p>
+        </div>
+        <div style="background: rgba(253, 245, 230, 0.45); border: 2px solid var(--black); border-radius: 16px; padding: 24px; box-shadow: 6px 6px 0px var(--black-shadow);">
+          <div style="font-family: var(--font-serif); font-size: 2.2rem; color: var(--red); font-weight: 700; margin-bottom: 12px;">02</div>
+          <h4 style="margin-bottom: 8px; font-weight: 700;">Client Architectures</h4>
+          <p style="font-size: 0.8rem; opacity: 0.8;">State management, TypeScript optimization, React configurations, and Next.js applications.</p>
+        </div>
+        <div style="background: rgba(253, 245, 230, 0.45); border: 2px solid var(--black); border-radius: 16px; padding: 24px; box-shadow: 6px 6px 0px var(--black-shadow);">
+          <div style="font-family: var(--font-serif); font-size: 2.2rem; color: var(--red); font-weight: 700; margin-bottom: 12px;">03</div>
+          <h4 style="margin-bottom: 8px; font-weight: 700;">Backend & Containers</h4>
+          <p style="font-size: 0.8rem; opacity: 0.8;">API security, relational databases, caching optimization, Docker container engines, and CI/CD pipelines.</p>
+        </div>
+        <div style="background: rgba(253, 245, 230, 0.45); border: 2px solid var(--black); border-radius: 16px; padding: 24px; box-shadow: 6px 6px 0px var(--black-shadow);">
+          <div style="font-family: var(--font-serif); font-size: 2.2rem; color: var(--red); font-weight: 700; margin-bottom: 12px;">04</div>
+          <h4 style="margin-bottom: 8px; font-weight: 700;">Autonomous Deployments</h4>
+          <p style="font-size: 0.8rem; opacity: 0.8;">LLM RAG networks, production-grade cloud configurations, security audits, and Capstone deployments.</p>
+        </div>
       </div>
     </section>
   </main>

@@ -1671,7 +1671,7 @@ body.dashboard-body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 40px;
+  margin-bottom: 48px;
   background: var(--white-glass);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -1679,7 +1679,6 @@ body.dashboard-body {
   border-radius: 20px;
   padding: 24px 32px;
   box-shadow: 8px 8px 0px var(--black-shadow);
-  animation: float-straight 15s ease-in-out infinite alternate;
 }
 
 .dashboard-header h1 {

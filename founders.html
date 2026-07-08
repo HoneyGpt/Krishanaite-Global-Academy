@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meet the Founders | Krishnaite Global Academy</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Read the personal story, vision, and mission of the developers and technical grandmasters behind Krishnaite Global Academy.">
+  
+  <!-- Style Sheet -->
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .detail-page-section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 140px 4% 80px 4%;
+      position: relative;
+      z-index: 10;
+    }
+
+    .detail-card-container {
+      background: var(--white-glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 2px solid var(--black);
+      border-radius: 28px;
+      width: 100%;
+      max-width: 1000px;
+      padding: 60px 48px;
+      box-shadow: 20px 20px 0px var(--black-shadow);
+      animation: float-straight 15s ease-in-out infinite alternate;
+      transition: var(--transition-smooth);
+      position: relative;
+    }
+
+    .detail-card-container:hover {
+      transform: translateY(-8px) scale(1.002);
+      box-shadow: 26px 26px 0px var(--black-shadow);
+    }
+
+    .back-home-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--black);
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 32px;
+      align-self: flex-start;
+      border: 1.5px solid var(--black);
+      padding: 8px 16px;
+      border-radius: 50px;
+      background: var(--gold);
+      box-shadow: 3px 3px 0px var(--black);
+      transition: var(--transition-fast);
+      cursor: pointer;
+    }
+
+    .back-home-link:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 5px 5px 0px var(--black);
+      background: var(--red);
+      color: var(--bg-peach);
+    }
+
+    .founders-grid {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+      margin-top: 40px;
+    }
+
+    .founder-image-box {
+      border: 2.5px solid var(--black);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 8px 8px 0px var(--black-shadow);
+      background: var(--black);
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 260px;
+    }
+
+    .founder-image-box svg {
+      width: 60%;
+      height: 60%;
+    }
+
+    .founder-bio-card {
+      background: rgba(253, 245, 230, 0.45);
+      border: 1.5px solid var(--black);
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: 6px 6px 0px var(--black);
+    }
+
+    .founder-bio-card h3 {
+      font-family: var(--font-serif);
+      font-size: 1.8rem;
+      margin-bottom: 6px;
+    }
+
+    .founder-bio-card h4 {
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      color: var(--red);
+      font-weight: 700;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .story-paragraph {
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: hsla(0, 0%, 7%, 0.85);
+      margin-bottom: 20px;
+    }
+
+    .bold-accent {
+      font-weight: 700;
+      color: var(--black);
+    }
+
+    @keyframes float-straight {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-16px); }
+    }
+  </style>
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+</head>
+<body>
+
+  <!-- Background Canvas for Grid & Floating Particle Shapes -->
+  <div class="canvas-bg">
+    <div class="perspective-grid" id="grid"></div>
+    <div class="floating-shape shape-1" id="shape1"></div>
+    <div class="floating-shape shape-2" id="shape2"></div>
+    <div class="floating-shape shape-3" id="shape3"></div>
+  </div>
+
+  <!-- Glass panel header with gold / black outlines -->
+  <header id="main-header">
+    <a href="index.html" class="logo" id="header-logo">
+      <div class="logo-icon"></div>
+      <span>Krishnaite</span>
+    </a>
+    <nav id="header-nav">
+      <a href="fees-structure.html" id="nav-fees">Fees Structure</a>
+      <a href="about-us.html" id="nav-about">About Us</a>
+      <a href="how-you-learn.html" id="nav-culture">How You Learn</a>
+      <a href="fellowship.html" id="nav-fellowship">Fellowship</a>
+      <a href="founders.html" id="nav-founders" style="color: var(--red);">Founders</a>
+      <a href="mentozy.html" id="nav-mentozy">LMS Portal</a>
+    </nav>
+    <a href="admissions-portal.html" class="cta-header-btn" id="cta-enroll-header" style="background: var(--red); color: var(--bg-peach);">Apply Now</a>
+  </header>
+
+  <main>
+    <section class="detail-page-section">
+      <!-- Back Navigation Pill -->
+      <a href="index.html" class="back-home-link">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        Back to Academy
+      </a>
+
+      <!-- Large Suspended Standalone Layout Panel -->
+      <div class="detail-card-container" id="detail-panel">
+        
+        <!-- Spiritual Acknowledgment Banner -->
+        <div style="font-family: var(--font-serif); font-size: 0.95rem; font-weight: 700; text-align: center; color: var(--red); margin-bottom: 24px; padding: 12px; border: 1.5px solid var(--black); border-radius: 12px; background: rgba(253,245,230,0.85); box-shadow: 4px 4px 0px var(--black);">
+          ॐ नमो भगवते वासुदेवाय नमः. Whole credits belong to Lord Vasudeva Krishna. I'm extremely grateful to perform my karma.
+        </div>
+
+        <!-- Header Section -->
+        <div class="modal-header">
+          <span class="modal-badge" style="background: var(--black); color: var(--gold); border-color: var(--gold);">Leadership Vision</span>
+          <h2>Meet the Founders</h2>
+          <blockquote class="modal-quote" style="border-left-color: var(--gold); color: var(--black); font-style: italic;">
+            "We built Krishnaite because traditional education teaches you to read manuals, while the market pays you to build systems. We are technical operators training the next wave of sovereign software builders."
+          </blockquote>
+          <p class="modal-intro">
+            Parents invest in people, not logos. At Krishnaite Global Academy, we run a strictly founder-led environment. We do not delegate lectures to assistants or buy off-the-shelf pre-recorded courses. We design, lecture, code, and review applications alongside our candidates every single week.
+          </p>
+        </div>
+
+        <div class="modal-body">
+          <div class="founders-grid">
+            
+            <!-- Left Side: Profile Photo Placeholder -->
+            <div class="founder-image-box">
+              <svg viewBox="0 0 100 100" fill="none" stroke="var(--gold)" stroke-width="2" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="35" r="20" />
+                <path d="M15 85 C15 65, 30 55, 50 55 C70 55, 85 65, 85 85" stroke-linecap="round" />
+                <line x1="30" y1="10" x2="70" y2="10" stroke="var(--red)" stroke-dasharray="2 2" />
+                <line x1="50" y1="5" x2="50" y2="15" stroke="var(--red)" />
+              </svg>
+            </div>
+
+            <!-- Right Side: Biography & Vision -->
+            <div class="founder-bio-card">
+              <h3>Harshita Bhaskaruni</h3>
+              <h4>Founder & CEO of Mentozy & Krishnaite</h4>
+              
+              <p class="story-paragraph">
+                Harshita Bhaskaruni is a tech entrepreneur, software engineer, and full-stack developer. Originally born and raised in Vijayawada, Andhra Pradesh, she attended Ravindra Bharati Public School and completed higher secondary education at Sri Sarada Educational Institutions. She is currently a Computer Science undergraduate student at the Birla Institute of Technology and Science (BITS), Pilani.
+              </p>
+
+              <p class="story-paragraph">
+                <span class="bold-accent">Mentozy & Krishnaite Ecosystem:</span> In early 2026, Harshita officially launched Mentozy, an all-in-one edtech ecosystem built on the premise that "anyone can teach, and anyone can learn." The platform operates as a peer-driven learning and mentorship network bypassing financial and geographic limitations. As CEO, Harshita manages core product development and a global network of builders.
+              </p>
+
+              <p class="story-paragraph">
+                <span class="bold-accent">Technical Expertise & AI Innovation:</span> Proficient in Python, Java, HTML, JavaScript, and 3D modeling, she has led multiple AI-driven applications:
+              </p>
+              <ul style="list-style: none; display: flex; flex-direction: column; gap: 8px; font-size: 0.88rem; margin-bottom: 20px;">
+                <li><strong>INGRES-AI:</strong> Project Manager for this platform, simplifying complex government data portals to offer farmers, researchers, and policymakers actionable insights on groundwater conservation.</li>
+                <li><strong>HoneyGPT & NoteBee:</strong> Developed productivity tools designed to streamline note-taking and real-time editing.</li>
+              </ul>
+
+              <p class="story-paragraph">
+                <span class="bold-accent">Recognition:</span> Honored as a Youth Icon of India for her commitments to early-stage software innovation and accessible education, she actively contributes to NGOs and youth development programs across Andhra Pradesh.
+              </p>
+
+              <p class="story-paragraph" style="font-style: italic; border-left: 3.5px solid var(--red); padding-left: 16px; margin-top: 24px; color: var(--black);">
+                "In my eyes, Lord Krishna is the real founder of everything I build. I believe Krishna isn't just a deity but a walking form of wisdom and inspiration. Krishnaite represents the same: we believe in a student's own creativity and mindset over textbook skills. I believe in helping students discover their strengths and purpose, rather than asking them to simply follow society's expectations. When individuals grow into their best selves, they naturally create meaningful value for society. Along with the academic journey, our goal is not only to teach software engineering, but to cultivate wisdom, disciplined thinking, clear communication, resilience under pressure, and the confidence to build meaningful technology with integrity... Jai Shree Krishna!"
+              </p>
+            </div>
+
+          </div>
+
+          <h3 class="fellowship-section-title" style="margin-top: 48px; border-bottom: 2px solid var(--black); padding-bottom: 10px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; font-size: 1.3rem;">Our Core Commitments</h3>
+          <ul class="info-list" style="list-style: none; display: flex; flex-direction: column; gap: 20px; margin-top: 20px;">
+            <li style="background: rgba(253, 245, 230, 0.5); border: 1.5px solid var(--black); border-radius: 16px; padding: 24px; box-shadow: 4px 4px 0px var(--black-shadow);">
+              <h5 style="font-family: var(--font-serif); font-size: 1.15rem; color: var(--red); margin-bottom: 8px;">1. Zero Prefiles & Pre-recorded Shortcuts</h5>
+              <p style="font-size: 0.92rem; color: hsla(0, 0%, 7%, 0.85);">Every masterclass is live, interactive, and founder-led. We code and debug in real-time, teaching students how to handle unpredictable compilation errors and system failures naturally.</p>
+            </li>
+            <li style="background: rgba(253, 245, 230, 0.5); border: 1.5px solid var(--black); border-radius: 16px; padding: 24px; box-shadow: 4px 4px 0px var(--black-shadow);">
+              <h5 style="font-family: var(--font-serif); font-size: 1.15rem; color: var(--red); margin-bottom: 8px;">2. Portfolio-Based Accountability</h5>
+              <p style="font-size: 0.92rem; color: hsla(0, 0%, 7%, 0.85);">We evaluate students solely based on their public GitHub contributions, live deployment URLs, and Capstone architectures. We build proof-of-work that stands out directly to top-tier engineering organizations.</p>
+            </li>
+          </ul>
+
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Modern Royal Footer -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand" id="footer-logo-block">
+        <h4>Krishnaite</h4>
+        <p> Fusing absolute gravitational independence with the mythological structures of royal architecture and the iron law of memory execution. </p>
+      </div>
+      <div class="footer-links" id="footer-sect-paths">
+        <h5>The Paths</h5>
+        <ul>
+          <li><a href="index.html#hero">The Forge Chamber</a></li>
+          <li><a href="sovereign-forge.html">The Sovereign Path</a></li>
+          <li><a href="vanguard-launchpad.html">The Vanguard Forge</a></li>
+        </ul>
+      </div>
+      <div class="footer-links" id="footer-sect-details">
+        <h5>Academy Details</h5>
+        <ul>
+          <li><a href="fees-structure.html">Financial Ledger</a></li>
+          <li><a href="fellowship.html">Genesis Fellowship</a></li>
+          <li><a href="how-you-learn.html">How You Learn</a></li>
+          <li><a href="about-us.html">About Us</a></li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="footer-meta" id="footer-bottom-row">
+      <p>&copy; 2026 Krishnaite Global Academy. All rights reserved. Under Sovereign Charter.</p>
+      <div class="footer-coords" id="coords-text">
+        Location: <span>45.1098° N, 15.2001° E</span> | Latency: <span>0.003ms</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Main interactive JS for grids & tilts -->
+  <script type="module" src="/app.ts"></script>
+</body>
+</html>
